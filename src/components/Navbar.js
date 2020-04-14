@@ -13,7 +13,7 @@ const Navbar = ({title, subTitle, textStyle, leftAction, rightAction}) => {
       title={title}
       titleStyle={textStyle}
       subtitle={subTitle}
-      alignment="center"
+      alignment="start"
       style={styles.navBar}
       rightControls={rightAction}
       leftControl={leftAction}

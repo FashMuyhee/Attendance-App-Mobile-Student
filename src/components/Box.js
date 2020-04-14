@@ -7,13 +7,17 @@ import {
   Icon,
   Text,
 } from '@ui-kitten/components';
+import {useNavigation} from '@react-navigation/native';
 
 const Box = ({icon, title, route}) => {
+  const navigation = useNavigation();
+
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const pulseIconRef = React.useRef();
   const handleClick = () => {
     pulseIconRef.current.startAnimation();
+    navigation.navigate(route);
   };
   return (
     <TouchableOpacity onPress={handleClick}>

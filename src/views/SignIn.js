@@ -50,7 +50,7 @@ const SignInScreen = (props) => {
 export default SignInScreen;
 const styles = StyleSheet.create({
   input: {
-    marginBottom: 30,
+    marginBottom: 20,
   },
   formBody: {
     marginTop: '15%',

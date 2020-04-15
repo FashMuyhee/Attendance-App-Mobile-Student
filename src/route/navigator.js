@@ -7,12 +7,13 @@ import {
   LandingScreen,
   SignUpScreen,
   SignInScreen,
+  TakeScreen,
 } from '../views';
 
 const Stack = createStackNavigator();
 /* const MainNavigator = () => (
   <Stack.Navigator headerMode="none">
-    
+
   </Stack.Navigator>
 ); */
 
@@ -22,6 +23,7 @@ const OnboardingNavigator = () => (
     <Stack.Screen name="signup" component={SignUpScreen} />
     <Stack.Screen name="signin" component={SignInScreen} />
     <Stack.Screen name="home" component={HomeScreen} />
+    <Stack.Screen name="take" component={TakeScreen} />
     <Stack.Screen name="settings" component={SettingsScreen} />
   </Stack.Navigator>
 );

@@ -10,7 +10,7 @@ import {View, Image} from 'react-native';
 import {Navbar, DetailText, Box} from '../components';
 import {inject, observer} from 'mobx-react';
 import user from '../assets/img/user.jpg';
-const HomeScreen = (props) => {
+const HomeScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const SettingIcon = (style) => (
     <Icon {...style} fill="white" name="settings-outline" />
@@ -23,7 +23,7 @@ const HomeScreen = (props) => {
         rightAction={
           <TopNavigationAction
             icon={SettingIcon}
-            onPress={() => props.navigation.navigate('settings')}
+            onPress={() => navigation.navigate('settings')}
           />
         }
       />
@@ -39,7 +39,7 @@ const HomeScreen = (props) => {
         </View>
       </View>
       <View style={styles.actions}>
-        <Box icon="edit-outline" title="Take Attendance" />
+        <Box icon="edit-outline" route="take" title="Take Attendance" />
         <Box icon="clipboard-outline" title="Courses" />
         <Box icon="list-outline" title="Attendance Record" />
         <Box icon="log-out-outline" title="Sign Out" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 // import {Tab, TabView} from '@ui-kitten/components';
 import {Hero, StudentForm, ScrollContainer} from '../components';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -22,7 +22,7 @@ export default SignUpScreen;
 const styles = StyleSheet.create({
   content: {
     height: hp('100%'),
-   /*  borderWidth: 1,
+    /*  borderWidth: 1,
     borderColor: 'green', */
   },
 });

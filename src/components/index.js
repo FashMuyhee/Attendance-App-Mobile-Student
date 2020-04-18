@@ -7,6 +7,7 @@ import DetailText from './DetailText';
 import Navbar from './Navbar';
 import ScrollContainer from './ScrollContainer';
 import Box from './Box';
+import ModalAlert from './ModalAlert';
 
 export {
   Container,
@@ -18,4 +19,5 @@ export {
   Navbar,
   ScrollContainer,
   Box,
+  ModalAlert,
 };

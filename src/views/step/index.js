@@ -1,5 +1,5 @@
-import StepOne from './StepOne';
-import StepTwo from './StepTwo';
-import StepThree from './StepThree';
+import SiginCode from './SiginCode';
+import Location from './Location';
+import Camera from './Camera';
 
-export {StepOne, StepTwo, StepThree};
+export {SiginCode, Location, Camera};

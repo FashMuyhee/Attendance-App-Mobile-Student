@@ -10,6 +10,11 @@ import {View, Image} from 'react-native';
 import {Navbar, DetailText, Box} from '../components';
 import {inject, observer} from 'mobx-react';
 import user from '../assets/img/user.jpg';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 const HomeScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const SettingIcon = (style) => (
@@ -66,7 +71,7 @@ const themedStyles = StyleService.create({
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
-    height: '30%',
+    height: hp('30%'),
     paddingLeft: '2%',
     paddingRight: '2%',
   },
@@ -78,8 +83,8 @@ const themedStyles = StyleService.create({
     paddingLeft: '2%',
   },
   avatar: {
-    width: 100,
-    height: 100,
+    width: wp('30%'),
+    height: hp('21%'),
     borderRadius: 100,
     justifyContent: 'center',
   },
@@ -91,12 +96,12 @@ const themedStyles = StyleService.create({
   },
   actions: {
     width: '100%',
-    height: '50%',
+    height: hp('50%'),
     position: 'absolute',
     bottom: 0,
     display: 'flex',
     flexDirection: 'row',
-    paddingLeft: '7%',
+    paddingLeft: '4%',
     paddingRight: '3%',
     justifyContent: 'space-between',
     flexWrap: 'wrap',

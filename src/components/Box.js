@@ -6,40 +6,47 @@ import {
   useTheme,
   Icon,
   Text,
+  Button,
 } from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 const Box = ({icon, title, route}) => {
   const navigation = useNavigation();
 
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const pulseIconRef = React.useRef();
   const handleClick = () => {
-    pulseIconRef.current.startAnimation();
     navigation.navigate(route);
   };
   return (
-    <TouchableOpacity onPress={handleClick}>
-      <View style={styles.box}>
-        <Icon
-          style={styles.icon}
-          name={icon}
-          fill={theme['color-primary-default']}
-          ref={pulseIconRef}
-          animation="pulse"
-        />
-        <Text style={styles.text}>{title}</Text>
-      </View>
-    </TouchableOpacity>
+    // <TouchableOpacity onPress={handleClick}>
+    // <Button
+    //   onPress={handleClick}
+    //   appearance="ghost"
+    //   style={{borderColor: 'red', borderWidth: 1}}>
+    <View style={styles.box}>
+      <Icon
+        style={styles.icon}
+        name={icon}
+        fill={theme['color-primary-default']}
+        onPress={handleClick}
+      />
+      <Text style={styles.text}>{title}</Text>
+    </View>
+    //  </TouchableOpacity>
+    // </Button>
   );
 };
 
 export default Box;
 const themedStyles = StyleService.create({
   box: {
-    height: 120,
-    width: 120,
+    height: hp('22%'),
+    width: wp('32%'),
     borderRadius: 20,
     backgroundColor: 'white',
     alignItems: 'center',
@@ -52,13 +59,13 @@ const themedStyles = StyleService.create({
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
     elevation: 8,
-    marginRight: '5%',
-    marginLeft: '5%',
-    marginBottom: '7%',
+    marginRight: wp('4%'),
+    marginLeft: wp('4%'),
+    marginBottom: hp('3%'),
   },
   icon: {
-    width: 50,
-    height: 50,
+    width: wp('10%'),
+    height: hp('10%'),
   },
   text: {
     textTransform: 'capitalize',

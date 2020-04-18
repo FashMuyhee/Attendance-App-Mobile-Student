@@ -3,6 +3,11 @@ import {View, ImageBackground, StyleSheet, Image} from 'react-native';
 import student from '../assets/img/student.png';
 import bg from '../assets/img/bg.png';
 import {Text, Button} from '@ui-kitten/components';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 const LandingScreen = (props) => {
   return (
     <>
@@ -41,14 +46,14 @@ const LandingScreen = (props) => {
 export default LandingScreen;
 const style = StyleSheet.create({
   container: {
-    width: '100%',
-    height: '100%',
+    width: wp('100%'),
+    height: hp('100%'),
     display: 'flex',
     position: 'relative',
     flex: 1,
   },
   imageBg: {
-    width: '100%',
+    width: wp('100%'),
     height: '100%',
     // zIndex: 2,
     display: 'flex',
@@ -67,8 +72,8 @@ const style = StyleSheet.create({
     flex: 1,
     zIndex: 3,
     position: 'absolute',
-    bottom: '5%',
-    width: '100%',
+    bottom: hp('3%'),
+    width: wp('100%'),
     alignItems: 'flex-start',
     paddingLeft: '5%',
     paddingRight: '5%',
@@ -76,11 +81,11 @@ const style = StyleSheet.create({
   boldenText: {
     fontWeight: '700',
     color: 'white',
-    fontSize: 14,
+    fontSize: hp('3.3%'),
   },
   ligthenText: {
     fontWeight: '100',
-    fontSize: 12,
+    fontSize: hp('2.3%'),
     color: 'white',
   },
   authButtons: {
@@ -96,7 +101,7 @@ const style = StyleSheet.create({
     color: 'white',
     borderColor: 'white',
     borderWidth: 1,
-    paddingLeft: '12%',
-    paddingRight: '12%',
+    paddingLeft: wp('12%'),
+    paddingRight: wp('12%'),
   },
 });

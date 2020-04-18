@@ -2,6 +2,11 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Hero, FormBody, ScrollContainer} from '../components';
 import {Icon, Input, Button} from '@ui-kitten/components';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 const SignInScreen = (props) => {
   const [matric_no, setMatricNo] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -50,9 +55,9 @@ const SignInScreen = (props) => {
 export default SignInScreen;
 const styles = StyleSheet.create({
   input: {
-    marginBottom: 20,
+    marginBottom: hp('2%'),
   },
   formBody: {
-    marginTop: '15%',
+    marginTop: hp('10%'),
   },
 });

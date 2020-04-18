@@ -2,6 +2,11 @@ import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 import {Text} from '@ui-kitten/components';
 import logo from '../assets/img/logo.png';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 const Hero = ({subTitle, title, customStyle}) => {
   const style = {...styles.hero, ...customStyle};
 
@@ -18,25 +23,25 @@ export default Hero;
 
 const styles = StyleSheet.create({
   hero: {
-    width: '100%',
-    height: '30%',
-    paddingTop: '10%',
-    marginTop: '12%',
-    marginBottom: '5%',
+    // width: wp('100%'),
+    height: hp('25%'),
+    // paddingTop: hp('10%'),
+    marginTop: hp('6%'),
+    marginBottom: hp('2%'),
     /* borderColor: 'black',
     borderWidth: 1, */
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: wp('13.5%'),
+    height: hp('9%'),
   },
   title: {
     fontWeight: 'bold',
-    marginTop: 40,
-    fontSize: 20,
+    marginTop: hp('6%'),
+    fontSize: hp('3.5%'),
   },
   subTitle: {
-    fontSize: 13,
+    fontSize: hp('2.5%'),
     fontWeight: '200',
   },
 });

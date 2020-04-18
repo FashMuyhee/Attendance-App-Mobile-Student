@@ -2,7 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import FormBody from './FormBody';
 import {Input, Icon, Button, Select} from '@ui-kitten/components';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 const StudentForm = () => {
   const data = [{text: 'Option 1'}, {text: 'Option 2'}, {text: 'Option 3'}];
 
@@ -75,6 +78,6 @@ const styles = StyleSheet.create({
     borderWidth: 1, */
   },
   input: {
-    marginBottom: '4%',
+    marginBottom: hp('2%'),
   },
 });

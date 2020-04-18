@@ -8,16 +8,16 @@ import {
 import {Navbar, ScrollContainer} from '../components';
 import {inject, observer} from 'mobx-react';
 import AnimatedMultistep from 'react-native-animated-multistep';
-import {StepOne, StepTwo, StepThree} from './step';
+import {SiginCode, Location, Camera} from './step'
 const TakeScreen = (props) => {
   const styles = useStyleSheet(themedStyles);
   const BackIcon = (style) => (
     <Icon {...style} fill="white" name="arrow-back" />
   );
   const allSteps = [
-    {name: 'step 1', component: StepOne},
-    {name: 'step 2', component: StepTwo},
-    {name: 'step 3', component: StepThree},
+    {name: 'step 1', component: SiginCode},
+    {name: 'step 2', component: Location},
+    {name: 'step 3', component: Camera},
   ];
   const onNext = () => {
     console.log('Next');
@@ -31,7 +31,7 @@ const TakeScreen = (props) => {
     console.log(finalState);
   };
   return (
-    <ScrollContainer customStyle={styles.dashboard}>
+    <ScrollContainer customStyle={styles.screen}>
       <Navbar
         title="Take Attendance"
         textStyle={styles.title}
@@ -56,7 +56,7 @@ const TakeScreen = (props) => {
 
 export default inject('themeStore')(observer(TakeScreen));
 const themedStyles = StyleService.create({
-  dashboard: {
+  screen: {
     height: '100%',
     width: '100%',
     position: 'relative',
@@ -70,29 +70,5 @@ const themedStyles = StyleService.create({
   },
   title: {
     color: 'white',
-  },
-  welcomeNote: {
-    /*  borderColor: 'yellow',
-    borderWidth: 1, */
-    marginTop: '15%',
-    paddingLeft: '9%',
-    paddingRight: '9%',
-    height: '40%',
-  },
-  boldText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  form: {
-    paddingLeft: '9%',
-    paddingRight: '9%',
-    marginTop: '10%',
-  },
-  tabContainer: {
-    justifyContent: 'center',
-    marginTop: '10%',
-  },
-  input: {
-    marginBottom: '4%',
   },
 });

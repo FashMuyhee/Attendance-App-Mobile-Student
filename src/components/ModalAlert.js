@@ -26,7 +26,7 @@ const ModalAlert = ({
   const theme = useTheme();
   const pulseIconRef = React.useRef();
 
- /*  React.useEffect(() => {
+  /*  React.useEffect(() => {
     pulseIconRef.current.startAnimation();
   }, []); */
 
@@ -50,7 +50,7 @@ const ModalAlert = ({
             <Icon
               name="checkmark"
               style={styles.icon}
-              fill={theme['color-basic-100']}
+              fill={theme['background-basic-color-1']}
               ref={pulseIconRef}
               animation="pulse"
             />

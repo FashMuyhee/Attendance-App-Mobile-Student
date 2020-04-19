@@ -48,10 +48,10 @@ const themedStyles = StyleService.create({
     height: hp('22%'),
     width: wp('32%'),
     borderRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: 'background-basic-color-1',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: 'color-primary-default',
+    shadowColor: 'background-basic-color-4',
     shadowOffset: {
       width: 0,
       height: 4,

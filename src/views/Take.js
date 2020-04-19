@@ -4,11 +4,12 @@ import {
   StyleService,
   useStyleSheet,
   Icon,
+  Layout,
 } from '@ui-kitten/components';
 import {Navbar, ScrollContainer} from '../components';
 import {inject, observer} from 'mobx-react';
 import AnimatedMultistep from 'react-native-animated-multistep';
-import {SiginCode, Location, Camera} from './step'
+import {SiginCode, Location, Camera} from './step';
 const TakeScreen = (props) => {
   const styles = useStyleSheet(themedStyles);
   const BackIcon = (style) => (
@@ -31,7 +32,7 @@ const TakeScreen = (props) => {
     console.log(finalState);
   };
   return (
-    <ScrollContainer customStyle={styles.screen}>
+    <>
       <Navbar
         title="Take Attendance"
         textStyle={styles.title}
@@ -42,27 +43,29 @@ const TakeScreen = (props) => {
           />
         }
       />
-      <AnimatedMultistep
-        steps={allSteps}
-        onFinish={finish}
-        onBack={onBack}
-        onNext={onNext}
-        comeInOnNext="bounceInUp"
-        OutOnNext="bounceOutUp"
-      />
-    </ScrollContainer>
+      <ScrollContainer customStyle={styles.screen}>
+        <AnimatedMultistep
+          steps={allSteps}
+          onFinish={finish}
+          onBack={onBack}
+          onNext={onNext}
+          comeInOnNext="bounceInUp"
+          OutOnNext="bounceOutUp"
+        />
+      </ScrollContainer>
+    </>
   );
 };
 
 export default inject('themeStore')(observer(TakeScreen));
 const themedStyles = StyleService.create({
   screen: {
-    height: '100%',
+    // height: '100%',
     width: '100%',
     position: 'relative',
     paddingLeft: 0,
     paddingRight: 0,
-    backgroundColor: 'color-basic-100',
+    backgroundColor: 'background-basic-color-1',
   },
   navBar: {
     backgroundColor: 'color-primary-default',

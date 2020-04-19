@@ -84,7 +84,7 @@ const themedStyles = StyleService.create({
   iconContainer: {
     backgroundColor: 'color-primary-default',
     height: hp('20%'),
-    width: wp('30%'),
+    width: wp('35%'),
     borderRadius: 100,
   },
   iconWarnContainer: {
@@ -105,13 +105,13 @@ const themedStyles = StyleService.create({
   boldText: {
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: hp('3.3%'),
+    fontSize: hp('2.3%'),
     paddingTop: hp('10%'),
     paddingBottom: hp('5%'),
   },
   subtitleText: {
     textAlign: 'center',
-    fontSize: hp('2.3%'),
+    fontSize: hp('2%'),
     paddingBottom: hp('5%'),
   },
   btn: {

@@ -84,7 +84,7 @@ const themedStyles = StyleService.create({
   },
   avatar: {
     width: wp('30%'),
-    height: hp('21%'),
+    height: hp('18%'),
     borderRadius: 100,
     justifyContent: 'center',
   },

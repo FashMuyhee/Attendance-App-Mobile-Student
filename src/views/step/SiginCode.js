@@ -77,13 +77,13 @@ const themedStyles = StyleService.create({
   },
   boldText: {
     fontWeight: 'bold',
-    fontSize: hp('3.3%'),
+    fontSize: hp('3%'),
   },
   normalText: {
-    fontSize: hp('3.3%'),
+    fontSize: hp('3%'),
   },
   subtitleText: {
-    fontSize: hp('2.3%'),
+    fontSize: hp('2%'),
   },
   form: {
     paddingLeft: '9%',

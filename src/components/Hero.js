@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
     borderWidth: 1, */
   },
   logo: {
-    width: wp('13.5%'),
+    width: wp('16%'),
     height: hp('9%'),
   },
   title: {
     fontWeight: 'bold',
     marginTop: hp('6%'),
-    fontSize: hp('3.5%'),
+    fontSize: hp('3.3%'),
   },
   subTitle: {
     fontSize: hp('2.5%'),

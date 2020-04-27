@@ -30,21 +30,19 @@ const Camera = (props) => {
     saveState({name: 'samad'});
     next();
   };
-  let source;
   const launchCamera = () => {
-    let options = {
+    /* let options = {
       storageOptions: {
-        skipBackup: true,
-        path: 'images',
+        // skipBackup: true,
+        // path: 'images',
       },
-    };
-    ImagePicker.launchCamera(options, (response) => {
+    }; */
+    ImagePicker.launchCamera((response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        source = {imgUri: response.uri};
         setState({...state, imgUri: response.uri});
       }
     });

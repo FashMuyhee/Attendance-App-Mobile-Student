@@ -9,7 +9,7 @@ import {
   Input,
   Button,
 } from '@ui-kitten/components';
-import {Container} from '../../components';
+import {Container, FormBody} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
@@ -17,17 +17,13 @@ import {
 } from 'react-native-responsive-screen';
 const SigninCode = (props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [signCode, setSignCode] = React.useState(null);
   const styles = useStyleSheet(themedStyles);
   const checkSignInCode = () => {
     const {next, saveState} = props;
-    saveState({name: 'samad'});
-    console.log('from step1');
+    // get lecture location and save
+    saveState({lectureLocation: {lat: 51514545, lng: 1234545}});
     next();
-  };
-
-  const goBack = () => {
-    const {back} = props;
-    back();
   };
 
   return (
@@ -53,10 +49,15 @@ const SigninCode = (props) => {
             </Layout>
           </Tab>
           <Tab title="Sign Out">
-            <Layout style={styles.tabContainer}>
-              <Input placeholder="Sign out Code" style={styles.input} />
+            <FormBody style={styles.tabContainer}>
+              <Input
+                placeholder="Sign out Code"
+                style={styles.input}
+                value={signCode}
+                onChangeText={(code) => setSignCode(code)}
+              />
               <Button>Sign out for class</Button>
-            </Layout>
+            </FormBody>
           </Tab>
         </TabView>
       </Container>

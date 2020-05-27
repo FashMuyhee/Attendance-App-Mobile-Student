@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import { View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -8,13 +8,13 @@ import {
   Text,
   Button,
 } from '@ui-kitten/components';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-const Box = ({icon, title, route}) => {
+const Box = ({ icon, title, route }) => {
   const navigation = useNavigation();
 
   const styles = useStyleSheet(themedStyles);
@@ -23,22 +23,17 @@ const Box = ({icon, title, route}) => {
     navigation.navigate(route);
   };
   return (
-    // <TouchableOpacity onPress={handleClick}>
-    // <Button
-    //   onPress={handleClick}
-    //   appearance="ghost"
-    //   style={{borderColor: 'red', borderWidth: 1}}>
-    <View style={styles.box}>
-      <Icon
-        style={styles.icon}
-        name={icon}
-        fill={theme['color-primary-default']}
-        onPress={handleClick}
-      />
-      <Text style={styles.text}>{title}</Text>
-    </View>
-    //  </TouchableOpacity>
-    // </Button>
+    <TouchableWithoutFeedback onPress={handleClick}>
+      <View style={styles.box}>
+        <Icon
+          style={styles.icon}
+          name={icon}
+          fill={theme['color-primary-default']}
+          onPress={handleClick}
+        />
+        <Text style={styles.text}>{title}</Text>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

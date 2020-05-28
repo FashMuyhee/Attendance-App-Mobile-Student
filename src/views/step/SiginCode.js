@@ -65,7 +65,7 @@ const SigninCode = (props) => {
   );
 };
 
-// export default inject('themeStore')(observer(SigninCode));
+// export default inject('store')(observer(SigninCode));
 export default SigninCode;
 const themedStyles = StyleService.create({
   welcomeNote: {

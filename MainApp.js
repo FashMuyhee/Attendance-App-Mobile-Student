@@ -1,10 +1,10 @@
 import React from 'react';
 import {Provider} from 'mobx-react';
-import ThemeStore from './src/store/ThemeStore';
+import Store from './src/store/Store';
 import App from './App';
 const MainApp = () => {
   return (
-    <Provider themeStore={ThemeStore}>
+    <Provider store={Store}>
       <App />
     </Provider>
   );

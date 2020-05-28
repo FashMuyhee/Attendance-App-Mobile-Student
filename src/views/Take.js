@@ -10,6 +10,7 @@ import {Navbar, ScrollContainer} from '../components';
 import {inject, observer} from 'mobx-react';
 import AnimatedMultistep from 'react-native-animated-multistep';
 import {SiginCode, Location, Camera} from './step';
+
 const TakeScreen = (props) => {
   const styles = useStyleSheet(themedStyles);
   const BackIcon = (style) => (
@@ -57,7 +58,7 @@ const TakeScreen = (props) => {
   );
 };
 
-export default inject('themeStore')(observer(TakeScreen));
+export default inject('store')(observer(TakeScreen));
 const themedStyles = StyleService.create({
   screen: {
     // height: '100%',

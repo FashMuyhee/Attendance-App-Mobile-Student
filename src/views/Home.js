@@ -53,7 +53,7 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-export default inject('themeStore')(observer(HomeScreen));
+export default inject('store')(observer(HomeScreen));
 const themedStyles = StyleService.create({
   dashboard: {
     height: '100%',

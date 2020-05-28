@@ -12,7 +12,7 @@ import {Container, Navbar} from '../components';
 import {inject, observer} from 'mobx-react';
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
-const SettingsScreen = ({navigation, themeStore}) => {
+const SettingsScreen = ({navigation, store}) => {
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -20,7 +20,7 @@ const SettingsScreen = ({navigation, themeStore}) => {
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
-  const {toggleTheme, myTheme} = themeStore;
+  const {toggleTheme, myTheme} = store;
   console.log(myTheme);
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -36,7 +36,7 @@ const SettingsScreen = ({navigation, themeStore}) => {
   );
 };
 
-export default inject('themeStore')(observer(SettingsScreen));
+export default inject('store')(observer(SettingsScreen));
 const styles = StyleSheet.create({
   title: {
     color: 'white',

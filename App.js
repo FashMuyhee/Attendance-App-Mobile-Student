@@ -14,7 +14,7 @@ const darkTheme = {...dark, ...customDarkTheme};
 const lightTheme = {...light, ...customLightTheme};
 
 const App = (props) => {
-  const {myTheme} = props.themeStore;
+  const {myTheme} = props.store;
   /* const [theme, setTheme] = useState('');
   const getTheme = async () => {
     try {
@@ -48,4 +48,4 @@ const App = (props) => {
   );
 };
 
-export default inject('themeStore')(observer(App));
+export default inject('store')(observer(App));

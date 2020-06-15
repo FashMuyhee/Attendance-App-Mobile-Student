@@ -9,7 +9,7 @@ import {
   Input,
   Button,
 } from '@ui-kitten/components';
-import {Container, FormBody} from '../../components';
+import {Container, FormBody, ModalAlert} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
@@ -18,19 +18,24 @@ import {
 const SigninCode = (props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [signCode, setSignCode] = React.useState(null);
+  const [modal, setModal] = React.useState(false);
   const styles = useStyleSheet(themedStyles);
   const checkSignInCode = () => {
     const {next, saveState} = props;
     // get lecture location and save
-    saveState({lectureLocation: {lat: 51514545, lng: 1234545}});
+    saveState({lectureLocation: {lat: 6.5183143, lng: 3.3715918}});
     next();
+  };
+
+  const handleSignOut = () => {
+    setModal(true);
   };
 
   return (
     <>
       <Container customStyle={styles.welcomeNote}>
         <Text style={styles.boldText}>
-          Hi User!{' '}
+          Hi User!
           <Text style={styles.normalText}>It's time for Attendance.</Text>
         </Text>
         <Text appearance="hint" style={styles.subtitleText}>
@@ -56,11 +61,19 @@ const SigninCode = (props) => {
                 value={signCode}
                 onChangeText={(code) => setSignCode(code)}
               />
-              <Button>Sign out for class</Button>
+              <Button onPress={handleSignOut}>Sign out for class</Button>
             </FormBody>
           </Tab>
         </TabView>
       </Container>
+      <ModalAlert
+        warn={false}
+        isVisible={modal}
+        closeModal={() => setModal(false)}
+        message="You've signed out for Compiler Construction successfully"
+        subtitle="Glad you stayed till the end,means you have perfect attendance today"
+        btnText="Close"
+      />
     </>
   );
 };

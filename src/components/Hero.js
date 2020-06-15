@@ -13,7 +13,9 @@ const Hero = ({subTitle, title, customStyle}) => {
   return (
     <View style={style}>
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title} category="h1">
+        {title}
+      </Text>
       <Text style={styles.subTitle}>{subTitle}</Text>
     </View>
   );
@@ -39,6 +41,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: hp('6%'),
     fontSize: hp('3.3%'),
+    fontFamily: 'Poppins-Regular',
   },
   subTitle: {
     fontSize: hp('2.5%'),

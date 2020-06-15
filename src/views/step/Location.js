@@ -1,33 +1,47 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
-import {PermissionsAndroid, ToastAndroid, StyleSheet} from 'react-native';
+import React, {Component} from 'react';
+import {
+  PermissionsAndroid,
+  ToastAndroid,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {StyleService, useStyleSheet, Text, Button} from '@ui-kitten/components';
-import {Container} from '../../components';
+import {
+  StyleService,
+  useStyleSheet,
+  Text,
+  Button,
+  useTheme,
+} from '@ui-kitten/components';
+import {Container, ModalAlert} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MapView, {Marker, Circle} from 'react-native-maps';
 
-const Location = ({next, getState, back}) => {
-  const styles = useStyleSheet(themedStyles);
-  const [state, setState] = useState({
+class Location extends Component {
+  state = {
     location: {},
     loading: false,
-  });
-
-  const checkLocation = () => {
-    // get state for use in other steps
-    next();
+    isVisibleModal: false,
+    isMatch: false,
+    locationDistance: 0,
   };
 
-  const goBack = () => {
+  goToCamera = () => {
+    // match locations
+
+    // get state for use in other steps
+    this.props.next();
+  };
+
+  goBack = () => {
     console.log('from step2');
 
-    back();
+    this.props.back();
   };
-  console.log(getState('location'));
+  // console.log(getState('location'));
 
-  const hasLocationPermission = async () => {
+  hasLocationPermission = async () => {
     const hasPermission = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
@@ -58,20 +72,32 @@ const Location = ({next, getState, back}) => {
     return false;
   };
 
-  const getLocation = async () => {
-    const checkLocationPermission = await hasLocationPermission();
+  getLocation = async () => {
+    const checkLocationPermission = await this.hasLocationPermission();
 
     if (!checkLocationPermission) {
       return;
     }
 
-    setState({...state, loading: true});
+    this.setState({loading: true});
     Geolocation.getCurrentPosition(
       (position) => {
-        setState({...state, location: position, loading: false});
+        this.setState({location: position.coords, loading: false});
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        // check check for location distance
+        const multiStepState = this.props.getState();
+        const lectureHall = multiStepState.lectureLocation;
+        const distance = this.checkLocationDistance(userLocation, {
+          lat: lectureHall.lat,
+          lng: lectureHall.lng,
+        });
+        this.setState({locationDistance: distance});
       },
       (error) => {
-        setState({...state, loading: false});
+        this.setState({loading: false, isVisibleModal: true});
       },
       {
         enableHighAccuracy: true,
@@ -82,79 +108,148 @@ const Location = ({next, getState, back}) => {
       },
     );
   };
-  useEffect(() => {
-    // get user location
-    // getLocation();
-  });
-  const multistate = getState();
-  const lectureHall = multistate.lectureLocation;
 
-  const markers = [
-    {
-      latlng: {latitude: state.location.lat, longitude: state.location.lng},
-      description: 'User Name',
-    },
-    {
-      latlng: {latitude: lectureHall.lat, longitude: lectureHall.lng},
-      description: 'Lecture Hall',
-    },
-  ];
-  console.log(markers);
-  return (
-    <>
-      <Container customStyle={styles.welcomeNote}>
-        <Text style={styles.boldText}>
-          Nice! <Text style={styles.normalText}>We need your location.</Text>
-        </Text>
-        <Text appearance="hint" style={styles.subtitleText}>
-          to ensure you're reaaly in class kindly activate location setting to
-          be sure you're within 30 meters of the Lecturer
-        </Text>
-      </Container>
-      <Container customStyle={styles.map}>
-        <MapView
-          style={styles.mapView}
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }}>
-          <Circle
-            key={(
-              markers[0].latlng.latitude + markers[0].latlng.longitude
-            ).toString()}
-            center={markers[1].latlng}
-            radius={90}
-            strokeWidth={1}
-            strokeColor={'#1a66ff'}
-            fillColor={'rgba(230,238,255,0.5)'}
-          />
-          {markers.map((marker) => (
-            <Marker
-              coordinate={marker.latlng}
-              title={marker.title}
-              description={marker.description}
-            />
-          ))}
-        </MapView>
-        <Button
-          onPress={checkLocation}
-          style={{bottom: 0, position: 'absolute', width: '100%'}}>
-          Next
-        </Button>
-      </Container>
-    </>
-  );
-};
+  checkLocationDistance = (firstLocation, secondLocation) => {
+    const earthRadius = 6371000; //m // 6371km
 
-// export default inject('themeStore')(observer(Location));
-export default Location;
-const themedStyles = StyleService.create({
+    const diffLat = ((secondLocation.lat - firstLocation.lat) * Math.PI) / 180;
+    const diffLng = ((secondLocation.lng - firstLocation.lng) * Math.PI) / 180;
+
+    const arc =
+      Math.cos((firstLocation.lat * Math.PI) / 180) *
+        Math.cos((secondLocation.lat * Math.PI) / 180) *
+        Math.sin(diffLng / 2) *
+        Math.sin(diffLng / 2) +
+      Math.sin(diffLat / 2) * Math.sin(diffLat / 2);
+    const line = 2 * Math.atan2(Math.sqrt(arc), Math.sqrt(1 - arc));
+
+    const distance = earthRadius * line;
+
+    return distance;
+  };
+
+  componentWillMount() {
+    this.getLocation();
+  }
+  render() {
+    // const styles = useStyleSheet(themedStyles);
+    // const theme = useTheme()
+    const multistate = this.props.getState();
+    const lectureHall = multistate.lectureLocation;
+    const {location, locationDistance, loading} = this.state;
+    const {user} = this.props.store;
+    const markers = [
+      {
+        /*  latlng: { latitude: state.location.lat, longitude: state.location.lng },
+         description: 'User Name', */
+        latlng: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        },
+        title: user.name,
+        description: 'Dolor sit sint exercitation reprehenderit magna.',
+        pinColor: '#4B9CFB',
+      },
+      {
+        latlng: {latitude: lectureHall.lat, longitude: lectureHall.lng},
+        title: 'Lecture Hall',
+        description: 'Dolor sit sint exercitation reprehenderit magna.',
+        pinColor: '#00BA4A',
+      },
+      /* {
+        latlng: { latitude: lectureHall.lat, longitude: lectureHall.lng },
+        description: 'Lecture Hall',
+      }, */
+    ];
+
+    return (
+      <>
+        <Container customStyle={styles.welcomeNote}>
+          <Text style={styles.boldText}>
+            Nice! <Text style={styles.normalText}>We need your location.</Text>
+          </Text>
+          <Text appearance="hint" style={styles.subtitleText}>
+            to ensure you're reaaly in class kindly activate location setting to
+            be sure you're within 30 meters of the Lecturer
+          </Text>
+        </Container>
+        <Container customStyle={styles.map}>
+          {loading ? (
+            <>
+              <ActivityIndicator animating size="small" />
+              <Text>Getting Location</Text>
+            </>
+          ) : (
+            <MapView
+              style={styles.mapView}
+              initialRegion={{
+                latitude: 6.5191271,
+                longitude: 3.3705135,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}
+              provider="google"
+              mapType="terrain">
+              <Circle
+                key={(
+                  markers[0].latlng.latitude + markers[0].latlng.longitude
+                ).toString()}
+                center={markers[1].latlng}
+                radius={20}
+                strokeWidth={1}
+                strokeColor={'#1a66ff'}
+                // fillColor={theme['color-primary-200']}
+              />
+              {markers.map((marker) => (
+                <Marker
+                  coordinate={marker.latlng}
+                  title={marker.title}
+                  description={marker.description}
+                  pinColor={marker.pinColor}
+                />
+              ))}
+            </MapView>
+          )}
+        </Container>
+        <Container customStyle={{marginTop: 10, marginBottom: 10}}>
+          {loading ? (
+            <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
+              Hang on a sec while we get and match Location
+            </Text>
+          ) : (
+            <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
+              {locationDistance < 20
+                ? 'Yeah !!! your location match click next to continue'
+                : `You're to far from the Lecture room,Move to the Lecture room then try again`}
+            </Text>
+          )}
+          <Button
+            onPress={this.goToCamera}
+            style={{width: '100%'}}
+            disabled={locationDistance < 20 ? false : true}>
+            Next
+          </Button>
+        </Container>
+        {/*  <ModalAlert
+                warn
+                isVisible={state.isVisibleModal}
+                closeModal={() => this.setState({isVisibleModal: false })}
+                message="You've signed in for Compiler Construction successfully"
+                subtitle="Ensure that you signout when the class is over, so your attendance is marked"
+                btnText="Close"
+              /> */}
+      </>
+    );
+  }
+}
+
+export default inject('store')(observer(Location));
+// export default Location;
+const styles = StyleService.create({
   welcomeNote: {
     /*  borderColor: 'yellow',
     borderWidth: 1, */
-    marginTop: hp('10%'),
+    marginTop: hp('5%'),
     paddingLeft: '9%',
     paddingRight: '9%',
     height: hp('12%'),
@@ -171,16 +266,20 @@ const themedStyles = StyleService.create({
   },
   map: {
     display: 'flex',
-    borderColor: 'yellow',
+    borderColor: '#00BA4A',
+    borderRadius: 5,
     borderWidth: 1,
-    paddingLeft: '9%',
-    paddingRight: '9%',
-    marginTop: hp('8%'),
-    height: hp('40%'),
+    // paddingLeft: '9%',
+    // paddingRight: '9%',
+    marginTop: hp('2%'),
+    height: hp('55%'),
     justifyContent: 'center',
+    alignSelf: 'center',
     alignItems: 'center',
+    width: '90%',
   },
   mapView: {
     ...StyleSheet.absoluteFillObject,
+    borderRadius: 5,
   },
 });

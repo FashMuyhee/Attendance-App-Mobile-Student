@@ -9,17 +9,19 @@ import {
 import {View, Image} from 'react-native';
 import {Navbar, DetailText, Box} from '../components';
 import {inject, observer} from 'mobx-react';
-import user from '../assets/img/user.jpg';
+import avatar from '../assets/img/user.jpg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation, store}) => {
   const styles = useStyleSheet(themedStyles);
   const SettingIcon = (style) => (
     <Icon {...style} fill="white" name="settings-outline" />
   );
+
+  const {user} = store;
   return (
     <Layout style={styles.dashboard}>
       <Navbar
@@ -34,13 +36,13 @@ const HomeScreen = ({navigation}) => {
       />
       <View style={styles.profile}>
         <View style={styles.avatarWrapper}>
-          <Image source={user} style={styles.avatar} />
+          <Image source={avatar} style={styles.avatar} />
         </View>
         <View style={styles.details}>
-          <DetailText subtitle="Ebenezer Arobadi" />
-          <DetailText subtitle="F/HD/18/3210023" />
-          <DetailText subtitle="Computer Technology" />
-          <DetailText subtitle="HND2" />
+          <DetailText subtitle={user.name} />
+          <DetailText subtitle={user.matric_no} />
+          <DetailText subtitle={user.department} />
+          <DetailText subtitle={user.level} />
         </View>
       </View>
       <View style={styles.actions}>

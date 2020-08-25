@@ -6,11 +6,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import axios from 'axios';
+import {inject, observer} from 'mobx-react';
 
 const SignInScreen = (props) => {
-  const [matric_no, setMatricNo] = React.useState('');
+  const [matric_no, setMatricNo] = React.useState('F/HD/18/3210023');
   const [password, setPassword] = React.useState('');
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -20,6 +23,28 @@ const SignInScreen = (props) => {
     <Icon {...style} name={secureTextEntry ? 'eye-off' : 'eye'} />
   );
   const renderUserIcon = (style) => <Icon {...style} name="person-outline" />;
+
+  const handleLogin = () => {
+    console.log('clicked');
+    setLoading(true);
+    axios({
+      method: 'post',
+      url: `http://192.168.43.102:3333/students/login`,
+      timeout: 20000,
+      data: {
+        matric_no: matric_no,
+      },
+    })
+      .then((data) => {
+        setLoading(false);
+        console.log(data);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+  };
+
   return (
     <ScrollContainer>
       <Hero title="Welcome Back" subTitle="Provide login details to continue" />
@@ -28,7 +53,7 @@ const SignInScreen = (props) => {
           value={matric_no}
           placeholder="Matric No"
           icon={renderUserIcon}
-          onChangeText={setMatricNo}
+          onChangeText={(value) => setMatricNo()}
           style={styles.input}
         />
         <Input
@@ -37,10 +62,12 @@ const SignInScreen = (props) => {
           icon={renderIcon}
           secureTextEntry={secureTextEntry}
           onIconPress={onIconPress}
-          onChangeText={setPassword}
+          onChangeText={() => setPassword()}
           style={styles.input}
         />
-        <Button> Sign In</Button>
+        <Button onPress={handleLogin}>
+          {loading ? 'Signing in ...' : ' Sign In'}
+        </Button>
 
         <Button
           onPress={() => props.navigation.navigate('home')}
@@ -52,7 +79,8 @@ const SignInScreen = (props) => {
   );
 };
 
-export default SignInScreen;
+export default inject('store')(observer(SignInScreen));
+// export default SignInScreen;
 const styles = StyleSheet.create({
   input: {
     marginBottom: hp('2%'),

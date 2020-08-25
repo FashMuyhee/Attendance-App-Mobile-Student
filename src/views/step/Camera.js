@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleService,
   useStyleSheet,
@@ -8,49 +8,74 @@ import {
   Icon,
   useTheme,
 } from '@ui-kitten/components';
-import {Image} from 'react-native';
-import {Container, ModalAlert} from '../../components';
+import { Image } from 'react-native';
+import { Container, ModalAlert } from '../../components';
 import ImagePicker from 'react-native-image-picker';
-import {inject, observer} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {View} from 'react-native';
+import { View } from 'react-native';
+import axios from 'axios';
 const Camera = (props) => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const [state, setState] = useState({visible: false, imgUri: ''});
-  const done = () => {
-    setState({...state, visible: true});
+  const [state, setState] = useState({
+    visible: false,
+    imgUri: null,
+    error: null,
+    loading: false,
+  });
+
+  const submit = () => {
+    // mathc image
+    /* axios({
+      method: 'get',
+      url: 'https://api.pixlab.io/facecompare',
+      params: {
+        src: imgUri,
+        target: target,
+        key: 'My_Pix_Key',
+      }
+    }).then(data => {
+      console.log(data.same_face, data.confidence)
+      // submit attendance if face match
+    }).catch(error => {
+      console.log(error)
+    }) */
+    setState({ ...state, visible: true });
   };
   const checkSignInCode = () => {
-    const {next, saveState} = props;
+    const { next, saveState } = props;
     // Save state for use in other steps
-    saveState({name: 'samad'});
+    saveState({ name: 'samad' });
     next();
   };
+
   const launchCamera = () => {
-    /* let options = {
-      storageOptions: {
+    let options = {
+      cameraRoll: false,
+      /* storageOptions: {
         // skipBackup: true,
         // path: 'images',
-      },
-    }; */
-    ImagePicker.launchCamera((response) => {
+      }, */
+    };
+    ImagePicker.launchCamera(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setState({...state, imgUri: response.uri});
+        setState({ ...state, imgUri: response.uri });
+        // check for facial match
       }
     });
   };
-  const {imgUri, visible} = state;
+  const { imgUri, visible } = state;
   const RenderImage = () => {
     if (imgUri) {
-      return <Image source={{uri: imgUri}} style={styles.image} />;
+      return <Image source={{ uri: imgUri }} style={styles.image} />;
     } else {
       return (
         <>
@@ -62,7 +87,7 @@ const Camera = (props) => {
           />
           <Text
             appearance="hint"
-            style={{...styles.subtitleText, textAlign: 'center'}}>
+            style={{ ...styles.subtitleText, textAlign: 'center' }}>
             Click to take a front facing picture of yourself
           </Text>
         </>
@@ -94,13 +119,13 @@ const Camera = (props) => {
             Retake Image
           </Button>
         ) : null}
-        <Button onPress={done} style={styles.btn}>
+        <Button onPress={submit} style={styles.btn}>
           Done
         </Button>
       </Container>
       <ModalAlert
         isVisible={visible}
-        closeModal={() => setState({...state, visible: false})}
+        closeModal={() => setState({ ...state, visible: false })}
         message="You've signed in for Compiler Construction successfully"
         subtitle="Ensure that you signout when the class is over, so your attendance is marked"
         btnText="Go Home"
@@ -109,7 +134,7 @@ const Camera = (props) => {
   );
 };
 
-// export default inject('themeStore')(observer(StepTwo));
+// export default inject('store')(observer(StepTwo));
 export default Camera;
 const themedStyles = StyleService.create({
   welcomeNote: {

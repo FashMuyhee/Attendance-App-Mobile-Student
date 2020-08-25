@@ -226,7 +226,8 @@ class Location extends Component {
           <Button
             onPress={this.goToCamera}
             style={{width: '100%'}}
-            disabled={locationDistance < 20 ? false : true}>
+            //disabled={locationDistance < 20 ? false : true}
+            >
             Next
           </Button>
         </Container>

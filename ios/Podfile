@@ -58,6 +58,8 @@ target 'Attendance' do
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
   target 'AttendanceTests' do
     inherit! :complete
     # Pods for testing

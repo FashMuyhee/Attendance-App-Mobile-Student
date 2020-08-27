@@ -24,6 +24,7 @@
     "react": "16.11.0",
     "react-native": "0.62.0",
     "react-native-animated-multistep": "^1.0.7",
+    "react-native-camera": "^3.37.0",
     "react-native-geolocation-service": "^4.0.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-picker": "^2.3.1",

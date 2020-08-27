@@ -4,6 +4,9 @@ import SignUpScreen from './SignUp';
 import SignInScreen from './SignIn';
 import LandingScreen from './Landing';
 import TakeScreen from './Take';
+import AddCourse from './AddCourse';
+import MyAttendance from './MyAttendance';
+import MyCourse from './MyCourse';
 
 export {
   HomeScreen,
@@ -12,4 +15,7 @@ export {
   SignUpScreen,
   LandingScreen,
   TakeScreen,
+  AddCourse,
+  MyCourse,
+  MyAttendance
 };

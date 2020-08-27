@@ -47,8 +47,8 @@ const HomeScreen = ({navigation, store}) => {
       </View>
       <View style={styles.actions}>
         <Box icon="edit-outline" route="take" title="Take Attendance" />
-        <Box icon="clipboard-outline" title="Courses" />
-        <Box icon="list-outline" title="Attendance Record" />
+        <Box icon="clipboard-outline" route="my_course" title="Courses" />
+        <Box icon="list-outline" route="my_attendance" title="Attendance Record" />
         <Box icon="log-out-outline" title="Sign Out" />
       </View>
     </Layout>

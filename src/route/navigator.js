@@ -1,6 +1,6 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
   HomeScreen,
   SettingsScreen,
@@ -8,6 +8,9 @@ import {
   SignUpScreen,
   SignInScreen,
   TakeScreen,
+  AddCourse,
+  MyCourse,
+  MyAttendance
 } from '../views';
 
 const Stack = createStackNavigator();
@@ -25,6 +28,9 @@ const OnboardingNavigator = () => (
     <Stack.Screen name="home" component={HomeScreen} />
     <Stack.Screen name="take" component={TakeScreen} />
     <Stack.Screen name="settings" component={SettingsScreen} />
+    <Stack.Screen name="my_course" component={MyCourse} />
+    <Stack.Screen name="add_course" component={AddCourse} />
+    <Stack.Screen name="my_attendance" component={MyAttendance} />
   </Stack.Navigator>
 );
 export const AppNavigator = () => (

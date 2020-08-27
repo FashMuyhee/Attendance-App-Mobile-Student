@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   PermissionsAndroid,
   ToastAndroid,
@@ -13,11 +13,11 @@ import {
   Button,
   useTheme,
 } from '@ui-kitten/components';
-import {Container, ModalAlert} from '../../components';
-import {inject, observer} from 'mobx-react';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import MapView, {Marker, Circle} from 'react-native-maps';
-
+import { Container, ModalAlert } from '../../components';
+import { inject, observer } from 'mobx-react';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import MapView, { Marker, Circle } from 'react-native-maps';
+import { checkLocationDifference } from '../../helpers/locationDifference'
 class Location extends Component {
   state = {
     location: {},
@@ -79,10 +79,10 @@ class Location extends Component {
       return;
     }
 
-    this.setState({loading: true});
+    this.setState({ loading: true });
     Geolocation.getCurrentPosition(
       (position) => {
-        this.setState({location: position.coords, loading: false});
+        this.setState({ location: position.coords, loading: false });
         const userLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -90,14 +90,14 @@ class Location extends Component {
         // check check for location distance
         const multiStepState = this.props.getState();
         const lectureHall = multiStepState.lectureLocation;
-        const distance = this.checkLocationDistance(userLocation, {
+        const distance = checkLocationDifference(userLocation, {
           lat: lectureHall.lat,
           lng: lectureHall.lng,
         });
-        this.setState({locationDistance: distance});
+        this.setState({ locationDistance: distance });
       },
       (error) => {
-        this.setState({loading: false, isVisibleModal: true});
+        this.setState({ loading: false, isVisibleModal: true });
       },
       {
         enableHighAccuracy: true,
@@ -109,24 +109,7 @@ class Location extends Component {
     );
   };
 
-  checkLocationDistance = (firstLocation, secondLocation) => {
-    const earthRadius = 6371000; //m // 6371km
 
-    const diffLat = ((secondLocation.lat - firstLocation.lat) * Math.PI) / 180;
-    const diffLng = ((secondLocation.lng - firstLocation.lng) * Math.PI) / 180;
-
-    const arc =
-      Math.cos((firstLocation.lat * Math.PI) / 180) *
-        Math.cos((secondLocation.lat * Math.PI) / 180) *
-        Math.sin(diffLng / 2) *
-        Math.sin(diffLng / 2) +
-      Math.sin(diffLat / 2) * Math.sin(diffLat / 2);
-    const line = 2 * Math.atan2(Math.sqrt(arc), Math.sqrt(1 - arc));
-
-    const distance = earthRadius * line;
-
-    return distance;
-  };
 
   componentWillMount() {
     this.getLocation();
@@ -136,8 +119,8 @@ class Location extends Component {
     // const theme = useTheme()
     const multistate = this.props.getState();
     const lectureHall = multistate.lectureLocation;
-    const {location, locationDistance, loading} = this.state;
-    const {user} = this.props.store;
+    const { location, locationDistance, loading } = this.state;
+    const { user } = this.props.store;
     const markers = [
       {
         /*  latlng: { latitude: state.location.lat, longitude: state.location.lng },
@@ -151,7 +134,7 @@ class Location extends Component {
         pinColor: '#4B9CFB',
       },
       {
-        latlng: {latitude: lectureHall.lat, longitude: lectureHall.lng},
+        latlng: { latitude: lectureHall.lat, longitude: lectureHall.lng },
         title: 'Lecture Hall',
         description: 'Dolor sit sint exercitation reprehenderit magna.',
         pinColor: '#00BA4A',
@@ -180,54 +163,54 @@ class Location extends Component {
               <Text>Getting Location</Text>
             </>
           ) : (
-            <MapView
-              style={styles.mapView}
-              initialRegion={{
-                latitude: 6.5191271,
-                longitude: 3.3705135,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.0121,
-              }}
-              provider="google"
-              mapType="terrain">
-              <Circle
-                key={(
-                  markers[0].latlng.latitude + markers[0].latlng.longitude
-                ).toString()}
-                center={markers[1].latlng}
-                radius={20}
-                strokeWidth={1}
-                strokeColor={'#1a66ff'}
+              <MapView
+                style={styles.mapView}
+                initialRegion={{
+                  latitude: 6.5191271,
+                  longitude: 3.3705135,
+                  latitudeDelta: 0.015,
+                  longitudeDelta: 0.0121,
+                }}
+                provider="google"
+                mapType="terrain">
+                <Circle
+                  key={(
+                    markers[0].latlng.latitude + markers[0].latlng.longitude
+                  ).toString()}
+                  center={markers[1].latlng}
+                  radius={20}
+                  strokeWidth={1}
+                  strokeColor={'#1a66ff'}
                 // fillColor={theme['color-primary-200']}
-              />
-              {markers.map((marker) => (
-                <Marker
-                  coordinate={marker.latlng}
-                  title={marker.title}
-                  description={marker.description}
-                  pinColor={marker.pinColor}
                 />
-              ))}
-            </MapView>
-          )}
+                {markers.map((marker) => (
+                  <Marker
+                    coordinate={marker.latlng}
+                    title={marker.title}
+                    description={marker.description}
+                    pinColor={marker.pinColor}
+                  />
+                ))}
+              </MapView>
+            )}
         </Container>
-        <Container customStyle={{marginTop: 10, marginBottom: 10}}>
+        <Container customStyle={{ marginTop: 10, marginBottom: 10 }}>
           {loading ? (
-            <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
+            <Text style={{ marginBottom: 5, marginTop: 5, textAlign: 'center' }}>
               Hang on a sec while we get and match Location
             </Text>
           ) : (
-            <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
-              {locationDistance < 20
-                ? 'Yeah !!! your location match click next to continue'
-                : `You're to far from the Lecture room,Move to the Lecture room then try again`}
-            </Text>
-          )}
+              <Text style={{ marginBottom: 5, marginTop: 5, textAlign: 'center' }}>
+                {locationDistance < 20
+                  ? 'Yeah !!! your location match click next to continue'
+                  : `You're to far from the Lecture room,Move to the Lecture room then try again`}
+              </Text>
+            )}
           <Button
             onPress={this.goToCamera}
-            style={{width: '100%'}}
-            //disabled={locationDistance < 20 ? false : true}
-            >
+            style={{ width: '100%' }}
+            disabled={locationDistance < 20 ? false : true}
+          >
             Next
           </Button>
         </Container>

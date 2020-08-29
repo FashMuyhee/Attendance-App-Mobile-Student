@@ -8,7 +8,7 @@ import {default as customLightTheme} from './src/config/light-theme.json';
 import {default as customDarkTheme} from './src/config/dark-theme.json';
 import {default as customMapping} from './src/config/custom-mapping.json';
 import {inject, observer} from 'mobx-react';
-import {AppNavigator} from './src/route/navigator';
+import AppNavigator from './src/route/navigator';
 
 const darkTheme = {...dark, ...customDarkTheme};
 const lightTheme = {...light, ...customLightTheme};

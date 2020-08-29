@@ -16,58 +16,34 @@ import {
 import { inject, observer } from 'mobx-react';
 
 const Stack = createStackNavigator();
-/* const OnboardingNavigator = () => (
-  <Stack.Navigator headerMode="none" initialRouteName="landing" screenOptions={{
-    /*  transitionSpec: {
-       open: TransitionSpecs.TransitionIOSSpec,
-       close: TransitionSpecs.TransitionIOSSpec,
-     }, 
-    gestureEnabled: true,
-    ...TransitionPresets.SlideFromRightIOS,
-    // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-  }}>
-    <Stack.Screen name="landing" component={LandingScreen} />
-    <Stack.Screen name="signup" component={SignUpScreen} />
-    <Stack.Screen name="signin" component={SignInScreen} />
-  </Stack.Navigator >
-);
- */
 
-const MainNavigator = ({ store }) => {
-  const { userToken } = store
+const AppNavigator = ({ store }) => {
+  const { isLoggedIn } = store
   return (
-    <Stack.Navigator headerMode="none" initialRouteName="landing" screenOptions={{
-      /*  transitionSpec: {
-         open: TransitionSpecs.TransitionIOSSpec,
-         close: TransitionSpecs.TransitionIOSSpec,
-       }, */
-      gestureEnabled: true,
-      ...TransitionPresets.SlideFromRightIOS,
-      // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-    }}>
-      {userToken == '' ? (
-        <>
-          <Stack.Screen name="landing" component={LandingScreen} />
-          <Stack.Screen name="signup" component={SignUpScreen} />
-          <Stack.Screen name="signin" component={SignInScreen} />
-        </>) : (
+    <NavigationContainer>
+      <Stack.Navigator headerMode="none" initialRouteName="landing" screenOptions={{
+        gestureEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}>
+        {!isLoggedIn ? (
           <>
-            <Stack.Screen name="home" component={HomeScreen} />
-            <Stack.Screen name="take" component={TakeScreen} />
-            <Stack.Screen name="settings" component={SettingsScreen} />
-            <Stack.Screen name="my_course" component={MyCourse} />
-            <Stack.Screen name="add_course" component={AddCourse} />
-            <Stack.Screen name="my_attendance" component={MyAttendance} />
-          </>)}
+            <Stack.Screen name="landing" component={LandingScreen} />
+            <Stack.Screen name="signup" component={SignUpScreen} />
+            <Stack.Screen name="signin" component={SignInScreen} />
+          </>) : (
+            <>
+              <Stack.Screen name="home" component={HomeScreen} />
+              <Stack.Screen name="take" component={TakeScreen} />
+              <Stack.Screen name="settings" component={SettingsScreen} />
+              <Stack.Screen name="my_course" component={MyCourse} />
+              <Stack.Screen name="add_course" component={AddCourse} />
+              <Stack.Screen name="my_attendance" component={MyAttendance} />
+            </>)}
 
-    </Stack.Navigator >
+      </Stack.Navigator >
+    </NavigationContainer>
   );
 }
 
-const AppNavigator = () => (
-  <NavigationContainer>
-    <MainNavigator />
-  </NavigationContainer>
-);
 
 export default inject('store')(observer(AppNavigator));

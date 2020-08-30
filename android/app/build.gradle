@@ -135,6 +135,7 @@ android {
         versionCode 1
         versionName "1.0"
         missingDimensionStrategy 'react-native-camera', 'mlkit' //react-native-camera
+        multiDexEnabled true 
 
     }
     splits {
@@ -196,6 +197,8 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.google.firebase:firebase-analytics:17.5.0'   // add the Firebase SDK for Google Analytics
+  implementation 'androidx.multidex:multidex:2.0.1'  //with androidx libraries
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

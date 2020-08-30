@@ -8,6 +8,7 @@ import Navbar from './Navbar';
 import ScrollContainer from './ScrollContainer';
 import Box from './Box';
 import ModalAlert from './ModalAlert';
+import MyText from './MyText';
 
 export {
   Container,
@@ -20,4 +21,5 @@ export {
   ScrollContainer,
   Box,
   ModalAlert,
+  MyText
 };

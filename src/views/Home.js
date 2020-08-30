@@ -6,22 +6,22 @@ import {
   Icon,
   Layout,
 } from '@ui-kitten/components';
-import {View, Image} from 'react-native';
-import {Navbar, DetailText, Box} from '../components';
-import {inject, observer} from 'mobx-react';
+import { View, Image } from 'react-native';
+import { Navbar, DetailText, Box } from '../components';
+import { inject, observer } from 'mobx-react';
 import avatar from '../assets/img/user.jpg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const HomeScreen = ({navigation, store}) => {
+const HomeScreen = ({ navigation, store }) => {
   const styles = useStyleSheet(themedStyles);
   const SettingIcon = (style) => (
     <Icon {...style} fill="white" name="settings-outline" />
   );
 
-  const {user} = store;
+  const { user, setIsLoggedIn } = store;
   return (
     <Layout style={styles.dashboard}>
       <Navbar
@@ -39,17 +39,17 @@ const HomeScreen = ({navigation, store}) => {
           <Image source={avatar} style={styles.avatar} />
         </View>
         <View style={styles.details}>
-          <DetailText subtitle={user.name} />
-          <DetailText subtitle={user.matric_no} />
-          <DetailText subtitle={user.department} />
-          <DetailText subtitle={user.level} />
+          <DetailText text={user.name} />
+          <DetailText text={user.matric_no} />
+          <DetailText text={user.department} />
+          <DetailText text={user.level} />
         </View>
       </View>
       <View style={styles.actions}>
         <Box icon="edit-outline" route="take" title="Take Attendance" />
         <Box icon="clipboard-outline" route="my_course" title="Courses" />
         <Box icon="list-outline" route="my_attendance" title="Attendance Record" />
-        <Box icon="log-out-outline" title="Sign Out" />
+        <Box icon="log-out-outline" title="Sign Out" xtraOnPress={() => setIsLoggedIn(false)} />
       </View>
     </Layout>
   );
@@ -76,13 +76,28 @@ const themedStyles = StyleService.create({
     height: hp('30%'),
     paddingLeft: '2%',
     paddingRight: '2%',
+    backgroundColor: 'background-basic-color-1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'background-basic-color-4',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 8,
+    width: "93%",
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: hp('5')
   },
   avatarWrapper: {
     /*  borderColor: 'red',
     borderWidth: 1, */
     width: '35%',
     alignSelf: 'center',
-    paddingLeft: '2%',
+    // paddingLeft: '2%',
   },
   avatar: {
     width: wp('30%'),

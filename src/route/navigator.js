@@ -14,6 +14,7 @@ import {
 } from '../views';
 
 import { inject, observer } from 'mobx-react';
+import { SiginCode, Location, Camera } from '../views/step';
 
 const Stack = createStackNavigator();
 
@@ -33,7 +34,10 @@ const AppNavigator = ({ store }) => {
           </>) : (
             <>
               <Stack.Screen name="home" component={HomeScreen} />
-              <Stack.Screen name="take" component={TakeScreen} />
+              {/* <Stack.Screen name="take" component={TakeScreen} /> */}
+              <Stack.Screen name="att_signin" component={SiginCode} />
+              <Stack.Screen name="location" component={Location} />
+              <Stack.Screen name="camera" component={Camera} />
               <Stack.Screen name="settings" component={SettingsScreen} />
               <Stack.Screen name="my_course" component={MyCourse} />
               <Stack.Screen name="add_course" component={AddCourse} />

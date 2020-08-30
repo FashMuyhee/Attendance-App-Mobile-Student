@@ -6,20 +6,21 @@ import {
   Icon,
   Layout,
 } from '@ui-kitten/components';
-import {Navbar, ScrollContainer} from '../components';
-import {inject, observer} from 'mobx-react';
-import AnimatedMultistep from 'react-native-animated-multistep';
-import {SiginCode, Location, Camera} from './step';
+import { Navbar, ScrollContainer } from '../components';
+import { inject, observer } from 'mobx-react';
+/* import AnimatedMultistep from 'react-native-animated-multistep';
+import { SiginCode, Location, Camera } from './step'; */
+import {useNavigation} from '@react-navigation/native'
 
 const TakeScreen = (props) => {
   const styles = useStyleSheet(themedStyles);
   const BackIcon = (style) => (
     <Icon {...style} fill="white" name="arrow-back" />
   );
-  const allSteps = [
-    {name: 'step 1', component: SiginCode},
-    {name: 'step 2', component: Location},
-    {name: 'step 3', component: Camera},
+  /* const allSteps = [
+    { name: 'step 1', component: SiginCode },
+    { name: 'step 2', component: Location },
+    { name: 'step 3', component: Camera },
   ];
   const onNext = () => {
     console.log('Next');
@@ -31,7 +32,9 @@ const TakeScreen = (props) => {
 
   const finish = (finalState) => {
     console.log(finalState);
-  };
+  }; */
+const navigation = useNavigation()
+
   return (
     <>
       <Navbar
@@ -40,19 +43,12 @@ const TakeScreen = (props) => {
         leftAction={
           <TopNavigationAction
             icon={BackIcon}
-            onPress={() => props.navigation.goBack()}
+            onPress={() => navigation.goBack()}
           />
         }
       />
       <ScrollContainer customStyle={styles.screen}>
-        <AnimatedMultistep
-          steps={allSteps}
-          onFinish={finish}
-          onBack={onBack}
-          onNext={onNext}
-          comeInOnNext="bounceInUp"
-          OutOnNext="bounceOutUp"
-        />
+        {props.children}
       </ScrollContainer>
     </>
   );

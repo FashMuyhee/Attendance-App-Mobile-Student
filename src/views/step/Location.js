@@ -18,7 +18,9 @@ import { inject, observer } from 'mobx-react';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MapView, { Marker, Circle } from 'react-native-maps';
 import { checkLocationDifference } from '../../helpers/locationDifference'
+import { TakeScreen } from '..';
 class Location extends Component {
+
   state = {
     location: {},
     loading: false,
@@ -28,10 +30,10 @@ class Location extends Component {
   };
 
   goToCamera = () => {
-    // match locations
 
     // get state for use in other steps
-    this.props.next();
+    this.props.navigation.navigate('camera')
+
   };
 
   goBack = () => {
@@ -39,7 +41,6 @@ class Location extends Component {
 
     this.props.back();
   };
-  // console.log(getState('location'));
 
   hasLocationPermission = async () => {
     const hasPermission = await PermissionsAndroid.check(
@@ -88,8 +89,8 @@ class Location extends Component {
           lng: position.coords.longitude,
         };
         // check check for location distance
-        const multiStepState = this.props.getState();
-        const lectureHall = multiStepState.lectureLocation;
+        const routeParam = this.props.navigation.route.params;
+        const lectureHall = routeParam.lectureLocation;
         const distance = checkLocationDifference(userLocation, {
           lat: lectureHall.lat,
           lng: lectureHall.lng,
@@ -115,10 +116,8 @@ class Location extends Component {
     this.getLocation();
   }
   render() {
-    // const styles = useStyleSheet(themedStyles);
-    // const theme = useTheme()
-    const multistate = this.props.getState();
-    const lectureHall = multistate.lectureLocation;
+    const routeParam = this.props.route.params;
+    const lectureHall = routeParam
     const { location, locationDistance, loading } = this.state;
     const { user } = this.props.store;
     const markers = [
@@ -146,7 +145,7 @@ class Location extends Component {
     ];
 
     return (
-      <>
+      <TakeScreen>
         <Container customStyle={styles.welcomeNote}>
           <MyText customStyle={styles.boldText}>
             Nice! <MyText customStyle={styles.normalText}>We need your location.</MyText>
@@ -222,7 +221,7 @@ class Location extends Component {
                 subtitle="Ensure that you signout when the class is over, so your attendance is marked"
                 btnText="Close"
               /> */}
-      </>
+      </TakeScreen>
     );
   }
 }

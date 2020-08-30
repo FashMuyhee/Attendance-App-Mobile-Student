@@ -14,6 +14,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { TakeScreen } from '..';
 const SigninCode = (props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [signCode, setSignCode] = React.useState(null);
@@ -22,8 +23,8 @@ const SigninCode = (props) => {
   const checkSignInCode = () => {
     const { next, saveState } = props;
     // get lecture location and save
-    saveState({ lectureLocation: { lat: 6.5183143, lng: 3.3715918 } });
-    next();
+    // saveState({ lectureLocation: { lat: 6.5183143, lng: 3.3715918 } });
+    props.navigation.navigate('location', { lectureLocation: { lat: 6.5183143, lng: 3.3715918 } })
   };
 
   const handleSignOut = () => {
@@ -31,7 +32,7 @@ const SigninCode = (props) => {
   };
 
   return (
-    <>
+    <TakeScreen>
       <Container customStyle={styles.welcomeNote}>
         <MyText customStyle={styles.boldText}>
           Hi User!{' '}
@@ -73,7 +74,7 @@ const SigninCode = (props) => {
         subtitle="Glad you stayed till the end,means you have perfect attendance today"
         btnText="Close"
       />
-    </>
+    </TakeScreen>
   );
 };
 

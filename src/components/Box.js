@@ -13,15 +13,17 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import MyText from './MyText';
 
-const Box = ({ icon, title, route }) => {
+const Box = ({ icon, title, route, xtraOnPress }) => {
   const navigation = useNavigation();
 
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const handleClick = () => {
+  const handleRoute = () => {
     navigation.navigate(route);
   };
+  const handleClick = route ? handleRoute : xtraOnPress
   return (
     <TouchableWithoutFeedback onPress={handleClick}>
       <View style={styles.box}>
@@ -31,9 +33,9 @@ const Box = ({ icon, title, route }) => {
           fill={theme['color-primary-default']}
           onPress={handleClick}
         />
-        <Text style={styles.text}>{title}</Text>
+        <MyText customStyle={styles.text}>{title}</MyText>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableWithoutFeedback >
   );
 };
 
@@ -41,7 +43,7 @@ export default Box;
 const themedStyles = StyleService.create({
   box: {
     height: hp('22%'),
-    width: wp('32%'),
+    width: wp('40%'),
     borderRadius: 20,
     backgroundColor: 'background-basic-color-1',
     alignItems: 'center',
@@ -54,16 +56,17 @@ const themedStyles = StyleService.create({
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
     elevation: 8,
-    marginRight: wp('4%'),
-    marginLeft: wp('4%'),
+    // marginRight: wp('1.5%'),
+    // marginLeft: wp('1.5%'),
     marginBottom: hp('3%'),
   },
   icon: {
-    width: wp('10%'),
-    height: hp('10%'),
+    width: wp('13%'),
+    height: hp('13%'),
   },
   text: {
     textTransform: 'capitalize',
     textAlign: 'center',
+    fontSize: 23
   },
 });

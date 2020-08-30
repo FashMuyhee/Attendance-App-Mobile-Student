@@ -1,22 +1,22 @@
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
-import {Text} from '@ui-kitten/components';
+import { View, Image, StyleSheet } from 'react-native';
+import MyText from './MyText';
 import logo from '../assets/img/logo.png';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const Hero = ({subTitle, title, customStyle}) => {
-  const style = {...styles.hero, ...customStyle};
+const Hero = ({ subTitle, title, customStyle }) => {
+  const style = { ...styles.hero, ...customStyle };
 
   return (
     <View style={style}>
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.title} category="h1">
+      <MyText customStyle={styles.title}>
         {title}
-      </Text>
-      <Text style={styles.subTitle}>{subTitle}</Text>
+      </MyText>
+      <MyText customStyle={styles.subTitle}>{subTitle}</MyText>
     </View>
   );
 };

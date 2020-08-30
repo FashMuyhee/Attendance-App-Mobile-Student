@@ -2,15 +2,14 @@ import React from 'react';
 import {
   StyleService,
   useStyleSheet,
-  Text,
   Tab,
   TabView,
   Layout,
   Input,
   Button,
 } from '@ui-kitten/components';
-import {Container, FormBody, ModalAlert} from '../../components';
-import {inject, observer} from 'mobx-react';
+import { Container, FormBody, ModalAlert, MyText } from '../../components';
+import { inject, observer } from 'mobx-react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -21,9 +20,9 @@ const SigninCode = (props) => {
   const [modal, setModal] = React.useState(false);
   const styles = useStyleSheet(themedStyles);
   const checkSignInCode = () => {
-    const {next, saveState} = props;
+    const { next, saveState } = props;
     // get lecture location and save
-    saveState({lectureLocation: {lat: 6.5183143, lng: 3.3715918}});
+    saveState({ lectureLocation: { lat: 6.5183143, lng: 3.3715918 } });
     next();
   };
 
@@ -34,14 +33,14 @@ const SigninCode = (props) => {
   return (
     <>
       <Container customStyle={styles.welcomeNote}>
-        <Text style={styles.boldText}>
-          Hi User!
-          <Text style={styles.normalText}>It's time for Attendance.</Text>
-        </Text>
-        <Text appearance="hint" style={styles.subtitleText}>
+        <MyText customStyle={styles.boldText}>
+          Hi User!{' '}
+          <MyText customStyle={styles.normalText}>It's time for Attendance.</MyText>
+        </MyText>
+        <MyText customStyle={styles.subtitleText}>
           Select an attendance action you intend to perform Sign in for a new
           class or signout for a finshed lecturer
-        </Text>
+       </MyText>
       </Container>
       <Container customStyle={styles.form}>
         <TabView
@@ -98,6 +97,7 @@ const themedStyles = StyleService.create({
   },
   subtitleText: {
     fontSize: hp('2%'),
+    color: 'color-basic-400'
   },
   form: {
     paddingLeft: '9%',

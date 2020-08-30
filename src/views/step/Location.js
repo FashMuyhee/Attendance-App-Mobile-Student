@@ -13,7 +13,7 @@ import {
   Button,
   useTheme,
 } from '@ui-kitten/components';
-import { Container, ModalAlert } from '../../components';
+import { Container, ModalAlert, MyText } from '../../components';
 import { inject, observer } from 'mobx-react';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MapView, { Marker, Circle } from 'react-native-maps';
@@ -148,13 +148,13 @@ class Location extends Component {
     return (
       <>
         <Container customStyle={styles.welcomeNote}>
-          <Text style={styles.boldText}>
-            Nice! <Text style={styles.normalText}>We need your location.</Text>
-          </Text>
-          <Text appearance="hint" style={styles.subtitleText}>
+          <MyText customStyle={styles.boldText}>
+            Nice! <MyText customStyle={styles.normalText}>We need your location.</MyText>
+          </MyText>
+          <MyText customStyle={styles.subtitleText}>
             to ensure you're reaaly in class kindly activate location setting to
             be sure you're within 30 meters of the Lecturer
-          </Text>
+          </MyText>
         </Container>
         <Container customStyle={styles.map}>
           {loading ? (

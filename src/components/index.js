@@ -9,7 +9,7 @@ import ScrollContainer from './ScrollContainer';
 import Box from './Box';
 import ModalAlert from './ModalAlert';
 import MyText from './MyText';
-
+import CameraModal from './CameraModal';
 export {
   Container,
   Hero,
@@ -21,5 +21,6 @@ export {
   ScrollContainer,
   Box,
   ModalAlert,
-  MyText
+  MyText,
+CameraModal
 };

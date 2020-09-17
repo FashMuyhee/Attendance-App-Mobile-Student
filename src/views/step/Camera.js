@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View,Image } from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -8,7 +8,7 @@ import {
   Icon,
   useTheme,
 } from '@ui-kitten/components';
-import { Container, ModalAlert, MyText } from '../../components';
+import { Container, ModalAlert,CameraModal, MyText } from '../../components';
 import ImagePicker from 'react-native-image-picker';
 import { inject, observer } from 'mobx-react';
 import {
@@ -26,14 +26,23 @@ class Camera extends PureComponent {
     imgUri: null,
     error: null,
     loading: false,
+cameraVisible:false
   };
 
   takePicture = async () => {
     if (this.camera) {
+
       const options = { quality: 0.5, base64: true };
+		await this.camera.resumePreview();
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
+//send captured image for comparison 
+this.setState({imgUri:data.uri })
     }
+  };
+onFaceDetect = async (faces) => {
+    //await this.takePicture()
+	//this.setState({cameraVisible:false})
   };
 
   RenderImage = () => {
@@ -46,7 +55,7 @@ class Camera extends PureComponent {
             name="camera"
             style={styles.icon}
             fill='#00BA4A'
-            onPress={this.takePicture.bind(this)} />
+            onPress={()=>this.setState({cameraVisible:true})} />
           <MyText
             appearance="hint"
             style={{ ...styles.subtitleText, textAlign: 'center' }}>
@@ -58,7 +67,7 @@ class Camera extends PureComponent {
   };
 
   render() {
-    const { imgUri, visible } = this.state
+    const { imgUri, visible,cameraVisible } = this.state
     return (
       <TakeScreen>
         <Container customStyle={styles.welcomeNote}>
@@ -72,22 +81,10 @@ class Camera extends PureComponent {
         </Container>
         <Container customStyle={styles.imageContainer}>
           <View style={styles.camera}>
-            <this.RenderImage />
-            <RNCamera
-              ref={ref => {
-                this.camera = ref;
-              }}
-              captureAudio={false}
-              style={styles.preview}
-              type={RNCamera.Constants.Type.front}
-              flashMode={RNCamera.Constants.FlashMode.on}
-              androidCameraPermissionOptions={{
-                title: 'Permission to use camera',
-                message: 'We need your permission to use your camera',
-                buttonPositive: 'Ok',
-                buttonNegative: 'Cancel',
-              }}
-            />
+            
+            
+<this.RenderImage />
+
           </View>
           <Text appearance="hint" style={styles.subtitleText}>
             {imgUri
@@ -95,7 +92,7 @@ class Camera extends PureComponent {
               : 'Waiting for you to take picture'}
           </Text>
           {imgUri ? (
-            <Button onPress={this.takePicture.bind(this)} style={styles.btn} status="success">
+            <Button onPress={()=>this.setState({cameraVisible:true})} style={styles.btn} status="success">
               Retake Image
             </Button>
           ) : null}
@@ -110,6 +107,29 @@ class Camera extends PureComponent {
           subtitle="Ensure that you signout when the class is over, so your attendance is marked"
           btnText="Go Home"
         />
+<CameraModal
+          isVisible={cameraVisible}
+closeModal={()=>this.setState({cameraVisible:false})}
+          >
+<RNCamera
+              ref={ref => {
+                this.camera = ref;
+              }}
+              captureAudio={false}
+              style={StyleSheet.absoluteFill}
+              type={RNCamera.Constants.Type.front}
+              flashMode={RNCamera.Constants.FlashMode.on}
+              androidCameraPermissionOptions={{
+                title: 'Permission to use camera',
+                message: 'We need your permission to use your camera',
+                buttonPositive: 'Ok',
+                buttonNegative: 'Cancel',
+              }}
+faceDetectionClassification={RNCamera.Constants.FaceDetection.Classifications.all}
+faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
+onFacesDetected={this.onFaceDetect}
+            />
+        </CameraModal>
       </TakeScreen>
     );
   }

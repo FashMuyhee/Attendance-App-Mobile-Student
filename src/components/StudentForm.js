@@ -63,7 +63,7 @@ const StudentForm = () => {
         // onChangeText={setPassword}
         style={styles.input}
       />
-      <Button>Sign Up</Button>
+      <Button style={styles.button}>Sign Up</Button>
     </FormBody>
   );
 };
@@ -71,13 +71,14 @@ const StudentForm = () => {
 export default StudentForm;
 const styles = StyleSheet.create({
   form: {
-    marginTop: '0%',
+    marginTop: '6%',
     paddingLeft: '0%',
     paddingRight: '0%',
-    /* borderColor: 'black',
-    borderWidth: 1, */
   },
   input: {
     marginBottom: hp('2%'),
+  },
+  button: {
+    marginBottom: hp('4%'),
   },
 });

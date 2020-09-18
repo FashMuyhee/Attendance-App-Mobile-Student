@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import FormBody from './FormBody';
 import {Input, Icon, Button, Select} from '@ui-kitten/components';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const LecturerForm = () => {
   const data = [{text: 'Option 1'}, {text: 'Option 2'}, {text: 'Option 3'}];
@@ -60,7 +61,7 @@ const LecturerForm = () => {
         // onChangeText={setPassword}
         style={styles.input}
       />
-      <Button>Sign Up</Button>
+      <Button style={styles.button}>Sign Up</Button>
     </FormBody>
   );
 };
@@ -70,8 +71,12 @@ const styles = StyleSheet.create({
   form: {
     paddingLeft: '0%',
     paddingRight: '0%',
+    marginTop: '6%',
   },
   input: {
-    marginBottom: '5%',
+    marginBottom: hp('2%'),
+  },
+  button: {
+    marginBottom: hp('4%'),
   },
 });

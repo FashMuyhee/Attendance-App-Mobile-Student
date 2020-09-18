@@ -7,6 +7,7 @@ import TakeScreen from './Take';
 import AddCourse from './AddCourse';
 import MyAttendance from './MyAttendance';
 import MyCourse from './MyCourse';
+import CreateAttendanceScreen from './CreateAttendance';
 
 export {
   HomeScreen,
@@ -17,5 +18,6 @@ export {
   TakeScreen,
   AddCourse,
   MyCourse,
-  MyAttendance
+  MyAttendance,
+  CreateAttendanceScreen,
 };

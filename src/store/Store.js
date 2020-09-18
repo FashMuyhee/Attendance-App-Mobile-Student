@@ -1,8 +1,8 @@
-import { decorate, observable, action, autorun } from 'mobx';
-import { AsyncStorage } from 'react-native';
+import {decorate, observable, action, autorun} from 'mobx';
+import {AsyncStorage} from 'react-native';
 
 class Store {
-  myTheme = 'lighTheme';
+  myTheme = 'lightTheme';
   userToken = '';
   user = {
     id: 1,
@@ -10,8 +10,9 @@ class Store {
     matric_no: 'F/HD/18/3210023',
     department: 'Computer Science',
     level: 'HND2',
+    role: 'student',
   };
-  isLoggedIn = false
+  isLoggedIn = false;
 
   toggleTheme = (theme) => {
     this.myTheme = theme === 'lightTheme' ? 'darkTheme' : 'lightTheme';

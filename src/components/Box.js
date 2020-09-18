@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import {View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -8,14 +8,14 @@ import {
   Text,
   Button,
 } from '@ui-kitten/components';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import MyText from './MyText';
 
-const Box = ({ icon, title, route, xtraOnPress }) => {
+const Box = ({icon, title, route, xtraOnPress}) => {
   const navigation = useNavigation();
 
   const styles = useStyleSheet(themedStyles);
@@ -23,7 +23,7 @@ const Box = ({ icon, title, route, xtraOnPress }) => {
   const handleRoute = () => {
     navigation.navigate(route);
   };
-  const handleClick = route ? handleRoute : xtraOnPress
+  const handleClick = route ? handleRoute : xtraOnPress;
   return (
     <TouchableWithoutFeedback onPress={handleClick}>
       <View style={styles.box}>
@@ -35,7 +35,7 @@ const Box = ({ icon, title, route, xtraOnPress }) => {
         />
         <MyText customStyle={styles.text}>{title}</MyText>
       </View>
-    </TouchableWithoutFeedback >
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -67,6 +67,6 @@ const themedStyles = StyleService.create({
   text: {
     textTransform: 'capitalize',
     textAlign: 'center',
-    fontSize: 23
+    fontSize: wp('5%'),
   },
 });

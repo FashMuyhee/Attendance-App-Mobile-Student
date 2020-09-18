@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { useStyleSheet, StyleService } from '@ui-kitten/components';
+import {View, Text} from 'react-native';
+import {useStyleSheet, StyleService} from '@ui-kitten/components';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
-const DetailText = ({ text }) => {
+const DetailText = ({text}) => {
   const styles = useStyleSheet(themedStyles);
 
   return (
@@ -20,17 +21,14 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    // paddingTop: '5%',
     paddingLeft: '5%',
     paddingRight: '5%',
-    /* borderColor: 'red',
-    borderWidth: 1, */
   },
   text: {
     fontWeight: '200',
-    fontSize: 23,
+    fontSize: wp('5%'),
     marginBottom: 0,
     fontFamily: 'Poppins-Regular',
-    color: 'color-text'
+    color: 'color-text',
   },
 });

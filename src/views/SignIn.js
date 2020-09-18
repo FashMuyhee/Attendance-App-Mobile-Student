@@ -1,19 +1,20 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Hero, FormBody, ScrollContainer } from '../components';
-import { Icon, Input, Button } from '@ui-kitten/components';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
+import {Hero, FormBody, ScrollContainer} from '../components';
+import {Icon, Input, Button, TabView, Tab} from '@ui-kitten/components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import axios from 'axios';
-import { inject, observer } from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 
 const SignInScreen = (props) => {
-  const [matric_no, setMatricNo] = React.useState('F/HD/18/3210023');
-  const [password, setPassword] = React.useState('');
-  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
-  const [loading, setLoading] = React.useState(false);
+  const [matric_no, setMatricNo] = useState('F/HD/18/3210023');
+  const [password, setPassword] = useState('');
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -27,8 +28,8 @@ const SignInScreen = (props) => {
   const handleLogin = () => {
     console.log('clicked');
     setLoading(true);
-    const { setIsLoggedIn } = props.store
-    setIsLoggedIn(true)
+    const {setIsLoggedIn} = props.store;
+    setIsLoggedIn(true);
     setLoading(false);
 
     /*  axios({
@@ -52,32 +53,67 @@ const SignInScreen = (props) => {
   return (
     <ScrollContainer>
       <Hero title="Welcome Back" subTitle="Provide login details to continue" />
-      <FormBody customStyle={styles.formBody}>
-        <Input
-          value={matric_no}
-          placeholder="Matric No"
-          icon={renderUserIcon}
-          onChangeText={(value) => setMatricNo()}
-          style={styles.input}
-        />
-        <Input
-          value={password}
-          placeholder="Password"
-          icon={renderIcon}
-          secureTextEntry={secureTextEntry}
-          onIconPress={onIconPress}
-          onChangeText={() => setPassword()}
-          style={styles.input}
-        />
-        <Button onPress={handleLogin}>
-          {loading ? 'Signing in ...' : ' Sign In'}
-        </Button>
-        <Button
-          onPress={() => props.navigation.navigate('home')}
-          appearance="ghost">
-          home dashboard
-        </Button>
-      </FormBody>
+      <TabView
+        selectedIndex={selectedIndex}
+        onSelect={(index) => setSelectedIndex(index)}
+        useNativeDriver={true}>
+        <Tab title="Lecturer">
+          <FormBody customStyle={styles.formBody}>
+            <Input
+              value={matric_no}
+              placeholder="Matric No"
+              icon={renderUserIcon}
+              onChangeText={(value) => setMatricNo()}
+              style={styles.input}
+            />
+            <Input
+              value={password}
+              placeholder="Password"
+              icon={renderIcon}
+              secureTextEntry={secureTextEntry}
+              onIconPress={onIconPress}
+              onChangeText={() => setPassword()}
+              style={styles.input}
+            />
+            <Button onPress={handleLogin}>
+              {loading ? 'Signing in ...' : ' Sign In'}
+            </Button>
+            <Button
+              onPress={() => props.navigation.navigate('home')}
+              appearance="ghost">
+              home dashboard
+            </Button>
+          </FormBody>
+        </Tab>
+        <Tab title="Student">
+          <FormBody customStyle={styles.formBody}>
+            <Input
+              value={matric_no}
+              placeholder="Matric No"
+              icon={renderUserIcon}
+              onChangeText={(value) => setMatricNo()}
+              style={styles.input}
+            />
+            <Input
+              value={password}
+              placeholder="Password"
+              icon={renderIcon}
+              secureTextEntry={secureTextEntry}
+              onIconPress={onIconPress}
+              onChangeText={() => setPassword()}
+              style={styles.input}
+            />
+            <Button onPress={handleLogin}>
+              {loading ? 'Signing in ...' : ' Sign In'}
+            </Button>
+            <Button
+              onPress={() => props.navigation.navigate('home')}
+              appearance="ghost">
+              home dashboard
+            </Button>
+          </FormBody>
+        </Tab>
+      </TabView>
     </ScrollContainer>
   );
 };
@@ -89,6 +125,6 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   formBody: {
-    marginTop: hp('10%'),
+    marginTop: hp('5%'),
   },
 });

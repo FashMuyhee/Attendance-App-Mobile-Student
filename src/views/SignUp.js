@@ -1,19 +1,28 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-// import {Tab, TabView} from '@ui-kitten/components';
-import {Hero, StudentForm, ScrollContainer} from '../components';
+import {Tab, TabView} from '@ui-kitten/components';
+import {Hero, StudentForm, ScrollContainer, LecturerForm} from '../components';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const SignUpScreen = () => {
-  // const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
   return (
     <ScrollContainer customStyle={styles.content}>
       <Hero
         title="Great to have you are here."
         subTitle="Provide details to complete Sign up"
       />
-
-      <StudentForm />
+      <TabView
+        selectedIndex={selectedIndex}
+        onSelect={(index) => setSelectedIndex(index)}
+        useNativeDriver={true}>
+        <Tab title="Lecturer">
+          <LecturerForm />
+        </Tab>
+        <Tab title="Student">
+          <StudentForm />
+        </Tab>
+      </TabView>
     </ScrollContainer>
   );
 };

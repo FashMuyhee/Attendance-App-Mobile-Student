@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleService,
   useStyleSheet,
@@ -8,23 +8,24 @@ import {
   Input,
   Button,
 } from '@ui-kitten/components';
-import { Container, FormBody, ModalAlert, MyText } from '../../components';
-import { inject, observer } from 'mobx-react';
+import {Container, FormBody, ModalAlert, MyText} from '../../components';
+import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { TakeScreen } from '..';
+import {TakeScreen} from '..';
+
 const SigninCode = (props) => {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [signCode, setSignCode] = React.useState(null);
-  const [modal, setModal] = React.useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [signCode, setSignCode] = useState(null);
+  const [modal, setModal] = useState(false);
   const styles = useStyleSheet(themedStyles);
   const checkSignInCode = () => {
-    const { next, saveState } = props;
     // get lecture location and save
     // saveState({ lectureLocation: { lat: 6.5183143, lng: 3.3715918 } });
-    props.navigation.navigate('location', { lectureLocation: { lat: 6.5183143, lng: 3.3715918 } })
+    //props.navigation.navigate('location', { lectureLocation: { lat: 6.5183143, lng: 3.3715918 } })
+    props.navigation.navigate('camera');
   };
 
   const handleSignOut = () => {
@@ -36,17 +37,20 @@ const SigninCode = (props) => {
       <Container customStyle={styles.welcomeNote}>
         <MyText customStyle={styles.boldText}>
           Hi User!{' '}
-          <MyText customStyle={styles.normalText}>It's time for Attendance.</MyText>
+          <MyText customStyle={styles.normalText}>
+            It's time for Attendance.
+          </MyText>
         </MyText>
         <MyText customStyle={styles.subtitleText}>
           Select an attendance action you intend to perform Sign in for a new
           class or signout for a finshed lecturer
-       </MyText>
+        </MyText>
       </Container>
       <Container customStyle={styles.form}>
         <TabView
           selectedIndex={selectedIndex}
-          onSelect={(index) => setSelectedIndex(index)}>
+          onSelect={(index) => setSelectedIndex(index)}
+          useNativeDriver={true}>
           <Tab title="Sign In">
             <Layout style={styles.tabContainer}>
               <Input placeholder="Sign in Code" style={styles.input} />
@@ -98,7 +102,7 @@ const themedStyles = StyleService.create({
   },
   subtitleText: {
     fontSize: hp('2%'),
-    color: 'color-basic-400'
+    color: 'color-basic-400',
   },
   form: {
     paddingLeft: '9%',

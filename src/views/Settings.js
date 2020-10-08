@@ -23,7 +23,7 @@ const SettingsScreen = ({navigation, store}) => {
   const {toggleTheme, myTheme} = store;
   console.log(myTheme);
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <>
       <Navbar
         title="Settings"
         leftAction={<BackAction />}
@@ -32,7 +32,7 @@ const SettingsScreen = ({navigation, store}) => {
       <Container>
         <Button onPress={() => toggleTheme(myTheme)}>Change Theme</Button>
       </Container>
-    </SafeAreaView>
+    </>
   );
 };
 

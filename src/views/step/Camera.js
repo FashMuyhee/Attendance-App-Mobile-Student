@@ -1,7 +1,13 @@
 import React, {PureComponent} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {Text, Button, Icon} from '@ui-kitten/components';
-import {Container, ModalAlert, CameraModal, MyText} from '../../components';
+import {
+  Container,
+  ModalAlert,
+  CameraModal,
+  MyText,
+  WelcomeNote,
+} from '../../components';
 import ImagePicker from 'react-native-image-picker';
 import {inject, observer} from 'mobx-react';
 import {
@@ -23,7 +29,7 @@ class Camera extends PureComponent {
 
   takePicture = async () => {
     if (this.camera) {
-      const options = {quality: 1, base64: true,};
+      const options = {quality: 1, base64: true};
       await this.camera.resumePreview();
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
@@ -43,6 +49,9 @@ class Camera extends PureComponent {
     } else {
       this.setState({cameraVisible: true});
     }
+  };
+  finish = () => {
+    this.props.navigation.navigate('home');
   };
 
   RenderImage = () => {
@@ -71,7 +80,7 @@ class Camera extends PureComponent {
     const {imgUri, visible, cameraVisible} = this.state;
     return (
       <TakeScreen>
-        <Container customStyle={styles.welcomeNote}>
+        {/* <Container customStyle={styles.welcomeNote}>
           <MyText customStyle={styles.boldText}>
             Super!{' '}
             <MyText customStyle={styles.normalText}> Just a Picture </MyText>
@@ -80,7 +89,13 @@ class Camera extends PureComponent {
             All that 's left is just a picture, provide a selfie image of
             yourself and you 're good to go
           </MyText>
-        </Container>
+        </Container> */}
+        <WelcomeNote
+          bold="Super"
+          normal="Just a Picture"
+          subtitle="All that 's left is just a picture, provide a selfie image of
+          yourself and you 're good to go"
+        />
         <Container customStyle={styles.imageContainer}>
           <View style={styles.camera}>
             <this.RenderImage />
@@ -98,7 +113,7 @@ class Camera extends PureComponent {
               Retake Image
             </Button>
           ) : null}
-          <Button onPress={() => {}} style={styles.btn}>
+          <Button onPress={this.finish} style={styles.btn}>
             Done
           </Button>
         </Container>
@@ -142,7 +157,7 @@ class Camera extends PureComponent {
 
 export default Camera;
 const styles = StyleSheet.create({
-  welcomeNote: {
+  /*  welcomeNote: {
     marginTop: hp('5%'),
     paddingLeft: '9%',
     paddingRight: '9%',
@@ -157,7 +172,7 @@ const styles = StyleSheet.create({
   },
   subtitleText: {
     fontSize: hp('2%'),
-  },
+  }, */
   imageContainer: {
     display: 'flex',
     /* borderColor: 'yellow',

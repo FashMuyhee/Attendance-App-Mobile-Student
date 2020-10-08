@@ -8,7 +8,7 @@ import {
   Input,
   Button,
 } from '@ui-kitten/components';
-import {Container, FormBody, ModalAlert, MyText} from '../../components';
+import {Container, FormBody, ModalAlert, WelcomeNote} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
@@ -34,7 +34,7 @@ const SigninCode = (props) => {
 
   return (
     <TakeScreen>
-      <Container customStyle={styles.welcomeNote}>
+      {/* <Container customStyle={styles.welcomeNote}>
         <MyText customStyle={styles.boldText}>
           Hi User!{' '}
           <MyText customStyle={styles.normalText}>
@@ -45,7 +45,13 @@ const SigninCode = (props) => {
           Select an attendance action you intend to perform Sign in for a new
           class or signout for a finshed lecturer
         </MyText>
-      </Container>
+      </Container> */}
+      <WelcomeNote
+        bold="Hi User"
+        normal="It's time for Attendance"
+        subtitle="Select an attendance action you intend to perform Sign in for a new
+        class or signout for a finished lecturer"
+      />
       <Container customStyle={styles.form}>
         <TabView
           selectedIndex={selectedIndex}
@@ -85,25 +91,25 @@ const SigninCode = (props) => {
 // export default inject('store')(observer(SigninCode));
 export default SigninCode;
 const themedStyles = StyleService.create({
-  welcomeNote: {
-    /*  borderColor: 'yellow',
-    borderWidth: 1, */
-    marginTop: hp('10%'),
-    paddingLeft: '9%',
-    paddingRight: '9%',
-    height: hp('12%'),
-  },
-  boldText: {
-    fontWeight: 'bold',
-    fontSize: hp('3%'),
-  },
-  normalText: {
-    fontSize: hp('3%'),
-  },
-  subtitleText: {
-    fontSize: hp('2%'),
-    color: 'color-basic-400',
-  },
+  // welcomeNote: {
+  //   /*  borderColor: 'yellow',
+  //   borderWidth: 1, */
+  //   marginTop: hp('10%'),
+  //   paddingLeft: '9%',
+  //   paddingRight: '9%',
+  //   height: hp('12%'),
+  // },
+  // boldText: {
+  //   fontWeight: 'bold',
+  //   fontSize: hp('3%'),
+  // },
+  // normalText: {
+  //   fontSize: hp('3%'),
+  // },
+  // subtitleText: {
+  //   fontSize: hp('2%'),
+  //   color: 'color-basic-400',
+  // },
   form: {
     paddingLeft: '9%',
     paddingRight: '9%',

@@ -10,6 +10,7 @@ import Box from './Box';
 import ModalAlert from './ModalAlert';
 import MyText from './MyText';
 import CameraModal from './CameraModal';
+import WelcomeNote from './WelcomeNote';
 export {
   Container,
   Hero,
@@ -22,5 +23,6 @@ export {
   Box,
   ModalAlert,
   MyText,
-CameraModal
+  CameraModal,
+  WelcomeNote,
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {View, TouchableWithoutFeedback} from 'react-native';
 import {
   StyleService,
   useStyleSheet,

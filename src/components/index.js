@@ -11,6 +11,8 @@ import ModalAlert from './ModalAlert';
 import MyText from './MyText';
 import CameraModal from './CameraModal';
 import WelcomeNote from './WelcomeNote';
+import Fab from './Fab';
+
 export {
   Container,
   Hero,
@@ -25,4 +27,5 @@ export {
   MyText,
   CameraModal,
   WelcomeNote,
+  Fab
 };

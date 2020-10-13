@@ -26,7 +26,6 @@ const SignInScreen = (props) => {
   const renderUserIcon = (style) => <Icon {...style} name="person-outline" />;
 
   const handleLogin = () => {
-    console.log('clicked');
     setLoading(true);
     const {setIsLoggedIn} = props.store;
     setIsLoggedIn(true);

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   PermissionsAndroid,
   ToastAndroid,
@@ -13,13 +13,14 @@ import {
   Button,
   useTheme,
 } from '@ui-kitten/components';
-import {Container, ModalAlert, MyText, WelcomeNote} from '../../components';
-import {inject, observer} from 'mobx-react';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import MapView, {Marker, Circle} from 'react-native-maps';
-import {checkLocationDifference} from '../../helpers/locationDifference';
-import {TakeScreen} from '..';
+import { Container, ModalAlert, MyText } from '../../components';
+import { inject, observer } from 'mobx-react';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import MapView, { Marker, Circle } from 'react-native-maps';
+import { checkLocationDifference } from '../../helpers/locationDifference'
+import { TakeScreen } from '..';
 class Location extends Component {
+
   state = {
     location: {},
     loading: false,
@@ -29,8 +30,10 @@ class Location extends Component {
   };
 
   goToCamera = () => {
+
     // get state for use in other steps
-    this.props.navigation.navigate('camera');
+    this.props.navigation.navigate('camera')
+
   };
 
   goBack = () => {
@@ -77,25 +80,25 @@ class Location extends Component {
       return;
     }
 
-    this.setState({loading: true});
+    this.setState({ loading: true });
     Geolocation.getCurrentPosition(
       (position) => {
-        this.setState({location: position.coords, loading: false});
+        this.setState({ location: position.coords, loading: false });
         const userLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
         // check check for location distance
-        const routeParam = this.props.navigation.route.params;
+        const routeParam = this.props.route.params;
         const lectureHall = routeParam.lectureLocation;
         const distance = checkLocationDifference(userLocation, {
           lat: lectureHall.lat,
           lng: lectureHall.lng,
         });
-        this.setState({locationDistance: distance});
+        this.setState({ locationDistance: distance });
       },
       (error) => {
-        this.setState({loading: false, isVisibleModal: true});
+        this.setState({ loading: false, isVisibleModal: true });
       },
       {
         enableHighAccuracy: true,
@@ -107,14 +110,16 @@ class Location extends Component {
     );
   };
 
+
+
   componentWillMount() {
     this.getLocation();
   }
   render() {
     const routeParam = this.props.route.params;
-    const lectureHall = routeParam;
-    const {location, locationDistance, loading} = this.state;
-    const {user} = this.props.store;
+    const lectureHall = routeParam
+    const { location, locationDistance, loading } = this.state;
+    const { user } = this.props.store;
     const markers = [
       {
         /*  latlng: { latitude: state.location.lat, longitude: state.location.lng },
@@ -128,7 +133,7 @@ class Location extends Component {
         pinColor: '#4B9CFB',
       },
       {
-        latlng: {latitude: lectureHall.lat, longitude: lectureHall.lng},
+        latlng: { latitude: lectureHall.lat, longitude: lectureHall.lng },
         title: 'Lecture Hall',
         description: 'Dolor sit sint exercitation reprehenderit magna.',
         pinColor: '#00BA4A',
@@ -141,7 +146,7 @@ class Location extends Component {
 
     return (
       <TakeScreen>
-        {/*         <Container customStyle={styles.welcomeNote}>
+        <Container customStyle={styles.welcomeNote}>
           <MyText customStyle={styles.boldText}>
             Nice! <MyText customStyle={styles.normalText}>We need your location.</MyText>
           </MyText>
@@ -149,13 +154,7 @@ class Location extends Component {
             to ensure you're reaaly in class kindly activate location setting to
             be sure you're within 30 meters of the Lecturer
           </MyText>
-        </Container> */}
-        <WelcomeNote
-          bold="Nice"
-          normal="we need your location"
-          subtitle="to ensure you're really in class kindly activate location setting to
-          be sure you're within 30 meters of the Lecturer"
-        />
+        </Container>
         <Container customStyle={styles.map}>
           {loading ? (
             <>
@@ -163,53 +162,54 @@ class Location extends Component {
               <Text>Getting Location</Text>
             </>
           ) : (
-            <MapView
-              style={styles.mapView}
-              initialRegion={{
-                latitude: 6.5191271,
-                longitude: 3.3705135,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.0121,
-              }}
-              provider="google"
-              mapType="terrain">
-              <Circle
-                key={(
-                  markers[0].latlng.latitude + markers[0].latlng.longitude
-                ).toString()}
-                center={markers[1].latlng}
-                radius={20}
-                strokeWidth={1}
-                strokeColor={'#1a66ff'}
+              <MapView
+                style={styles.mapView}
+                initialRegion={{
+                  latitude: 6.5191271,
+                  longitude: 3.3705135,
+                  latitudeDelta: 0.015,
+                  longitudeDelta: 0.0121,
+                }}
+                provider="google"
+                mapType="terrain">
+                <Circle
+                  key={(
+                    markers[0].latlng.latitude + markers[0].latlng.longitude
+                  ).toString()}
+                  center={markers[1].latlng}
+                  radius={20}
+                  strokeWidth={1}
+                  strokeColor={'#1a66ff'}
                 // fillColor={theme['color-primary-200']}
-              />
-              {markers.map((marker) => (
-                <Marker
-                  coordinate={marker.latlng}
-                  title={marker.title}
-                  description={marker.description}
-                  pinColor={marker.pinColor}
                 />
-              ))}
-            </MapView>
-          )}
+                {markers.map((marker) => (
+                  <Marker
+                    coordinate={marker.latlng}
+                    title={marker.title}
+                    description={marker.description}
+                    pinColor={marker.pinColor}
+                  />
+                ))}
+              </MapView>
+            )}
         </Container>
-        <Container customStyle={{marginTop: 10, marginBottom: 10}}>
+        <Container customStyle={{ marginTop: 10, marginBottom: 10 }}>
           {loading ? (
-            <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
+            <Text style={{ marginBottom: 5, marginTop: 5, textAlign: 'center' }}>
               Hang on a sec while we get and match Location
             </Text>
           ) : (
-            <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
-              {locationDistance < 20
-                ? 'Yeah !!! your location match click next to continue'
-                : `You're to far from the Lecture room,Move to the Lecture room then try again`}
-            </Text>
-          )}
+              <Text style={{ marginBottom: 5, marginTop: 5, textAlign: 'center' }}>
+                {locationDistance < 20
+                  ? 'Yeah !!! your location match click next to continue'
+                  : `You're to far from the Lecture room,Move to the Lecture room then try again`}
+              </Text>
+            )}
           <Button
             onPress={this.goToCamera}
-            style={{width: '100%'}}
-            disabled={locationDistance < 20 ? false : true}>
+            style={{ width: '100%' }}
+            disabled={locationDistance < 20 ? false : true}
+          >
             Next
           </Button>
         </Container>
@@ -229,24 +229,24 @@ class Location extends Component {
 export default inject('store')(observer(Location));
 // export default Location;
 const styles = StyleService.create({
-  // welcomeNote: {
-  //   /*  borderColor: 'yellow',
-  //   borderWidth: 1, */
-  //   marginTop: hp('5%'),
-  //   paddingLeft: '9%',
-  //   paddingRight: '9%',
-  //   height: hp('12%'),
-  // },
-  // boldText: {
-  //   fontWeight: 'bold',
-  //   fontSize: hp('3%'),
-  // },
-  // normalText: {
-  //   fontSize: hp('3%'),
-  // },
-  // subtitleText: {
-  //   fontSize: hp('2%'),
-  // },
+  welcomeNote: {
+    /*  borderColor: 'yellow',
+    borderWidth: 1, */
+    marginTop: hp('5%'),
+    paddingLeft: '9%',
+    paddingRight: '9%',
+    height: hp('12%'),
+  },
+  boldText: {
+    fontWeight: 'bold',
+    fontSize: hp('3%'),
+  },
+  normalText: {
+    fontSize: hp('3%'),
+  },
+  subtitleText: {
+    fontSize: hp('2%'),
+  },
   map: {
     display: 'flex',
     borderColor: '#00BA4A',

@@ -23,9 +23,8 @@ const SigninCode = (props) => {
   const styles = useStyleSheet(themedStyles);
   const checkSignInCode = () => {
     // get lecture location and save
-    // saveState({ lectureLocation: { lat: 6.5183143, lng: 3.3715918 } });
-    //props.navigation.navigate('location', { lectureLocation: { lat: 6.5183143, lng: 3.3715918 } })
-    props.navigation.navigate('camera');
+    props.navigation.navigate('location', { lectureLocation: { lat: 6.5183143, lng: 3.3715918 } })
+    // props.navigation.navigate('camera');
   };
 
   const handleSignOut = () => {

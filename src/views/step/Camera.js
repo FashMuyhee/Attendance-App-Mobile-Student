@@ -32,14 +32,15 @@ class Camera extends PureComponent {
       const options = {quality: 1, base64: true};
       await this.camera.resumePreview();
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
       //send captured image for comparison
       this.setState({imgUri: data.uri});
     }
   };
-  onFaceDetect = async (faces) => {
-    await this.takePicture();
-    this.setState({cameraVisible: false});
+  onFaceDetect = async ({faces}) => {
+    if (faces[0]) {
+      await this.takePicture();
+      this.setState({cameraVisible: false});
+    }
   };
 
   handleCameraModal = () => {
@@ -80,21 +81,11 @@ class Camera extends PureComponent {
     const {imgUri, visible, cameraVisible} = this.state;
     return (
       <TakeScreen>
-        {/* <Container customStyle={styles.welcomeNote}>
-          <MyText customStyle={styles.boldText}>
-            Super!{' '}
-            <MyText customStyle={styles.normalText}> Just a Picture </MyText>
-          </MyText>
-          <MyText customStyle={styles.subtitleText}>
-            All that 's left is just a picture, provide a selfie image of
-            yourself and you 're good to go
-          </MyText>
-        </Container> */}
         <WelcomeNote
           bold="Super"
           normal="Just a Picture"
-          subtitle="All that 's left is just a picture, provide a selfie image of
-          yourself and you 're good to go"
+          subtitle="All that's left is just a picture, provide a selfie image of
+          yourself and you're good to go"
         />
         <Container customStyle={styles.imageContainer}>
           <View style={styles.camera}>

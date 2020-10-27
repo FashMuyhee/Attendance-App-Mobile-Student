@@ -6,8 +6,8 @@ class Store {
   userToken = '';
   user = {
     id: 1,
-    name: 'Ebenezer Arobadi',
-    matric_no: 'F/HD/18/3210023',
+    name: 'Fasoranti Oluwamuyiwa',
+    matric_no: 'F/HD/18/3210014',
     department: 'Computer Science',
     level: 'HND2',
     role: 'student',

@@ -25,9 +25,35 @@ const SignInScreen = (props) => {
   );
   const renderUserIcon = (style) => <Icon {...style} name="person-outline" />;
 
-  const handleLogin = () => {
+  const handleStudentLogin = () => {
     setLoading(true);
-    const {setIsLoggedIn} = props.store;
+    const {setIsLoggedIn, user, setUser} = props.store;
+    setUser({...user, role: 'student'});
+    setIsLoggedIn(true);
+    setLoading(false);
+
+    /*  axios({
+                 method: 'post',
+                 url: `http://192.168.43.102:3333/students/login`,
+                 timeout: 20000,
+                 data: {
+                     matric_no: matric_no,
+                 },
+             })
+             .then((data) => {
+                 setLoading(false);
+                 console.log(data);
+             })
+             .catch((error) => {
+                 setLoading(false);
+                 console.log(error);
+             }); */
+  };
+
+  const handleLectuerLogin = () => {
+    setLoading(true);
+    const {setIsLoggedIn, user, setUser} = props.store;
+    setUser({...user, role: 'lectuer'});
     setIsLoggedIn(true);
     setLoading(false);
 
@@ -74,7 +100,7 @@ const SignInScreen = (props) => {
               onChangeText={() => setPassword()}
               style={styles.input}
             />
-            <Button onPress={handleLogin}>
+            <Button onPress={handleLectuerLogin}>
               {loading ? 'Signing in ...' : ' Sign In'}
             </Button>
             <Button
@@ -102,7 +128,7 @@ const SignInScreen = (props) => {
               onChangeText={() => setPassword()}
               style={styles.input}
             />
-            <Button onPress={handleLogin}>
+            <Button onPress={handleStudentLogin}>
               {loading ? 'Signing in ...' : ' Sign In'}
             </Button>
             <Button

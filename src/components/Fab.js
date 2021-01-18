@@ -18,11 +18,7 @@ const Fab = ({children, onPress}) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Layout style={styles.fab}>
-        <Icon
-          style={styles.icon}
-          name="plus"
-          fill={theme['color-basic-700']}
-        />
+        <Icon style={styles.icon} name="plus" fill={theme['color-basic-700']} />
       </Layout>
     </TouchableWithoutFeedback>
   );
@@ -35,13 +31,19 @@ const themedStyles = StyleService.create({
     color: 'color-text',
     textAlign: 'center',
     position: 'absolute',
-    bottom: hp('5%'),
+    bottom: hp('2%'),
     right: wp('2%'),
     width: 55,
     height: 55,
     borderRadius: 50,
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
   },
   icon: {
-    fontSize: 8,
+    width: 40,
+    height: 40,
+    alignSelf: 'center',
   },
 });

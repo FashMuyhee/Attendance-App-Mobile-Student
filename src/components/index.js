@@ -12,6 +12,7 @@ import MyText from './MyText';
 import CameraModal from './CameraModal';
 import WelcomeNote from './WelcomeNote';
 import Fab from './Fab';
+import {Table, TBody, THead, TCell, TRow} from './Table';
 
 export {
   Container,
@@ -27,5 +28,10 @@ export {
   MyText,
   CameraModal,
   WelcomeNote,
-  Fab
+  Fab,
+  Table,
+  THead,
+  TBody,
+  TRow,
+  TCell,
 };

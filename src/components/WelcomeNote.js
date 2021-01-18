@@ -17,8 +17,8 @@ export default function WelcomeNote({bold, normal, subtitle}) {
 const styles = StyleSheet.create({
   welcomeNote: {
     marginTop: hp('5%'),
-    paddingLeft: '9%',
-    paddingRight: '9%',
+    paddingLeft: '3%',
+    paddingRight: '3%',
     height: hp('12%'),
     marginBottom: hp('5%'),
   },

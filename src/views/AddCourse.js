@@ -32,7 +32,7 @@ const AddCourseScreen = ({navigation, store}) => {
         <WelcomeNote
           bold={`Hi ${user.name.split(' ')[0]}`}
           normal="Let's add some courses"
-          subtitle="Selct your department,level,semester and the desired courses you need to add"
+          subtitle="Select your department,level,semester and the desired courses you need to add"
         />
       </Container>
     </>
@@ -45,3 +45,4 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+``

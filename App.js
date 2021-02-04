@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from 'react';
-import {StatusBar, AsyncStorage} from 'react-native';
+import {StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {mapping, dark, light} from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';

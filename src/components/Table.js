@@ -1,10 +1,17 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, ScrollView, StyleProp} from 'react-native';
 import {StyleService, Layout, useStyleSheet} from '@ui-kitten/components';
+import PropTypes from 'prop-types';
 
-const Table = ({children}) => {
+const Table = ({children, style}) => {
   const styles = useStyleSheet(themedStyles);
-  return <Layout style={styles.tableContainer}>{children}</Layout>;
+  const tableWrapper = {...styles.tableContainer, ...style};
+  return <Layout style={tableWrapper}>{children}</Layout>;
+};
+
+Table.prototype = {
+  children: PropTypes.element.isRequired,
+  style: StyleProp,
 };
 
 const THead = ({children}) => {
@@ -65,10 +72,10 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
     height: 50,
     borderBottomColor: 'color-primary-default',
-    borderBottomWidth: .5,
+    borderBottomWidth: 0.5,
     width: '100%',
   },
   tableCell: {
-    marginRight: 30,
+    // marginRight: 30,
   },
 });

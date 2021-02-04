@@ -9,7 +9,8 @@
     "reset-cache": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
-    "lint-fix": "eslint . --fix"
+    "lint-fix": "eslint . --fix",
+    "adb-connect": "adb reverse tcp:8081 tcp:8081"
   },
   "dependencies": {
     "@eva-design/eva": "^1.4.0",

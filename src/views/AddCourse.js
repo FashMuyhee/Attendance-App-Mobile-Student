@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {
   Divider,
@@ -7,9 +7,12 @@ import {
   TopNavigationAction,
   styled,
   Button,
+  Select,
 } from '@ui-kitten/components';
 import {Container, Navbar, WelcomeNote} from '../components';
 import {inject, observer} from 'mobx-react';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
 const AddCourseScreen = ({navigation, store}) => {
@@ -17,9 +20,12 @@ const AddCourseScreen = ({navigation, store}) => {
     navigation.goBack();
   };
   const {user} = store;
+  
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
+  const data = [{text: 'Option 1'}, {text: 'Option 2'}, {text: 'Option 3'}];
+  const [selectedOption, setSelectedOption] = useState(null);
 
   return (
     <>
@@ -34,6 +40,14 @@ const AddCourseScreen = ({navigation, store}) => {
           normal="Let's add some courses"
           subtitle="Select your department,level,semester and the desired courses you need to add"
         />
+        <Select
+          data={data}
+          selectedOption={selectedOption}
+          onSelect={setSelectedOption}
+          style={styles.input}
+          placeholder="Select Courses"
+        />
+        <Button>Register Course</Button>
       </Container>
     </>
   );
@@ -44,5 +58,9 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
   },
+  input: {
+    marginBottom: hp('2%'),
+    padding: 20,
+  },
 });
-``
+``;

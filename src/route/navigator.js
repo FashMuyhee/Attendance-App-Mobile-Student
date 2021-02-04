@@ -30,34 +30,33 @@ const AppNavigator = ({store}) => {
     <NavigationContainer>
       <Stack.Navigator
         headerMode="none"
-        initialRouteName="landing"
+        initialRouteName="home"
         screenOptions={{
           gestureEnabled: true,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
-        {!isLoggedIn ? (
+        {/* {!isLoggedIn ? (
           <>
             <Stack.Screen name="landing" component={LandingScreen} />
             <Stack.Screen name="signup" component={SignUpScreen} />
             <Stack.Screen name="signin" component={SignInScreen} />
           </>
-        ) : (
-          <>
-            <Stack.Screen name="home" component={HomeScreen} />
-            {/* <Stack.Screen name="take" component={TakeScreen} /> */}
-            <Stack.Screen name="att_signin" component={SiginCode} />
-            <Stack.Screen name="location" component={Location} />
-            <Stack.Screen name="camera" component={Camera} />
-            <Stack.Screen name="settings" component={SettingsScreen} />
-            <Stack.Screen name="my_course" component={MyCourse} />
-            <Stack.Screen name="add_course" component={AddCourse} />
-            <Stack.Screen name="my_attendance" component={MyAttendance} />
-            <Stack.Screen
-              name="create_attendance"
-              component={CreateAttendanceScreen}
-            />
-          </>
-        )}
+        ) : ( */}
+        <>
+          <Stack.Screen name="home" component={HomeScreen} />
+          <Stack.Screen name="att_signin" component={SiginCode} />
+          <Stack.Screen name="location" component={Location} />
+          <Stack.Screen name="camera" component={Camera} />
+          <Stack.Screen name="settings" component={SettingsScreen} />
+          <Stack.Screen name="my_course" component={MyCourse} />
+          <Stack.Screen name="add_course" component={AddCourse} />
+          <Stack.Screen name="my_attendance" component={MyAttendance} />
+          <Stack.Screen
+            name="create_attendance"
+            component={CreateAttendanceScreen}
+          />
+        </>
+        {/* )} */}
       </Stack.Navigator>
     </NavigationContainer>
   );

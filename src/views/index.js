@@ -3,21 +3,5 @@ import SettingsScreen from './Settings';
 import SignUpScreen from './SignUp';
 import SignInScreen from './SignIn';
 import LandingScreen from './Landing';
-import TakeScreen from './Take';
-import AddCourse from './AddCourse';
-import MyAttendance from './MyAttendance';
-import MyCourse from './MyCourse';
-import CreateAttendanceScreen from './CreateAttendance';
 
-export {
-  HomeScreen,
-  SettingsScreen,
-  SignInScreen,
-  SignUpScreen,
-  LandingScreen,
-  TakeScreen,
-  AddCourse,
-  MyCourse,
-  MyAttendance,
-  CreateAttendanceScreen,
-};
+export {HomeScreen, SettingsScreen, SignInScreen, SignUpScreen, LandingScreen};

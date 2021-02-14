@@ -12,51 +12,73 @@ import {
   LandingScreen,
   SignUpScreen,
   SignInScreen,
-  TakeScreen,
-  AddCourse,
-  MyCourse,
-  MyAttendance,
-  CreateAttendanceScreen,
 } from '../views';
 
+import {
+  StudAddCourse,
+  StudCourse,
+  StudRecord,
+  TakeScreen,
+} from '../views/student';
+
+import {
+  CreateAttendanceScreen,
+  LectAddCourse,
+  LectCourse,
+  LectRecord,
+} from '../views/lecturer';
 import {inject, observer} from 'mobx-react';
 import {SiginCode, Location, Camera} from '../views/step';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = ({store}) => {
-  const {isLoggedIn} = store;
+  const {isLoggedIn, user} = store;
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         headerMode="none"
-        initialRouteName="home"
+        initialRouteName="landing"
         screenOptions={{
           gestureEnabled: true,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
-        {/* {!isLoggedIn ? (
+        {!isLoggedIn ? (
           <>
             <Stack.Screen name="landing" component={LandingScreen} />
             <Stack.Screen name="signup" component={SignUpScreen} />
             <Stack.Screen name="signin" component={SignInScreen} />
           </>
-        ) : ( */}
-        <>
-          <Stack.Screen name="home" component={HomeScreen} />
-          <Stack.Screen name="att_signin" component={SiginCode} />
-          <Stack.Screen name="location" component={Location} />
-          <Stack.Screen name="camera" component={Camera} />
-          <Stack.Screen name="settings" component={SettingsScreen} />
-          <Stack.Screen name="my_course" component={MyCourse} />
-          <Stack.Screen name="add_course" component={AddCourse} />
-          <Stack.Screen name="my_attendance" component={MyAttendance} />
-          <Stack.Screen
-            name="create_attendance"
-            component={CreateAttendanceScreen}
-          />
-        </>
-        {/* )} */}
+        ) : (
+          <>
+            <Stack.Screen name="home" component={HomeScreen} />
+            <Stack.Screen name="settings" component={SettingsScreen} />
+            {user.role === 'student' ? (
+              <>
+                <Stack.Screen name="att_signin" component={SiginCode} />
+                <Stack.Screen name="location" component={Location} />
+                <Stack.Screen name="camera" component={Camera} />
+                <Stack.Screen name="stu_course" component={StudCourse} />
+                <Stack.Screen name="stu_add_course" component={StudAddCourse} />
+                <Stack.Screen name="stu_attendance" component={StudRecord} />
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="lect_course" component={LectCourse} />
+                <Stack.Screen
+                  name="lect_add_course"
+                  component={LectAddCourse}
+                />
+                <Stack.Screen name="lect_attendance" component={LectRecord} />
+                <Stack.Screen
+                  name="create_attendance"
+                  component={CreateAttendanceScreen}
+                />
+              </>
+            )}
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

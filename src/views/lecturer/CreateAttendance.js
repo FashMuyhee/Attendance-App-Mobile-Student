@@ -16,7 +16,7 @@ import {
   Container,
   MyText,
   FormBody,
-} from '../components';
+} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';

@@ -18,7 +18,7 @@ import {
   TBody,
   TCell,
   TRow,
-} from '../components';
+} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
@@ -96,7 +96,7 @@ const MyCourseScreen = ({navigation, store}) => {
           </TBody>
         </Table>
       </ScrollContainer>
-      <Fab onPress={() => navigation.navigate('add_course')} />
+      <Fab onPress={() => navigation.navigate('stu_add_course')} />
     </>
   );
 };

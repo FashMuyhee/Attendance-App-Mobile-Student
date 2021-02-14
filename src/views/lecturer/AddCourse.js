@@ -9,7 +9,7 @@ import {
   Button,
   Select,
 } from '@ui-kitten/components';
-import {Container, Navbar, WelcomeNote} from '../components';
+import {Container, Navbar, WelcomeNote} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 

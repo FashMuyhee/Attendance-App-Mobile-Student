@@ -26,10 +26,10 @@ const HomeScreen = ({navigation, store}) => {
   const DashboardActionStudent = () => (
     <View style={styles.actions}>
       <Box icon="edit-outline" route="att_signin" title="Take Attendance" />
-      <Box icon="clipboard-outline" route="my_course" title="Courses" />
+      <Box icon="clipboard-outline" route="stu_course" title="Courses" />
       <Box
         icon="list-outline"
-        route="my_attendance"
+        route="stu_attendance"
         title="Attendance Record"
       />
       <Box
@@ -47,10 +47,10 @@ const HomeScreen = ({navigation, store}) => {
         route="create_attendance"
         title="Create Attendance"
       />
-      <Box icon="clipboard-outline" route="my_course" title="My Courses" />
+      <Box icon="clipboard-outline" route="lect_course" title="My Courses" />
       <Box
         icon="list-outline"
-        route="my_attendance"
+        route="lect_attendance"
         title="Attendance Record"
       />
       <Box

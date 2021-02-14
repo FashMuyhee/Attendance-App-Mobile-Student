@@ -16,7 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 // import axios from 'axios';
 import {RNCamera} from 'react-native-camera';
-import {TakeScreen} from '..';
+import {TakeScreen} from '../student';
 
 class Camera extends PureComponent {
   state = {

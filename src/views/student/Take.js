@@ -6,7 +6,7 @@ import {
   Icon,
   Layout,
 } from '@ui-kitten/components';
-import { Navbar, ScrollContainer } from '../components';
+import { Navbar, ScrollContainer } from '../../components';
 import { inject, observer } from 'mobx-react';
 /* import AnimatedMultistep from 'react-native-animated-multistep';
 import { SiginCode, Location, Camera } from './step'; */

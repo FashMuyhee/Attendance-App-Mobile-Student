@@ -16,12 +16,12 @@ import {
   TBody,
   TCell,
   THead,
-} from '../components';
+} from '../../components';
 import {inject, observer} from 'mobx-react';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
-const MyAttendanceScreen = ({navigation, store}) => {
+const AttendanceRecordScreen = ({navigation, store}) => {
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -151,7 +151,7 @@ const MyAttendanceScreen = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(MyAttendanceScreen));
+export default inject('store')(observer(AttendanceRecordScreen));
 const styles = StyleSheet.create({
   title: {
     color: 'white',

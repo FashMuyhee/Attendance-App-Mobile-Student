@@ -18,7 +18,7 @@ import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MapView, {Marker, Circle} from 'react-native-maps';
 import {checkLocationDifference} from '../../helpers/locationDifference';
-import {TakeScreen} from '..';
+import {TakeScreen} from '../student';
 
 let markers = [];
 class Location extends Component {

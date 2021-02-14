@@ -14,7 +14,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {TakeScreen} from '..';
+import {TakeScreen} from '../student';
 
 const SigninCode = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -33,18 +33,6 @@ const SigninCode = (props) => {
 
   return (
     <TakeScreen>
-      {/* <Container customStyle={styles.welcomeNote}>
-        <MyText customStyle={styles.boldText}>
-          Hi User!{' '}
-          <MyText customStyle={styles.normalText}>
-            It's time for Attendance.
-          </MyText>
-        </MyText>
-        <MyText customStyle={styles.subtitleText}>
-          Select an attendance action you intend to perform Sign in for a new
-          class or signout for a finshed lecturer
-        </MyText>
-      </Container> */}
       <WelcomeNote
         bold="Hi User"
         normal="It's time for Attendance"
@@ -90,25 +78,6 @@ const SigninCode = (props) => {
 // export default inject('store')(observer(SigninCode));
 export default SigninCode;
 const themedStyles = StyleService.create({
-  // welcomeNote: {
-  //   /*  borderColor: 'yellow',
-  //   borderWidth: 1, */
-  //   marginTop: hp('10%'),
-  //   paddingLeft: '9%',
-  //   paddingRight: '9%',
-  //   height: hp('12%'),
-  // },
-  // boldText: {
-  //   fontWeight: 'bold',
-  //   fontSize: hp('3%'),
-  // },
-  // normalText: {
-  //   fontSize: hp('3%'),
-  // },
-  // subtitleText: {
-  //   fontSize: hp('2%'),
-  //   color: 'color-basic-400',
-  // },
   form: {
     paddingLeft: '9%',
     paddingRight: '9%',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableWithoutFeedback, Text, StyleSheet} from 'react-native';
+import {TouchableWithoutFeedback, Image} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,13 +12,21 @@ import {
   useTheme,
 } from '@ui-kitten/components';
 
-const Fab = ({children, onPress}) => {
+const Fab = ({onPress, icon, imageIcon, style}) => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <Layout style={styles.fab}>
-        <Icon style={styles.icon} name="plus" fill={theme['color-basic-700']} />
+      <Layout style={{...styles.fab, ...style}}>
+        {imageIcon ? (
+          <Image source={imageIcon} style={{alignSelf: 'center'}} />
+        ) : (
+          <Icon
+            style={styles.icon}
+            name={icon}
+            fill={theme['color-basic-700']}
+          />
+        )}
       </Layout>
     </TouchableWithoutFeedback>
   );

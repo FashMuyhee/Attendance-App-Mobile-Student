@@ -13,6 +13,7 @@ import CameraModal from './CameraModal';
 import WelcomeNote from './WelcomeNote';
 import Fab from './Fab';
 import {Table, TBody, THead, TCell, TRow} from './Table';
+import FilterSheet from './FilterSheet';
 
 export {
   Container,
@@ -34,4 +35,5 @@ export {
   TBody,
   TRow,
   TCell,
+  FilterSheet,
 };

@@ -8,7 +8,6 @@ import {
   MyText,
   WelcomeNote,
 } from '../../components';
-import ImagePicker from 'react-native-image-picker';
 import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,

@@ -96,7 +96,7 @@ const MyCourseScreen = ({navigation, store}) => {
           </TBody>
         </Table>
       </ScrollContainer>
-      <Fab onPress={() => navigation.navigate('stu_add_course')} />
+      <Fab onPress={() => navigation.navigate('stu_add_course')} icon="plus" />
     </>
   );
 };

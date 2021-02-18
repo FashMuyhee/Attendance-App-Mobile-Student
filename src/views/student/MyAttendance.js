@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {
-  Divider,
   Icon,
   Text,
   TopNavigationAction,
-  styled,
-  Button,
+  TabView,
+  Tab,
 } from '@ui-kitten/components';
 import {
   ScrollContainer,
@@ -18,7 +17,9 @@ import {
   THead,
 } from '../../components';
 import {inject, observer} from 'mobx-react';
-
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import DetailedRecord from './DetailedRecord';
+import SummaryRecord from './SummaryRecord';
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
 const MyAttendanceScreen = ({navigation, store}) => {
@@ -30,6 +31,7 @@ const MyAttendanceScreen = ({navigation, store}) => {
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [table, setTable] = useState({
     tableTitle: ['S/N', 'Course Code', 'date', 'sign in', 'sign out', 'Unit'],
     detailedData: [
@@ -107,45 +109,18 @@ const MyAttendanceScreen = ({navigation, store}) => {
         textStyle={styles.title}
       />
       <ScrollContainer>
-        <Table style={{marginTop: 30}}>
-          <THead>
-            {table.tableTitle.map((data, key) => {
-              return (
-                <TCell key={key}>
-                  <Text style={{color: 'white', textTransform: 'uppercase'}}>
-                    {data}
-                  </Text>
-                </TCell>
-              );
-            })}
-          </THead>
-          <TBody>
-            {table.detailedData.map((item, key) => {
-              return (
-                <TRow key={key}>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.id}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.code}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.date}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.sign_in}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.sign_out}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.unit}</Text>
-                  </TCell>
-                </TRow>
-              );
-            })}
-          </TBody>
-        </Table>
+        <TabView
+          selectedIndex={selectedIndex}
+          onSelect={(index) => setSelectedIndex(index)}
+          useNativeDriver={true}
+          style={{marginTop: 50}}>
+          <Tab title="Summary View">
+            <SummaryRecord renderData={table.detailedData} />
+          </Tab>
+          <Tab title="Detailed View">
+            <DetailedRecord renderData={table.detailedData} />
+          </Tab>
+        </TabView>
       </ScrollContainer>
     </SafeAreaView>
   );

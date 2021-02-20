@@ -39,7 +39,7 @@ const AppNavigator = ({store}) => {
     <NavigationContainer>
       <Stack.Navigator
         headerMode="none"
-        initialRouteName="landing"
+        initialRouteName="signin"
         screenOptions={{
           gestureEnabled: true,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

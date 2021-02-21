@@ -1,11 +1,13 @@
 import axios from 'axios';
+import env from '../helpers/env';
+
 const login = async ({matric_no, password}) => {
   return new Promise((resolve, reject) => {
     if (password && matric_no) {
       if (password.length >= 8) {
         axios
           .post(
-            `https://mobile-attendance-api.herokuapp.com/students/login`,
+            `${env.url}/students/login`,
             {
               matric_no: matric_no,
               password: password,
@@ -44,7 +46,7 @@ const profile = async (token) => {
     try {
       const {data} = await axios({
         method: 'GET',
-        url: `https://mobile-attendance-api.herokuapp.com/students/1`,
+        url: `${env.url}/students/1`,
         headers: {Authorization: `Bearer ${token}`},
 
         timeout: 30000,

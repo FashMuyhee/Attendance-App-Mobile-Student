@@ -7,7 +7,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {inject, observer} from 'mobx-react';
-import {login, profile} from '../models/auth';
+import {login, profile} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
 
 const SignInScreen = (props) => {
@@ -122,6 +122,7 @@ const SignInScreen = (props) => {
               icon={renderUserIcon}
               onChangeText={(value) => setMatricNo(value)}
               style={styles.input}
+              returnKeyType="next"
             />
             <Input
               placeholder="Password"
@@ -130,6 +131,8 @@ const SignInScreen = (props) => {
               onIconPress={onIconPress}
               onChangeText={(value) => setPassword(value)}
               style={styles.input}
+              returnKeyType="done"
+              onSubmitEditing={handleLectuerLogin}
             />
             <Button onPress={handleLectuerLogin}>
               {loading ? 'Signing in ...' : ' Sign In'}
@@ -143,6 +146,7 @@ const SignInScreen = (props) => {
               icon={renderUserIcon}
               onChangeText={(value) => setMatricNo(value)}
               style={styles.input}
+              returnKeyType="next"
             />
             <Input
               placeholder="Password"
@@ -151,6 +155,8 @@ const SignInScreen = (props) => {
               onIconPress={onIconPress}
               onChangeText={(value) => setPassword(value)}
               style={styles.input}
+              returnKeyType="done"
+              onSubmitEditing={handleStudentLogin}
             />
             <Button onPress={handleStudentLogin} disabled={loading}>
               {loading ? 'Signing in ...' : ' Sign In'}

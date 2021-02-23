@@ -1,21 +1,26 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Hero, FormBody, ScrollContainer} from '../components';
-import {Icon, Input, Button, TabView, Tab} from '@ui-kitten/components';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import {Icon, Input, Button, TabView, Tab, Text} from '@ui-kitten/components';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {inject, observer} from 'mobx-react';
-import {login, profile} from '../controller/auth';
+import {
+  login,
+  profile,
+  lecturerProfile,
+  lecturerLogin,
+} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
+import {Formik} from 'formik';
+import {lecturerLoginSchema, studentLoginSchema} from '../helpers/validator';
 
 const SignInScreen = (props) => {
-  const [matric_no, setMatricNo] = useState('F/HD/18/3210049');
-  const [password, setPassword] = useState('rootuser');
+ /*  const [matric_no, setMatricNo] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(''); */
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -24,18 +29,21 @@ const SignInScreen = (props) => {
   const renderIcon = (style) => (
     <Icon {...style} name={secureTextEntry ? 'eye-off' : 'eye'} />
   );
+
   const renderUserIcon = (style) => <Icon {...style} name="person-outline" />;
+  const renderEmailIcon = (style) => <Icon {...style} name="email-outline" />;
 
-  const handleStudentLogin = () => {
+  const {setIsLoggedIn, setUser, setToken} = props.store;
+
+  const handleStudentLogin = (values) => {
     setLoading(true);
-    const {setIsLoggedIn, setUser} = props.store;
 
-    login({matric_no, password})
+    login(values)
       .then((data) => {
         const token = data;
-        setLoading(false);
 
-        console.log(token);
+        setToken(token);
+        console.log(token)
         profile(token)
           .then((res) => {
             const authUser = {
@@ -46,7 +54,7 @@ const SignInScreen = (props) => {
               level: res.level,
               role: 'student',
             };
-            setUser({...authUser});
+            setUser(authUser);
             setIsLoggedIn(true);
             setLoading(false);
             Snackbar.show({
@@ -64,6 +72,7 @@ const SignInScreen = (props) => {
           })
           .catch((data) => {
             console.log(data);
+            setLoading(false);
           });
       })
       .catch((error) => {
@@ -83,29 +92,60 @@ const SignInScreen = (props) => {
       });
   };
 
-  const handleLectuerLogin = () => {
+  const handleLecturerLogin = (values) => {
     setLoading(true);
-    const {setIsLoggedIn, user, setUser} = props.store;
-    setUser({...user, role: 'lectuer'});
-    setIsLoggedIn(true);
-    setLoading(false);
 
-    /*  axios({
-                 method: 'post',
-                 url: `http://192.168.43.102:3333/students/login`,
-                 timeout: 20000,
-                 data: {
-                     matric_no: matric_no,
-                 },
-             })
-             .then((data) => {
-                 setLoading(false);
-                 console.log(data);
-             })
-             .catch((error) => {
-                 setLoading(false);
-                 console.log(error);
-             }); */
+    lecturerLogin(values)
+      .then((data) => {
+        const token = data;
+        // console.log(token);
+        setToken(token);
+        lecturerProfile(token)
+          .then(({user}) => {
+            const authUser = {
+              id: user.id,
+              name: user.fullname,
+              matric_no: user.staff_no,
+              department: user.department,
+              level: user.level,
+              role: 'lecturer',
+            };
+            setUser(authUser);
+            setIsLoggedIn(true);
+            setLoading(false);
+            Snackbar.show({
+              text: `Welcome back ${user.fullname}`,
+              duration: Snackbar.LENGTH_SHORT,
+              textColor: 'white',
+              action: {
+                text: 'ok',
+                textColor: 'green',
+                onPress: () => {
+                  Snackbar.dismiss();
+                },
+              },
+            });
+          })
+          .catch((data) => {
+            console.log(data);
+            setLoading(false);
+          });
+      })
+      .catch((error) => {
+        Snackbar.show({
+          text: error.toUpperCase(),
+          duration: Snackbar.LENGTH_SHORT,
+          textColor: 'red',
+          action: {
+            text: 'ok',
+            textColor: 'red',
+            onPress: () => {
+              Snackbar.dismiss();
+            },
+          },
+        });
+        setLoading(false);
+      });
   };
 
   return (
@@ -116,52 +156,84 @@ const SignInScreen = (props) => {
         onSelect={(index) => setSelectedIndex(index)}
         useNativeDriver={true}>
         <Tab title="Lecturer">
-          <FormBody customStyle={styles.formBody}>
-            <Input
-              placeholder="Matric No"
-              icon={renderUserIcon}
-              onChangeText={(value) => setMatricNo(value)}
-              style={styles.input}
-              returnKeyType="next"
-            />
-            <Input
-              placeholder="Password"
-              icon={renderIcon}
-              secureTextEntry={secureTextEntry}
-              onIconPress={onIconPress}
-              onChangeText={(value) => setPassword(value)}
-              style={styles.input}
-              returnKeyType="done"
-              onSubmitEditing={handleLectuerLogin}
-            />
-            <Button onPress={handleLectuerLogin}>
-              {loading ? 'Signing in ...' : ' Sign In'}
-            </Button>
-          </FormBody>
+          <Formik
+            initialValues={{
+              email: '',
+              password: '',
+            }}
+            onSubmit={handleLecturerLogin}
+            validationSchema={lecturerLoginSchema}>
+            {({handleChange, handleSubmit, errors, touched}) => (
+              <FormBody customStyle={styles.formBody}>
+                <Input
+                  placeholder="Email"
+                  icon={renderEmailIcon}
+                  onChangeText={handleChange('email')}
+                  style={styles.input}
+                  returnKeyType="next"
+                />
+                {errors.email && touched.email && (
+                  <Text style={styles.errorText}>{errors.email}</Text>
+                )}
+                <Input
+                  placeholder="Password"
+                  icon={renderIcon}
+                  secureTextEntry={secureTextEntry}
+                  onIconPress={onIconPress}
+                  onChangeText={handleChange('password')}
+                  style={styles.input}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit}
+                />
+                {errors.password && touched.password && (
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                )}
+                <Button onPress={handleSubmit} disabled={loading}>
+                  {loading ? 'Signing in ...' : ' Sign In'}
+                </Button>
+              </FormBody>
+            )}
+          </Formik>
         </Tab>
         <Tab title="Student">
-          <FormBody customStyle={styles.formBody}>
-            <Input
-              placeholder="Matric No"
-              icon={renderUserIcon}
-              onChangeText={(value) => setMatricNo(value)}
-              style={styles.input}
-              returnKeyType="next"
-            />
-            <Input
-              placeholder="Password"
-              icon={renderIcon}
-              secureTextEntry={secureTextEntry}
-              onIconPress={onIconPress}
-              onChangeText={(value) => setPassword(value)}
-              style={styles.input}
-              returnKeyType="done"
-              onSubmitEditing={handleStudentLogin}
-            />
-            <Button onPress={handleStudentLogin} disabled={loading}>
-              {loading ? 'Signing in ...' : ' Sign In'}
-            </Button>
-          </FormBody>
+          <Formik
+            initialValues={{
+              matric_no: '',
+              password: '',
+            }}
+            onSubmit={handleStudentLogin}
+            validationSchema={studentLoginSchema}>
+            {({handleChange, handleSubmit, errors, touched}) => (
+              <FormBody customStyle={styles.formBody}>
+                <Input
+                  placeholder="Matric No"
+                  icon={renderUserIcon}
+                  onChangeText={handleChange('matric_no')}
+                  style={styles.input}
+                  returnKeyType="next"
+                />
+                {errors.matric_no && touched.matric_no && (
+                  <Text style={styles.errorText}>{errors.matric_no}</Text>
+                )}
+                <Input
+                  placeholder="Password"
+                  icon={renderIcon}
+                  secureTextEntry={secureTextEntry}
+                  onIconPress={onIconPress}
+                  onChangeText={handleChange('password')}
+                  style={styles.input}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit}
+                />
+                {errors.password && touched.password && (
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                )}
+                <Button onPress={handleSubmit} disabled={loading}>
+                  {loading ? 'Signing in ...' : ' Sign In'}
+                </Button>
+              </FormBody>
+            )}
+          </Formik>
         </Tab>
       </TabView>
     </ScrollContainer>
@@ -176,5 +248,10 @@ const styles = StyleSheet.create({
   },
   formBody: {
     marginTop: hp('5%'),
+  },
+  errorText: {
+    color: 'tomato',
+    fontSize: 12,
+    marginBottom: 10,
   },
 });

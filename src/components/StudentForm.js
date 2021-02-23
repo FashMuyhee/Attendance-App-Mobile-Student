@@ -82,7 +82,7 @@ const StudentForm = () => {
       }}
       onSubmit={handleRegister}
       validationSchema={registerSchema}>
-      {({handleChange, handleSubmit, errors, touched, isValid}) => (
+      {({handleChange, handleSubmit, errors, touched}) => (
         <FormBody customStyle={styles.form}>
           <Input
             placeholder="Fullname"

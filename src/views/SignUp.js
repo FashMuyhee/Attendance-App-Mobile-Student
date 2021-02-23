@@ -5,7 +5,7 @@ import {Hero, StudentForm, ScrollContainer, LecturerForm} from '../components';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const SignUpScreen = () => {
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
   return (
     <ScrollContainer customStyle={styles.content}>
       <Hero

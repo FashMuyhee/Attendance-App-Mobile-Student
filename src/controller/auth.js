@@ -110,7 +110,7 @@ const register = async ({
 };
 const lecturerRegister = async ({
   fullname,
-  matric_no,
+  staff_no,
   department,
   level,
   email,
@@ -121,7 +121,7 @@ const lecturerRegister = async ({
       method: 'POST',
       url: `${env.url}/lecturers`,
       data: {
-        matric_no: matric_no,
+        staff_no: staff_no,
         password: password,
         fullname: fullname,
         department: department,
@@ -145,11 +145,11 @@ const lecturerRegister = async ({
             reject('Email has been used by another student');
           } else if (
             index.hasOwnProperty('field') &&
-            index.field == 'matric_no' &&
+            index.field == 'staff_no' &&
             index.hasOwnProperty('validation') &&
             index.validation == 'unique'
           ) {
-            reject(`You can't register with someone matric number`);
+            reject(`You can't register with someone staff number`);
           }
         });
       });

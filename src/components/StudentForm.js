@@ -5,11 +5,12 @@ import {Input, Icon, Button, Select, Text} from '@ui-kitten/components';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {Formik} from 'formik';
 import {registerSchema} from '../helpers/validator';
-import {register} from '../controller/auth';
+import {register, login, profile} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
 import {useNavigation} from '@react-navigation/native';
+import {inject, observer} from 'mobx-react';
 
-const StudentForm = () => {
+const StudentForm = ({store}) => {
   const data = [
     {text: 'ND1'},
     {text: 'ND2'},
@@ -24,6 +25,8 @@ const StudentForm = () => {
   const [level, setLevel] = React.useState({text: ''});
   const [loading, setLoading] = useState(false);
 
+  const {setIsLoggedIn, setUser, setToken} = store;
+
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -37,21 +40,57 @@ const StudentForm = () => {
     setLoading(true);
 
     register(user)
-      .then((data) => {
-        setLoading(false);
-        Snackbar.show({
-          text: `Registration Successful, Login Now`,
-          duration: Snackbar.LENGTH_SHORT,
-          textColor: 'white',
-          action: {
-            text: 'ok',
-            textColor: 'green',
-            onPress: () => {
-              Snackbar.dismiss();
-            },
-          },
-        });
-        navigate('signin');
+      .then(() => {
+        const user = {matric_no: values.matric_no, password: values.password};
+        login(user)
+          .then((data) => {
+            const token = data;
+
+            setToken(token);
+            console.log(token);
+            profile(token)
+              .then((res) => {
+                const authUser = {
+                  name: res.fullname,
+                  role: 'student',
+                  ...res,
+                };
+                setUser(authUser);
+                setIsLoggedIn(true);
+                setLoading(false);
+                Snackbar.show({
+                  text: `Registration Successful, Welcome ${res.fullname}`,
+                  duration: Snackbar.LENGTH_SHORT,
+                  textColor: 'white',
+                  action: {
+                    text: 'ok',
+                    textColor: 'green',
+                    onPress: () => {
+                      Snackbar.dismiss();
+                    },
+                  },
+                });
+              })
+              .catch((data) => {
+                console.log(data);
+                setLoading(false);
+              });
+          })
+          .catch((error) => {
+            Snackbar.show({
+              text: error.toUpperCase(),
+              duration: Snackbar.LENGTH_SHORT,
+              textColor: 'red',
+              action: {
+                text: 'ok',
+                textColor: 'red',
+                onPress: () => {
+                  Snackbar.dismiss();
+                },
+              },
+            });
+            setLoading(false);
+          });
       })
       .catch((error) => {
         setLoading(false);
@@ -156,7 +195,7 @@ const StudentForm = () => {
   );
 };
 
-export default StudentForm;
+export default inject('store')(observer(StudentForm));
 const styles = StyleSheet.create({
   form: {
     marginTop: '6%',

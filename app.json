@@ -1,4 +1,9 @@
 {
   "name": "Attendance",
-  "displayName": "Attendance"
+  "displayName": "Attendance",
+  "primaryColor": "#00BA4A",
+  "androidNavigationBar": {
+    "backgroundColor": "#00BA4A",
+    "barStyle": "light-content"
+  }
 }

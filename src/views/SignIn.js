@@ -15,9 +15,6 @@ import {Formik} from 'formik';
 import {lecturerLoginSchema, studentLoginSchema} from '../helpers/validator';
 
 const SignInScreen = (props) => {
- /*  const [matric_no, setMatricNo] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState(''); */
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -43,16 +40,13 @@ const SignInScreen = (props) => {
         const token = data;
 
         setToken(token);
-        console.log(token)
+        console.log(token);
         profile(token)
           .then((res) => {
             const authUser = {
-              id: res.id,
               name: res.fullname,
-              matric_no: res.matric_no,
-              department: res.department,
-              level: res.level,
               role: 'student',
+              ...res,
             };
             setUser(authUser);
             setIsLoggedIn(true);
@@ -104,10 +98,8 @@ const SignInScreen = (props) => {
           .then(({user}) => {
             const authUser = {
               id: user.id,
-              name: user.fullname,
               matric_no: user.staff_no,
-              department: user.department,
-              level: user.level,
+              ...res,
               role: 'lecturer',
             };
             setUser(authUser);

@@ -6,10 +6,10 @@ import {
   Icon,
   Layout,
 } from '@ui-kitten/components';
-import {View, Image} from 'react-native';
+import {View, Image, TouchableWithoutFeedback} from 'react-native';
 import {Navbar, DetailText, Box} from '../components';
 import {inject, observer} from 'mobx-react';
-import avatar from '../assets/img/user.jpg';
+import avatar from '../assets/img/user.png';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -72,17 +72,19 @@ const HomeScreen = ({navigation, store}) => {
           />
         }
       />
-      <View style={styles.profile}>
-        <View style={styles.avatarWrapper}>
-          <Image source={avatar} style={styles.avatar} />
+      <TouchableWithoutFeedback onPress={() => navigation.navigate('settings')}>
+        <View style={styles.profile}>
+          <View style={styles.avatarWrapper}>
+            <Image source={avatar} style={styles.avatar} />
+          </View>
+          <View style={styles.details}>
+            <DetailText text={user.name} />
+            <DetailText text={user.matric_no} />
+            <DetailText text={user.department} />
+            <DetailText text={user.level} />
+          </View>
         </View>
-        <View style={styles.details}>
-          <DetailText text={user.name} />
-          <DetailText text={user.matric_no} />
-          <DetailText text={user.department} />
-          <DetailText text={user.level} />
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
       {user.role === 'student' ? (
         <DashboardActionStudent />
       ) : (
@@ -137,8 +139,8 @@ const themedStyles = StyleService.create({
     // paddingLeft: '2%',
   },
   avatar: {
-    width: wp('30%'),
-    height: hp('18%'),
+    width: wp(30),
+    height: hp(16),
     borderRadius: 100,
     justifyContent: 'center',
   },

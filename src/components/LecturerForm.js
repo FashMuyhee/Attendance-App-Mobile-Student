@@ -4,17 +4,23 @@ import FormBody from './FormBody';
 import {Input, Icon, Button, Select, Text} from '@ui-kitten/components';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {lecturerRegisterSchema} from '../helpers/validator';
-import {lecturerRegister} from '../controller/auth';
+import {
+  lecturerRegister,
+  lecturerLogin,
+  lecturerProfile,
+} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
+import {inject, observer} from 'mobx-react';
 
-const LecturerForm = () => {
+const LecturerForm = ({store}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [level, setLevel] = useState({text: ''});
   const [levelData, setLevelData] = useState([]);
   const [loading, setLoading] = useState(false);
   const {navigate} = useNavigation();
+  const {setIsLoggedIn, setUser, setToken} = store;
 
   useEffect(() => {
     let data = [];
@@ -36,8 +42,8 @@ const LecturerForm = () => {
     setLoading(true);
 
     lecturerRegister(user)
-      .then((data) => {
-        setLoading(false);
+      .then(() => {
+        /*  setLoading(false);
         Snackbar.show({
           text: `Registration Successful, Login Now`,
           duration: Snackbar.LENGTH_SHORT,
@@ -50,7 +56,57 @@ const LecturerForm = () => {
             },
           },
         });
-        navigate('signin');
+        navigate('signin'); */
+        const user = {email: values.email, password: values.password};
+        lecturerLogin(user)
+          .then((data) => {
+            const token = data;
+            // console.log(token);
+            setToken(token);
+            lecturerProfile(token)
+              .then(({user}) => {
+                const authUser = {
+                  id: user.id,
+                  matric_no: user.staff_no,
+                  ...user,
+                  role: 'lecturer',
+                };
+                setUser(authUser);
+                setIsLoggedIn(true);
+                setLoading(false);
+                Snackbar.show({
+                  text: `Registration Successful, Welcome ${user.fullname}`,
+                  duration: Snackbar.LENGTH_SHORT,
+                  textColor: 'white',
+                  action: {
+                    text: 'ok',
+                    textColor: 'green',
+                    onPress: () => {
+                      Snackbar.dismiss();
+                    },
+                  },
+                });
+              })
+              .catch((data) => {
+                console.log(data);
+                setLoading(false);
+              });
+          })
+          .catch((error) => {
+            Snackbar.show({
+              text: error.toUpperCase(),
+              duration: Snackbar.LENGTH_SHORT,
+              textColor: 'red',
+              action: {
+                text: 'ok',
+                textColor: 'red',
+                onPress: () => {
+                  Snackbar.dismiss();
+                },
+              },
+            });
+            setLoading(false);
+          });
       })
       .catch((error) => {
         setLoading(false);
@@ -156,7 +212,8 @@ const LecturerForm = () => {
   );
 };
 
-export default LecturerForm;
+export default inject('store')(observer(LecturerForm));
+
 const styles = StyleSheet.create({
   form: {
     paddingLeft: '0%',

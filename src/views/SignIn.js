@@ -99,6 +99,7 @@ const SignInScreen = (props) => {
             const authUser = {
               id: user.id,
               matric_no: user.staff_no,
+              name: user.fullname,
               ...user,
               role: 'lecturer',
             };

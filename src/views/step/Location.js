@@ -4,8 +4,6 @@ import {
   ToastAndroid,
   StyleSheet,
   ActivityIndicator,
-  View,
-  TouchableOpacity,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {
@@ -18,13 +16,9 @@ import {
 import {Container, ModalAlert, MyText} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import MapView, {Marker, Circle} from 'react-native-maps';
 import {checkLocationDifference} from '../../helpers/locationDifference';
 import {TakeScreen} from '../student';
-import MapboxGL from '@react-native-mapbox-gl/maps';
-
-MapboxGL.setAccessToken(
-  'pk.eyJ1IjoiZmFzaG11eWhlZSIsImEiOiJja205anVnZmkxNml0MnZtenBzNjJheGNlIn0.9lbyAOCtZ2o1l_OQodySRg',
-);
 
 let markers = [];
 class Location extends Component {
@@ -120,14 +114,9 @@ class Location extends Component {
     );
   };
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.getLocation();
-    MapboxGL.locationManager.start();
   }
-  componentWillUnmount() {
-    MapboxGL.locationManager.stop();
-  }
-
   render() {
     const routeParam = this.props.route.params;
     const {lectureLocation} = routeParam;
@@ -135,13 +124,16 @@ class Location extends Component {
     const {user} = this.props.store;
     markers = [
       {
-        latLng: [longitude, latitude],
+        latlng: {
+          latitude: latitude,
+          longitude: longitude,
+        },
         title: user.name,
         description: 'Dolor sit sint exercitation reprehenderit magna.',
         pinColor: '#4B9CFB',
       },
       {
-        latLng: [lectureLocation.lng, lectureLocation.lat],
+        latlng: {latitude: lectureLocation.lat, longitude: lectureLocation.lng},
         title: 'Lecture Hall',
         description: 'Dolor sit sint exercitation reprehenderit magna.',
         pinColor: '#00BA4A',
@@ -152,7 +144,7 @@ class Location extends Component {
       <TakeScreen>
         <Container customStyle={styles.welcomeNote}>
           <MyText customStyle={styles.boldText}>
-            Nice!{' '}
+            Nice!
             <MyText customStyle={styles.normalText}>
               We need your location.
             </MyText>
@@ -169,31 +161,36 @@ class Location extends Component {
               <Text>Getting Location</Text>
             </>
           ) : (
-            <MapboxGL.MapView
-              styleURL={MapboxGL.StyleURL.Outdoors}
-              zoomLevel={50}
-              compassEnabled
-              showUserLocation={true}
-              style={styles.mapView}>
-              <MapboxGL.Camera
-                centerCoordinate={markers[0].latLng}
-                zoomLevel={10}
+            <MapView
+              style={styles.mapView}
+              initialRegion={{
+                latitude: 6.5191271,
+                longitude: 3.3705135,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}
+              provider="google"
+              showsCompass
+              mapType="standard">
+              <Circle
+                // center={{latitude: lectureHall.lat, longitude: lectureHall.lng}}
+                center={markers[1].latlng}
+                radius={20}
+                strokeWidth={1}
+                strokeColor={'#1a66ff'}
+                // fillColor={theme['color-primary-200']}
               />
-              {markers.map((marker, key) => (
-                <MapboxGL.PointAnnotation
-                  coordinate={marker.latLng}
-                  id={marker.title}
-                  key={key}>
-                  <MapboxGL.Callout
-                    title={marker.title}
-                    textStyle={{
-                      fontFamily: 'Poppins Regular',
-                      color: marker.pinColor,
-                    }}
-                  />
-                </MapboxGL.PointAnnotation>
+              {markers.map((item, key) => (
+                <Marker
+                  // coordinate={{latitude: 6.5205902, longitude: 3.3745945}}
+                  coordinate={item.latlng}
+                  title={item.title}
+                  description={item.description}
+                  pinColor={item.pinColor}
+                  key={key}
+                />
               ))}
-            </MapboxGL.MapView>
+            </MapView>
           )}
         </Container>
         <Container customStyle={{marginTop: 10, marginBottom: 10}}>
@@ -205,7 +202,7 @@ class Location extends Component {
             <Text style={{marginBottom: 5, marginTop: 5, textAlign: 'center'}}>
               {locationDistance < 20
                 ? 'Yeah !!! your location match click next to continue'
-                : `You're to far from the Lecture room, Move to the Lecture room then try again`}
+                : `You're to far from the Lecture room,Move to the Lecture room then try again`}
             </Text>
           )}
           <Button
@@ -255,6 +252,8 @@ const styles = StyleService.create({
     borderColor: '#00BA4A',
     borderRadius: 5,
     borderWidth: 1,
+    // paddingLeft: '9%',
+    // paddingRight: '9%',
     marginTop: hp('2%'),
     height: hp('55%'),
     justifyContent: 'center',
@@ -265,18 +264,5 @@ const styles = StyleService.create({
   mapView: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 5,
-  },
-  touchableContainer: {borderColor: 'black', borderWidth: 1.0, width: 60},
-  touchable: {
-    backgroundColor: 'blue',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  touchableText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 });

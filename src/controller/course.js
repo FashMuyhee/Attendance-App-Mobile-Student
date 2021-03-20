@@ -54,4 +54,30 @@ const studentAddCourse = async (course_id, user) => {
   });
 };
 
-export {fetchAllCourses, fetchCoursesByLevel, studentAddCourse};
+const fetchStudentCourses = async (user) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: `${env.url}/students/2/get_courses`,
+      method: 'get',
+      timeout: 30000,
+      headers: {Authorization: `Bearer ${user}`},
+    })
+      .then(({data}) => {
+        const myCourse = data.payload.message['courses'].map((course, key) => {
+          const code = course.code.toUpperCase();
+          return [key, course.title, code];
+        });
+        resolve(myCourse);
+      })
+      .catch((error) => {
+        reject(error.response);
+      });
+  });
+};
+
+export {
+  fetchAllCourses,
+  fetchCoursesByLevel,
+  studentAddCourse,
+  fetchStudentCourses,
+};

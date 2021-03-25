@@ -17,9 +17,7 @@
 
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDTm10C0-lNhOSFfi3fhw3GNMkH4daRvlg" />
-  <meta-data
-      android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-      android:value="face" /> <!-- //react-native-camera -->
+    <meta-data android:name="com.google.firebase.ml.vision.DEPENDENCIES" android:value="face" /> <!-- //react-native-camera -->
   </application>
 
 </manifest>

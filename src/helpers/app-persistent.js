@@ -18,5 +18,12 @@ const getCredentials = async () => {
     console.log('Something went wrong', error);
   }
 };
+const removeCredentials = async () => {
+  try {
+    await AsyncStorage.removeItem('userData');
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-export {setCredentials, getCredentials};
+export {setCredentials, getCredentials, removeCredentials};

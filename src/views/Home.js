@@ -14,7 +14,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
+import {removeCredentials} from '../helpers/app-persistent';
 const HomeScreen = ({navigation, store}) => {
   const styles = useStyleSheet(themedStyles);
   const SettingIcon = (style) => (
@@ -23,6 +23,10 @@ const HomeScreen = ({navigation, store}) => {
 
   const {user, setIsLoggedIn} = store;
 
+  const logout = async () => {
+    setIsLoggedIn(false);
+    removeCredentials();
+  };
   const DashboardActionStudent = () => (
     <View style={styles.actions}>
       <Box icon="edit-outline" route="att_signin" title="Take Attendance" />
@@ -32,11 +36,7 @@ const HomeScreen = ({navigation, store}) => {
         route="stu_attendance"
         title="Attendance Record"
       />
-      <Box
-        icon="log-out-outline"
-        title="Sign Out"
-        xtraOnPress={() => setIsLoggedIn(false)}
-      />
+      <Box icon="log-out-outline" title="Sign Out" xtraOnPress={logout} />
     </View>
   );
 
@@ -53,11 +53,7 @@ const HomeScreen = ({navigation, store}) => {
         route="lect_attendance"
         title="Attendance Record"
       />
-      <Box
-        icon="log-out-outline"
-        title="Sign Out"
-        xtraOnPress={() => setIsLoggedIn(false)}
-      />
+      <Box icon="log-out-outline" title="Sign Out" xtraOnPress={logout} />
     </View>
   );
   return (

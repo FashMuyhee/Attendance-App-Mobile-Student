@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {View} from 'react-native';
 import {
   Icon,
   Text,
@@ -60,7 +59,7 @@ const MyCourseScreen = ({navigation, store}) => {
           normal="Here are your courses"
           subtitle="below ate the courses offered by you,you can choose to add more at any given time by by clicking the `+` button"
         />
-        <Table borderStyle={{borderWidth: 14, borderColor: '#fff'}}>
+        <Table>
           <Row
             data={table.head}
             style={styles.head}
@@ -69,7 +68,7 @@ const MyCourseScreen = ({navigation, store}) => {
           {loading ? (
             <Layout
               style={{
-                flexDirection: 'row',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>

@@ -65,7 +65,7 @@ const fetchStudentCourses = async (user) => {
       .then(({data}) => {
         const myCourse = data.payload.message['courses'].map((course, key) => {
           const code = course.code.toUpperCase();
-          return [key, course.title, code];
+          return [key + 1, course.title, code];
         });
         resolve(myCourse);
       })

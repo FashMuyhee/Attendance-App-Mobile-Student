@@ -194,6 +194,26 @@ const lecturerProfile = async (token) => {
   }
 };
 
+const uploadStudentDp = async (image, token) => {
+  const form = new FormData();
+  form.append('dp', {uri: image, name: 'image.jpg', type: 'image/jpeg'});
+
+  try {
+    const {res} = axios({
+      method: 'put',
+      url: `${env.url}/students/8/uploadDp`,
+      headers: {Authorization: `Bearer ${token}`},
+      'Content-Type': 'multipart/form-data',
+      data: form,
+      timeout: 30000,
+    });
+    console.log(res);
+    return res.payload;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export {
   login,
   register,
@@ -201,4 +221,5 @@ export {
   lecturerLogin,
   lecturerRegister,
   lecturerProfile,
+  uploadStudentDp,
 };

@@ -9,11 +9,16 @@ import {default as customDarkTheme} from './src/config/dark-theme.json';
 import {default as customMapping} from './src/config/custom-mapping.json';
 import {inject, observer} from 'mobx-react';
 import AppNavigator from './src/route/navigator';
-import {login, profile} from './src/controller/auth';
+import {
+  login,
+  profile,
+  lecturerProfile,
+  lecturerLogin,
+} from './src/controller/auth';
 import {getCredentials} from './src/helpers/app-persistent';
 import SplashScreen from 'react-native-splash-screen';
 import Snackbar from 'react-native-snackbar';
-
+import {LoadingScreen, SettingsScreen} from './src/views';
 const darkTheme = {...dark, ...customDarkTheme};
 const lightTheme = {...light, ...customLightTheme};
 
@@ -82,13 +87,66 @@ const App = (props) => {
       });
   };
 
+  const handleLecturerLogin = (values) => {
+    setLoading(true);
+
+    lecturerLogin({email: values.uid, password: values.password})
+      .then((data) => {
+        const token = data;
+        setToken(token);
+        lecturerProfile(token)
+          .then(({user}) => {
+            const authUser = {
+              id: user.id,
+              matric_no: user.staff_no,
+              name: user.fullname,
+              ...user,
+              role: 'lecturer',
+            };
+            setUser(authUser);
+            setIsLoggedIn(true);
+            setLoading(false);
+            Snackbar.show({
+              text: `Welcome back ${user.fullname}`,
+              duration: Snackbar.LENGTH_SHORT,
+              textColor: 'white',
+              action: {
+                text: 'ok',
+                textColor: 'green',
+                onPress: () => {
+                  Snackbar.dismiss();
+                },
+              },
+            });
+          })
+          .catch((data) => {
+            console.log(data);
+            setLoading(false);
+          });
+      })
+      .catch((error) => {
+        Snackbar.show({
+          text: error.toUpperCase(),
+          duration: Snackbar.LENGTH_SHORT,
+          textColor: 'red',
+          action: {
+            text: 'ok',
+            textColor: 'red',
+            onPress: () => {
+              Snackbar.dismiss();
+            },
+          },
+        });
+        setLoading(false);
+      });
+  };
   useEffect(() => {
     getCredentials()
       .then((credentials) => {
         if (credentials.role === 'student') {
           handleStudentLogin(credentials);
         } else if (credentials.role === 'lecturer') {
-          console.log('yeah lecturer');
+          handleLecturerLogin(credentials);
         }
       })
       .catch((e) => {
@@ -110,7 +168,8 @@ const App = (props) => {
         theme={currentTheme}
         customMapping={customMapping}>
         <StatusBar backgroundColor="#00AB4A" />
-        <AppNavigator />
+        {/* {loading ? <LoadingScreen /> : <AppNavigator />} */}
+        <SettingsScreen />
       </ApplicationProvider>
     </>
   );

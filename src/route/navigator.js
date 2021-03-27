@@ -11,6 +11,7 @@ import {
   SettingsScreen,
   LandingScreen,
   SignUpScreen,
+  LoadingScreen,
   SignInScreen,
 } from '../views';
 
@@ -47,13 +48,14 @@ const AppNavigator = ({store}) => {
         {!isLoggedIn ? (
           <>
             <Stack.Screen name="landing" component={LandingScreen} />
+            {/* <Stack.Screen name="loading" component={LoadingScreen} /> */}
             <Stack.Screen name="signup" component={SignUpScreen} />
             <Stack.Screen name="signin" component={SignInScreen} />
           </>
         ) : (
           <>
-            <Stack.Screen name="home" component={HomeScreen} />
             <Stack.Screen name="settings" component={SettingsScreen} />
+            <Stack.Screen name="home" component={HomeScreen} />
             {user.role === 'student' ? (
               <>
                 <Stack.Screen name="att_signin" component={SiginCode} />

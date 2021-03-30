@@ -168,8 +168,8 @@ const App = (props) => {
         theme={currentTheme}
         customMapping={customMapping}>
         <StatusBar backgroundColor="#00AB4A" />
-        {/* {loading ? <LoadingScreen /> : <AppNavigator />} */}
-        <SettingsScreen />
+        {loading ? <LoadingScreen /> : <AppNavigator />}
+        {/* <SettingsScreen /> */}
       </ApplicationProvider>
     </>
   );

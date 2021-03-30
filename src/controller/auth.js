@@ -194,22 +194,36 @@ const lecturerProfile = async (token) => {
   }
 };
 
-const uploadStudentDp = async (image, token) => {
-  const form = new FormData();
-  form.append('dp', {uri: image, name: 'image.jpg', type: 'image/jpeg'});
+const createFormData = (photo) => {
+  const data = new FormData();
+  data.append('dp', {
+    name: photo.fileName,
+    type: photo.type,
+    uri:
+      Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
+  });
 
+  return data;
+};
+
+const uploadStudentDp = async (image, token) => {
+  console.log(createFormData(image));
   try {
     const {res} = axios({
-      method: 'put',
+      method: 'PUT',
       url: `${env.url}/students/8/uploadDp`,
-      headers: {Authorization: `Bearer ${token}`},
-      'Content-Type': 'multipart/form-data',
-      data: form,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'application/json',
+      },
+      data: createFormData(image),
       timeout: 30000,
     });
-    console.log(res);
+    console.log('true' + res);
     return res.payload;
   } catch (error) {
+    console.log(error.response);
     return error.response;
   }
 };

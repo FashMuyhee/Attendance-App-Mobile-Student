@@ -54,8 +54,8 @@ const AppNavigator = ({store}) => {
           </>
         ) : (
           <>
-            <Stack.Screen name="settings" component={SettingsScreen} />
             <Stack.Screen name="home" component={HomeScreen} />
+            <Stack.Screen name="settings" component={SettingsScreen} />
             {user.role === 'student' ? (
               <>
                 <Stack.Screen name="att_signin" component={SiginCode} />

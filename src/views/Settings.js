@@ -32,8 +32,9 @@ const SettingsScreen = ({navigation, store}) => {
     navigation.goBack();
   };
   const theme = useTheme();
-  const [imgUrl, setImgUrl] = useState(null);
+  const [imgUrl, setImgUrl] = useState({uri: null});
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
@@ -45,13 +46,15 @@ const SettingsScreen = ({navigation, store}) => {
     ImagePicker.launchImageLibrary(
       {mediaType: 'photo', includeBase64: false, maxHeight: 200, maxWidth: 200},
       (res) => {
-        setImgUrl(res.uri);
+        setImgUrl(res);
       },
     );
   };
 
-  const saveDp = () => {
-    console.log(uploadStudentDp(res.uri, userToken));
+  const saveDp = async () => {
+    setLoading(true);
+    await uploadStudentDp(imgUrl, userToken);
+    setLoading(false);
   };
 
   return (
@@ -67,7 +70,7 @@ const SettingsScreen = ({navigation, store}) => {
             <Avatar
               style={styles.avatar}
               size="large"
-              source={imgUrl ? {uri: imgUrl} : avatar}
+              source={imgUrl.uri != null ? {uri: imgUrl.uri} : avatar}
             />
           </TouchableWithoutFeedback>
           <View style={styles.pickerContainer}>
@@ -81,14 +84,19 @@ const SettingsScreen = ({navigation, store}) => {
           </View>
         </Layout>
         <Button onPress={() => toggleTheme(myTheme)}>Change Theme</Button>
-        <Button onPress={()=>saveDp()}>Upload</Button>
+        <Button
+          onPress={() => saveDp()}
+          disabled={loading}
+          style={{marginVertical: 100}}>
+          {loading ? ' Uploading ....' : 'Upload'}
+        </Button>
         <Modal
           visible={visible}
           transparent={false}
           animationType="slide"
           onRequestClose={() => setVisible(false)}>
           <View style={styles.backdrop}>
-            <Image style={styles.preview} source={{uri: imgUrl}} />
+            <Image style={styles.preview} source={{uri: imgUrl.uri}} />
           </View>
         </Modal>
       </Container>

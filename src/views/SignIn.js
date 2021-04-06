@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import {Hero, FormBody, ScrollContainer} from '../components';
 import {Icon, Input, Button, TabView, Tab, Text} from '@ui-kitten/components';
@@ -30,6 +30,10 @@ const SignInScreen = (props) => {
 
   const renderUserIcon = (style) => <Icon {...style} name="person-outline" />;
   const renderEmailIcon = (style) => <Icon {...style} name="email-outline" />;
+
+  // USE REFS
+  const passwordInput = useRef(null);
+  const password2Input = useRef(null);
 
   const {setIsLoggedIn, setUser, setToken} = props.store;
 
@@ -170,11 +174,13 @@ const SignInScreen = (props) => {
                   onChangeText={handleChange('email')}
                   style={styles.input}
                   returnKeyType="next"
+                  onSubmitEditing={() => passwordInput.current.focus()}
                 />
                 {errors.email && touched.email && (
                   <Text style={styles.errorText}>{errors.email}</Text>
                 )}
                 <Input
+                  ref={passwordInput}
                   placeholder="Password"
                   icon={renderIcon}
                   secureTextEntry={secureTextEntry}
@@ -210,11 +216,13 @@ const SignInScreen = (props) => {
                   onChangeText={handleChange('matric_no')}
                   style={styles.input}
                   returnKeyType="next"
+                  onSubmitEditing={() => password2Input.current.focus()}
                 />
                 {errors.matric_no && touched.matric_no && (
                   <Text style={styles.errorText}>{errors.matric_no}</Text>
                 )}
                 <Input
+                  ref={password2Input}
                   placeholder="Password"
                   icon={renderIcon}
                   secureTextEntry={secureTextEntry}

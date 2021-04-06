@@ -39,7 +39,8 @@ const StudentForm = ({store}) => {
     const user = {...values, level: level.text};
     setLoading(true);
 
-    register(user)
+    if(values.c_password === values.password){
+      register(user)
       .then(() => {
         const user = {matric_no: values.matric_no, password: values.password};
         login(user)
@@ -107,6 +108,21 @@ const StudentForm = ({store}) => {
           },
         });
       });
+    }else{
+      setLoading(false);
+      Snackbar.show({
+        text: 'Password Mismatch',
+        duration: Snackbar.LENGTH_SHORT,
+        textColor: 'red',
+        action: {
+          text: 'ok',
+          textColor: 'red',
+          onPress: () => {
+            Snackbar.dismiss();
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -118,6 +134,7 @@ const StudentForm = ({store}) => {
         fullname: '',
         department: '',
         level: level.text,
+        c_password: '',
       }}
       onSubmit={handleRegister}
       validationSchema={registerSchema}>
@@ -182,6 +199,19 @@ const StudentForm = ({store}) => {
           />
           {errors.password && touched.password && (
             <Text style={styles.errorText}>{errors.password}</Text>
+          )}
+          <Input
+            placeholder="Confirm Password"
+            icon={renderIconEye}
+            secureTextEntry={secureTextEntry}
+            onIconPress={onIconPress}
+            onChangeText={handleChange('c_password')}
+            style={styles.input}
+            returnKeyType="done"
+            onSubmitEditing={handleSubmit}
+          />
+          {errors.c_password && touched.c_password && (
+            <Text style={styles.errorText}>{errors.c_password}</Text>
           )}
           <Button
             style={styles.button}

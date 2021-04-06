@@ -41,88 +41,91 @@ const LecturerForm = ({store}) => {
     const user = {...values, level: level.text};
     setLoading(true);
 
-    lecturerRegister(user)
-      .then(() => {
-        /*  setLoading(false);
-        Snackbar.show({
-          text: `Registration Successful, Login Now`,
-          duration: Snackbar.LENGTH_SHORT,
-          textColor: 'white',
-          action: {
-            text: 'ok',
-            textColor: 'green',
-            onPress: () => {
-              Snackbar.dismiss();
-            },
-          },
-        });
-        navigate('signin'); */
-        const user = {email: values.email, password: values.password};
-        lecturerLogin(user)
-          .then((data) => {
-            const token = data;
-            // console.log(token);
-            setToken(token);
-            lecturerProfile(token)
-              .then(({user}) => {
-                const authUser = {
-                  id: user.id,
-                  matric_no: user.staff_no,
-                  ...user,
-                  role: 'lecturer',
-                };
-                setUser(authUser);
-                setIsLoggedIn(true);
-                setLoading(false);
-                Snackbar.show({
-                  text: `Registration Successful, Welcome ${user.fullname}`,
-                  duration: Snackbar.LENGTH_SHORT,
-                  textColor: 'white',
-                  action: {
-                    text: 'ok',
-                    textColor: 'green',
-                    onPress: () => {
-                      Snackbar.dismiss();
+    if (values.c_password === values.password) {
+      lecturerRegister(user)
+        .then(() => {
+          const user = {email: values.email, password: values.password};
+          lecturerLogin(user)
+            .then((data) => {
+              const token = data;
+              // console.log(token);
+              setToken(token);
+              lecturerProfile(token)
+                .then(({user}) => {
+                  const authUser = {
+                    id: user.id,
+                    matric_no: user.staff_no,
+                    ...user,
+                    role: 'lecturer',
+                  };
+                  setUser(authUser);
+                  setIsLoggedIn(true);
+                  setLoading(false);
+                  Snackbar.show({
+                    text: `Registration Successful, Welcome ${user.fullname}`,
+                    duration: Snackbar.LENGTH_SHORT,
+                    textColor: 'white',
+                    action: {
+                      text: 'ok',
+                      textColor: 'green',
+                      onPress: () => {
+                        Snackbar.dismiss();
+                      },
                     },
-                  },
+                  });
+                })
+                .catch((data) => {
+                  console.log(data);
+                  setLoading(false);
                 });
-              })
-              .catch((data) => {
-                console.log(data);
-                setLoading(false);
-              });
-          })
-          .catch((error) => {
-            Snackbar.show({
-              text: error.toUpperCase(),
-              duration: Snackbar.LENGTH_SHORT,
-              textColor: 'red',
-              action: {
-                text: 'ok',
+            })
+            .catch((error) => {
+              Snackbar.show({
+                text: error.toUpperCase(),
+                duration: Snackbar.LENGTH_SHORT,
                 textColor: 'red',
-                onPress: () => {
-                  Snackbar.dismiss();
+                action: {
+                  text: 'ok',
+                  textColor: 'red',
+                  onPress: () => {
+                    Snackbar.dismiss();
+                  },
                 },
-              },
+              });
+              setLoading(false);
             });
-            setLoading(false);
-          });
-      })
-      .catch((error) => {
-        setLoading(false);
-        Snackbar.show({
-          text: error.toUpperCase(),
-          duration: Snackbar.LENGTH_SHORT,
-          textColor: 'red',
-          action: {
-            text: 'ok',
+        })
+        .catch((error) => {
+          setLoading(false);
+          Snackbar.show({
+            text: error.toUpperCase(),
+            duration: Snackbar.LENGTH_SHORT,
             textColor: 'red',
-            onPress: () => {
-              Snackbar.dismiss();
+            action: {
+              text: 'ok',
+              textColor: 'red',
+              onPress: () => {
+                Snackbar.dismiss();
+              },
             },
-          },
+          });
         });
+    } else {
+      setLoading(false);
+
+      Snackbar.show({
+        text: 'Password Mismatch',
+        duration: Snackbar.LENGTH_SHORT,
+        textColor: 'red',
+        action: {
+          text: 'ok',
+          textColor: 'red',
+          onPress: () => {
+            Snackbar.dismiss();
+          },
+        },
       });
+    }
   };
   return (
     <Formik
@@ -133,6 +136,7 @@ const LecturerForm = ({store}) => {
         fullname: '',
         department: '',
         level: level.text,
+        c_password: '',
       }}
       onSubmit={handleRegister}
       validationSchema={lecturerRegisterSchema}>
@@ -199,6 +203,19 @@ const LecturerForm = ({store}) => {
           />
           {errors.password && touched.password && (
             <Text style={styles.errorText}>{errors.password}</Text>
+          )}
+          <Input
+            placeholder="Confirm Password"
+            icon={renderIconEye}
+            secureTextEntry={secureTextEntry}
+            onIconPress={onIconPress}
+            onChangeText={handleChange('c_password')}
+            style={styles.input}
+            returnKeyType="done"
+            onSubmitEditing={handleSubmit}
+          />
+          {errors.c_password && touched.c_password && (
+            <Text style={styles.errorText}>{errors.c_password}</Text>
           )}
           <Button
             style={styles.button}

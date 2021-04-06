@@ -9,6 +9,10 @@ export const registerSchema = yup.object().shape({
     .string()
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password is required'),
+  c_password: yup
+    .string()
+    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
   fullname: yup.string().required('Fullname Required'),
   matric_no: yup.string().required('Matric Number Required'),
   department: yup.string().required('Department Required'),
@@ -20,6 +24,10 @@ export const lecturerRegisterSchema = yup.object().shape({
     .email('Please enter valid email')
     .required('Email Address is Required'),
   password: yup
+    .string()
+    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+  c_password: yup
     .string()
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password is required'),

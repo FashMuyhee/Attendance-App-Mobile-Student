@@ -6,7 +6,14 @@ const fetchAllCourses = async () => {
     axios
       .get(`${env.url}/courses`, {timeout: 30000})
       .then(({data}) => {
-        resolve(data.payload.data.courses);
+        const courses = data.payload.data.courses.map((course, key) => {
+          return {
+            name: course.title,
+            code: course.code,
+            id: course.id,
+          };
+        });
+        resolve(courses);
       })
       .catch((error) => {
         reject(error);
@@ -54,6 +61,26 @@ const studentAddCourse = async (course_id, user) => {
   });
 };
 
+const lecturerAddCourse = async (course_id, user) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: `${env.url}/lecturers/2/add_course`,
+      method: 'post',
+      timeout: 30000,
+      headers: {Authorization: `Bearer ${user}`},
+      data: {
+        course_id,
+      },
+    })
+      .then(({data}) => {
+        resolve(data.payload);
+      })
+      .catch((error) => {
+        reject(error.response);
+      });
+  });
+};
+
 const fetchStudentCourses = async (user) => {
   return new Promise((resolve, reject) => {
     axios({
@@ -75,9 +102,32 @@ const fetchStudentCourses = async (user) => {
   });
 };
 
+const fetchLecturerCourses = async (user) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: `${env.url}/lecturers/2/get_courses`,
+      method: 'get',
+      timeout: 30000,
+      headers: {Authorization: `Bearer ${user}`},
+    })
+      .then(({data}) => {
+        const myCourse = data.payload.data['courses'].map((course, key) => {
+          const code = course.code.toUpperCase();
+          return [key + 1, course.title, code];
+        });
+        resolve(myCourse);
+      })
+      .catch((error) => {
+        reject(error.response);
+      });
+  });
+};
+
 export {
   fetchAllCourses,
   fetchCoursesByLevel,
   studentAddCourse,
   fetchStudentCourses,
+  lecturerAddCourse,
+  fetchLecturerCourses,
 };

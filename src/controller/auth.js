@@ -52,7 +52,7 @@ const lecturerLogin = async ({email, password}) => {
           errorMsg.hasOwnProperty('passwordField') &&
           errorMsg.hasOwnProperty('uidField')
         ) {
-          reject('incorrect staff number or password');
+          reject('incorrect email or password');
         } else if (errorMsg.passwordField === 'password') {
           reject('password incorrect');
         }
@@ -202,19 +202,18 @@ const createFormData = (photo) => {
     uri:
       Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
   });
-
+  console.log(data)
   return data;
 };
 
 const uploadStudentDp = async (image, token) => {
-  console.log(createFormData(image));
   try {
     const {res} = axios({
       method: 'PUT',
       url: `${env.url}/students/8/uploadDp`,
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
+        // 'Content-Type': 'multipart/form-data',
         'Accept': 'application/json',
       },
       data: createFormData(image),

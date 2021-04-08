@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import {
   Icon,
   Text,
@@ -7,38 +6,23 @@ import {
   StyleService,
   useStyleSheet,
   Layout,
+  Spinner,
 } from '@ui-kitten/components';
-import {
-  ScrollContainer,
-  Navbar,
-  WelcomeNote,
-  Fab,
-  Table,
-  THead,
-  TBody,
-  TCell,
-  TRow,
-} from '../../components';
+import {ScrollContainer, Navbar, WelcomeNote, Fab} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {fetchLecturerCourses} from '../../controller/course';
+import {Table, Row, Rows} from 'react-native-table-component';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
 const MyCourseScreen = ({navigation, store}) => {
   const styles = useStyleSheet(themedStyles);
   const [table, setTable] = useState({
-    head: ['S/N', 'Course Title', 'Course Code', 'Unit'],
-    data: [
-      {course: 'Course 1', id: 1, code: 'com123', unit: 3},
-      {course: 'Course 2', id: 2, code: 'com123', unit: 3},
-      {course: 'Course 3', id: 3, code: 'com123', unit: 3},
-      {course: 'Course 4', id: 4, code: 'com123', unit: 3},
-      {course: 'Course 5', id: 5, code: 'com123', unit: 3},
-      {course: 'Course 6', id: 6, code: 'com123', unit: 3},
-      {course: 'Course 7', id: 7, code: 'com123', unit: 3},
-      {course: 'Course 8', id: 8, code: 'com123', unit: 3},
-    ],
+    head: ['S/N', 'Course Title', 'Course Code'],
+    data: [],
   });
+  const [loading, setLoading] = useState(false);
 
   const navigateBack = () => {
     navigation.goBack();
@@ -47,8 +31,20 @@ const MyCourseScreen = ({navigation, store}) => {
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
-  const {user} = store;
+  const {user,userToken} = store;
 
+  useEffect(() => {
+    setLoading(true);
+    fetchLecturerCourses(userToken)
+      .then((data) => {
+        setTable({...table, data});
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+      });
+  }, []);
   return (
     <>
       <Navbar
@@ -63,37 +59,28 @@ const MyCourseScreen = ({navigation, store}) => {
           subtitle="below ate the courses offered by you,you can choose to add more at any given time by by clicking the `+` button"
         />
         <Table>
-          <THead>
-            {table.head.map((data, key) => {
-              return (
-                <TCell key={key}>
-                  <Text style={{color: 'white', textTransform: 'uppercase'}}>
-                    {data}
-                  </Text>
-                </TCell>
-              );
-            })}
-          </THead>
-          <TBody>
-            {table.data.map((item, key) => {
-              return (
-                <TRow key={key}>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.id}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.course}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.code}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{item.unit}</Text>
-                  </TCell>
-                </TRow>
-              );
-            })}
-          </TBody>
+          <Row
+            data={table.head}
+            style={styles.head}
+            textStyle={styles.textHead}
+          />
+          {loading ? (
+            <Layout
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Spinner status="primary" />
+              <Text>Fetching Your Courses...</Text>
+            </Layout>
+          ) : (
+            <Rows
+              data={table.data}
+              textStyle={styles.textBody}
+              style={{height: 50}}
+            />
+          )}
         </Table>
       </ScrollContainer>
       <Fab onPress={() => navigation.navigate('lect_add_course')} icon="plus" />
@@ -113,10 +100,15 @@ const themedStyles = StyleService.create({
   },
   head: {
     height: 40,
-    backgroundColor: '#808B97',
+    backgroundColor: 'color-primary-500',
   },
   tableText: {
     textTransform: 'capitalize',
   },
-  text: {textAlign: 'center'},
+  textHead: {
+    textAlign: 'center',
+    color: 'color-basic-100',
+    fontFamily: 'Poppins-Regular',
+  },
+  textBody: {margin: 6, color: 'color-text`', fontFamily: 'Poppins-Regular'},
 });

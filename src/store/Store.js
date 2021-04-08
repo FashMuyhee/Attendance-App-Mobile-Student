@@ -9,7 +9,7 @@ class Store {
     level: 'HND2',
     role: 'lecturer',
   };
-  isLoggedIn = true;
+  isLoggedIn = false;
 
   setToken = (token) => {
     this.userToken = token;

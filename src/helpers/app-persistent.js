@@ -26,4 +26,22 @@ const removeCredentials = async () => {
   }
 };
 
-export {setCredentials, getCredentials, removeCredentials};
+const setTheme = async (theme) => {
+  try {
+    await AsyncStorage.setItem('theme', JSON.stringify(theme));
+  } catch (error) {
+    console.log('Something went wrong', error);
+  }
+};
+
+const getTheme = async () => {
+  try {
+    let data = await AsyncStorage.getItem('theme');
+    const theme = JSON.parse(data);
+    return theme;
+  } catch (error) {
+    console.log('Something went wrong', error);
+  }
+};
+
+export {setCredentials, getCredentials, removeCredentials, getTheme, setTheme};

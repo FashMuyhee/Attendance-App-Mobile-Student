@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {mapping, dark, light} from '@eva-design/eva';
@@ -15,26 +15,17 @@ import {
   lecturerProfile,
   lecturerLogin,
 } from './src/controller/auth';
-import {getCredentials} from './src/helpers/app-persistent';
-import SplashScreen from 'react-native-splash-screen';
+import {getCredentials, getTheme} from './src/helpers/app-persistent';
 import Snackbar from 'react-native-snackbar';
 import {LoadingScreen, SettingsScreen} from './src/views';
 const darkTheme = {...dark, ...customDarkTheme};
 const lightTheme = {...light, ...customLightTheme};
+import {ThemeContext} from './src/store/ThemeContext';
 
 const App = (props) => {
-  /* const [theme, setTheme] = useState('');
-  const getTheme = async () => {
-    try {
-      const mytheme = await AsyncStorage.getItem('theme');
-      setTheme(mytheme);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-*/
   const [loading, setLoading] = useState(false);
-  const {setIsLoggedIn, setUser, setToken, myTheme} = props.store;
+  const {setIsLoggedIn, setUser, setToken} = props.store;
+  const {isDark} = useContext(ThemeContext);
 
   const handleStudentLogin = (values) => {
     setLoading(true);
@@ -152,20 +143,15 @@ const App = (props) => {
       .catch((e) => {
         console.log(e);
       });
+    console.log('app',isDark);
   }, []);
 
-  let currentTheme = lightTheme;
-  if (myTheme === 'lightTheme') {
-    currentTheme = lightTheme;
-  } else if (myTheme === 'darkTheme') {
-    currentTheme = darkTheme;
-  }
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         mapping={mapping}
-        theme={currentTheme}
+        theme={isDark ? darkTheme : lightTheme}
         customMapping={customMapping}>
         <StatusBar backgroundColor="#00AB4A" />
         {loading ? <LoadingScreen /> : <AppNavigator />}

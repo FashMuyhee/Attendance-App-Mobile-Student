@@ -11,9 +11,12 @@ export const ThemeProvider = (props) => {
     await setTheme(isDark);
   };
 
- /*  useEffect(() => {
-    const theme = getTheme();
-    setIsDark(theme);
+  /* useEffect(() => {
+    async () => {
+      const theme = getTheme();
+      console.log(theme);
+      // setIsDark(theme);
+    };
   }, []); */
 
   return (

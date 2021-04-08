@@ -1,8 +1,5 @@
 import {decorate, observable, action, autorun} from 'mobx';
-import {AsyncStorage} from 'react-native';
-
 class Store {
-  myTheme = 'lightTheme';
   userToken = '';
   user = {
     id: 1,
@@ -10,26 +7,14 @@ class Store {
     matric_no: 'F/HD/18/3210014',
     department: 'Computer Science',
     level: 'HND2',
-    role: 'student',
+    role: 'lecturer',
   };
-  isLoggedIn = false;
-
-  toggleTheme = (theme) => {
-    this.myTheme = theme === 'lightTheme' ? 'darkTheme' : 'lightTheme';
-    // console.log(this.myTheme);
-  };
-
-  themeToStorage = autorun(async () => {
-    try {
-      await AsyncStorage.setItem('theme', this.myTheme);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+  isLoggedIn = true;
 
   setToken = (token) => {
     this.userToken = token;
   };
+
   setIsLoggedIn = (status) => {
     this.isLoggedIn = status;
   };
@@ -39,11 +24,9 @@ class Store {
   };
 }
 decorate(Store, {
-  myTheme: observable,
   userToken: observable,
   user: observable,
   isLoggedIn: observable,
-  toggleTheme: action,
   setUser: action,
   setIsLoggedIn: action,
 });

@@ -161,8 +161,8 @@ const SignInScreen = (props) => {
         <Tab title="Lecturer">
           <Formik
             initialValues={{
-              email: '',
-              password: '',
+              email: 'okikiola76@yahoo.com',
+              password: 'rootuser',
             }}
             onSubmit={handleLecturerLogin}
             validationSchema={lecturerLoginSchema}>

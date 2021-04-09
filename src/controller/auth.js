@@ -1,6 +1,6 @@
 import axios from 'axios';
 import env from '../helpers/env';
-
+import FormData from 'form-data';
 const login = async ({matric_no, password}) => {
   return new Promise((resolve, reject) => {
     axios
@@ -202,28 +202,24 @@ const createFormData = (photo) => {
     uri:
       Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
   });
-  console.log(data)
   return data;
 };
 
 const uploadStudentDp = async (image, token) => {
   try {
-    const {res} = axios({
-      method: 'PUT',
+    const {data} = await axios({
+      method: 'put',
       url: `${env.url}/students/8/uploadDp`,
       headers: {
-        Authorization: `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json',
+        authorization: `Bearer ${token}`,
+        'content-type': 'multipart/form-data',
       },
       data: createFormData(image),
       timeout: 30000,
     });
-    console.log('true' + res);
-    return res.payload;
+    return data.payload;
   } catch (error) {
-    console.log(error.response);
-    return error.response;
+    return error.response.data;
   }
 };
 

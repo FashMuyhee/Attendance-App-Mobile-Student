@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -14,6 +14,7 @@ import {
   Avatar,
   Layout,
   useTheme,
+  Toggle,
 } from '@ui-kitten/components';
 import {Container, Navbar} from '../components';
 import {inject, observer} from 'mobx-react';
@@ -24,8 +25,8 @@ import {
 } from 'react-native-responsive-screen';
 import * as ImagePicker from 'react-native-image-picker';
 import {uploadStudentDp} from '../controller/auth';
-
-const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
+import {ThemeContext} from '../store/ThemeContext';
+import Snackbar from 'react-native-snackbar';
 
 const SettingsScreen = ({navigation, store}) => {
   const navigateBack = () => {
@@ -35,16 +36,30 @@ const SettingsScreen = ({navigation, store}) => {
   const [imgUrl, setImgUrl] = useState({uri: null});
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  // const [isDark, setIsDark] = useState(false);
+  const {isDark, toggleTheme} = useContext(ThemeContext);
 
+  const BackIcon = (style) => (
+    <Icon {...style} name="arrow-back" fill="white" />
+  );
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
 
-  const {toggleTheme, myTheme, userToken} = store;
+  const ThemeIcon = () => (
+    <Icon
+      width={32}
+      height={32}
+      name={isDark ? 'moon' : 'sun'}
+      fill={isDark ? theme['color-info-200'] : theme['color-success-default']}
+    />
+  );
+
+  const {userToken, user, setUser} = store;
 
   const pickImage = () => {
     ImagePicker.launchImageLibrary(
-      {mediaType: 'photo', includeBase64: false, maxHeight: 200, maxWidth: 200},
+      {mediaType: 'photo', includeBase64: false},
       (res) => {
         setImgUrl(res);
       },
@@ -53,9 +68,36 @@ const SettingsScreen = ({navigation, store}) => {
 
   const saveDp = async () => {
     setLoading(true);
-    await uploadStudentDp(imgUrl, userToken);
+    const result = await uploadStudentDp(imgUrl, userToken);
+    console.log(result);
+    const colorCode = result.type === 'error' ? 'red' : 'green';
+    if (result.type != 'error') {
+      setUser({...user, dp: result.imageUpload.data});
+    }
     setLoading(false);
+    Snackbar.show({
+      text: result.message.toUpperCase(),
+      duration: Snackbar.LENGTH_SHORT,
+      textColor: colorCode,
+      action: {
+        text: 'ok',
+        textColor: colorCode,
+        onPress: () => {
+          Snackbar.dismiss();
+        },
+      },
+    });
   };
+
+  const handleThemeToggle = () => {
+    toggleTheme();
+  };
+  const image =
+    user.dp === null && imgUrl.uri === null
+      ? avatar
+      : imgUrl.uri != null
+      ? {uri: imgUrl.uri}
+      : {uri: user.dp};
 
   return (
     <>
@@ -70,7 +112,8 @@ const SettingsScreen = ({navigation, store}) => {
             <Avatar
               style={styles.avatar}
               size="large"
-              source={imgUrl.uri != null ? {uri: imgUrl.uri} : avatar}
+              // source={imgUrl.uri != null ? {uri: imgUrl.uri} : avatar}
+              source={image}
             />
           </TouchableWithoutFeedback>
           <View style={styles.pickerContainer}>
@@ -83,20 +126,43 @@ const SettingsScreen = ({navigation, store}) => {
             </TouchableWithoutFeedback>
           </View>
         </Layout>
-        <Button onPress={() => toggleTheme(myTheme)}>Change Theme</Button>
-        <Button
-          onPress={() => saveDp()}
-          disabled={loading}
-          style={{marginVertical: 100}}>
-          {loading ? ' Uploading ....' : 'Upload'}
-        </Button>
+        {typeof user.dp === 'object' ? (
+          <Button
+            onPress={() => saveDp()}
+            disabled={loading}
+            style={{marginVertical: 10, width: '70%', alignSelf: 'center'}}>
+            {loading ? ' Uploading ....' : 'Upload'}
+          </Button>
+        ) : (
+          <></>
+        )}
+        <View style={styles.themeToggle}>
+          <Text>Theme</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Toggle
+              status="primary"
+              checked={isDark}
+              onChange={handleThemeToggle}
+            />
+            <ThemeIcon />
+          </View>
+        </View>
         <Modal
           visible={visible}
           transparent={false}
           animationType="slide"
           onRequestClose={() => setVisible(false)}>
           <View style={styles.backdrop}>
-            <Image style={styles.preview} source={{uri: imgUrl.uri}} />
+            <Image
+              source={{uri: user.dp}}
+              style={styles.preview}
+              // source={imgUrl.uri != null ? {uri: imgUrl.uri} : avatar}
+            />
           </View>
         </Modal>
       </Container>
@@ -139,5 +205,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
+  },
+  themeToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 20,
   },
 });

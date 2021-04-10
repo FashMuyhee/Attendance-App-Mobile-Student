@@ -143,7 +143,6 @@ const App = (props) => {
       .catch((e) => {
         console.log(e);
       });
-    console.log('app',isDark);
   }, []);
 
   return (

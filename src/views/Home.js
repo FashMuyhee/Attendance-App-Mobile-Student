@@ -71,7 +71,10 @@ const HomeScreen = ({navigation, store}) => {
       <TouchableWithoutFeedback onPress={() => navigation.navigate('settings')}>
         <View style={styles.profile}>
           <View style={styles.avatarWrapper}>
-            <Image source={avatar} style={styles.avatar} />
+            <Image
+              source={user.dp === null ? avatar : {uri: user.dp}}
+              style={styles.avatar}
+            />
           </View>
           <View style={styles.details}>
             <DetailText text={user.name} />

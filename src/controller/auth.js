@@ -205,11 +205,12 @@ const createFormData = (photo) => {
   return data;
 };
 
-const uploadStudentDp = async (image, token) => {
+const uploadStudentDp = async (image, token,role) => {
+console.log(role)
   try {
     const {data} = await axios({
       method: 'put',
-      url: `${env.url}/students/8/uploadDp`,
+      url: `${env.url}/${role}s/8/uploadDp`,
       headers: {
         authorization: `Bearer ${token}`,
         'content-type': 'multipart/form-data',

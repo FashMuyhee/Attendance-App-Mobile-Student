@@ -68,7 +68,7 @@ const SettingsScreen = ({navigation, store}) => {
 
   const saveDp = async () => {
     setLoading(true);
-    const result = await uploadStudentDp(imgUrl, userToken);
+    const result = await uploadStudentDp(imgUrl, userToken, user.role);
     console.log(result);
     const colorCode = result.type === 'error' ? 'red' : 'green';
     if (result.type != 'error') {

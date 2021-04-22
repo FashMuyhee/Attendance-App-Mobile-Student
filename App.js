@@ -9,7 +9,7 @@ import {default as customDarkTheme} from './src/config/dark-theme.json';
 import {default as customMapping} from './src/config/custom-mapping.json';
 import {inject, observer} from 'mobx-react';
 import AppNavigator from './src/route/navigator';
-// import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 import {
   login,
@@ -153,7 +153,7 @@ const App = (props) => {
         console.log(e);
       });
     console.log(getToken());
-    // changeNavigationBarColor('#00AB4A',false,true);
+    changeNavigationBarColor('#00AB4A',false,true);
   }, []);
 
   return (

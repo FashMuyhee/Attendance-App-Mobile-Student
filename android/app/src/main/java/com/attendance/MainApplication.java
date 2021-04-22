@@ -17,6 +17,7 @@ import java.util.List;
 import java.lang.*;
 import androidx.multidex.MultiDexApplication; //nultidex
 import androidx.multidex.MultiDex;
+// import com.thebylito.navigationbarcolor.NavigationBarColorPackage;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -33,6 +34,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          // packages.add(new NavigationBarColorPackage());
           return packages;
         }
 

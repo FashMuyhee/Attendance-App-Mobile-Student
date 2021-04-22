@@ -13,6 +13,7 @@ import Snackbar from 'react-native-snackbar';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import {inject, observer} from 'mobx-react';
+import {setTokenToStorage} from '../helpers/app-persistent'
 
 const LecturerForm = ({store}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -50,6 +51,8 @@ const LecturerForm = ({store}) => {
               const token = data;
               // console.log(token);
               setToken(token);
+              setTokenToStorage(token);
+
               lecturerProfile(token)
                 .then(({user}) => {
                   const authUser = {

@@ -9,13 +9,20 @@ import {default as customDarkTheme} from './src/config/dark-theme.json';
 import {default as customMapping} from './src/config/custom-mapping.json';
 import {inject, observer} from 'mobx-react';
 import AppNavigator from './src/route/navigator';
+// import changeNavigationBarColor from 'react-native-navigation-bar-color';
+
 import {
   login,
   profile,
   lecturerProfile,
   lecturerLogin,
 } from './src/controller/auth';
-import {getCredentials, getTheme} from './src/helpers/app-persistent';
+import {
+  getCredentials,
+  getTheme,
+  getToken,
+  setTokenToStorage,
+} from './src/helpers/app-persistent';
 import Snackbar from 'react-native-snackbar';
 import {LoadingScreen, SettingsScreen} from './src/views';
 const darkTheme = {...dark, ...customDarkTheme};
@@ -34,6 +41,7 @@ const App = (props) => {
         const token = data;
 
         setToken(token);
+        setTokenToStorage(token);
         profile(token)
           .then((res) => {
             const authUser = {
@@ -85,6 +93,7 @@ const App = (props) => {
       .then((data) => {
         const token = data;
         setToken(token);
+        setTokenToStorage(token);
         lecturerProfile(token)
           .then(({user}) => {
             const authUser = {
@@ -143,6 +152,8 @@ const App = (props) => {
       .catch((e) => {
         console.log(e);
       });
+    console.log(getToken());
+    // changeNavigationBarColor('#00AB4A',false,true);
   }, []);
 
   return (

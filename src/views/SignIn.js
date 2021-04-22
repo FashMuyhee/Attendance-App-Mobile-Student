@@ -13,7 +13,7 @@ import {
 import Snackbar from 'react-native-snackbar';
 import {Formik} from 'formik';
 import {lecturerLoginSchema, studentLoginSchema} from '../helpers/validator';
-import {setCredentials} from '../helpers/app-persistent';
+import {setCredentials,setTokenToStorage} from '../helpers/app-persistent';
 
 const SignInScreen = (props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -59,6 +59,7 @@ const SignInScreen = (props) => {
               role: 'student',
             };
             setCredentials(userCredentials);
+            setTokenToStorage(token);
             setIsLoggedIn(true);
             setLoading(false);
             Snackbar.show({
@@ -102,8 +103,8 @@ const SignInScreen = (props) => {
     lecturerLogin(values)
       .then((data) => {
         const token = data;
-        // console.log(token);
         setToken(token);
+        setTokenToStorage(token);
         lecturerProfile(token)
           .then(({user}) => {
             const authUser = {

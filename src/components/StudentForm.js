@@ -9,6 +9,7 @@ import {register, login, profile} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
 import {useNavigation} from '@react-navigation/native';
 import {inject, observer} from 'mobx-react';
+import {setTokenToStorage} from '../helpers/app-persistent';
 
 const StudentForm = ({store}) => {
   const data = [
@@ -39,76 +40,76 @@ const StudentForm = ({store}) => {
     const user = {...values, level: level.text};
     setLoading(true);
 
-    if(values.c_password === values.password){
+    if (values.c_password === values.password) {
       register(user)
-      .then(() => {
-        const user = {matric_no: values.matric_no, password: values.password};
-        login(user)
-          .then((data) => {
-            const token = data;
+        .then(() => {
+          const user = {matric_no: values.matric_no, password: values.password};
+          login(user)
+            .then((data) => {
+              const token = data;
 
-            setToken(token);
-            console.log(token);
-            profile(token)
-              .then((res) => {
-                const authUser = {
-                  name: res.fullname,
-                  role: 'student',
-                  ...res,
-                };
-                setUser(authUser);
-                setIsLoggedIn(true);
-                setLoading(false);
-                Snackbar.show({
-                  text: `Registration Successful, Welcome ${res.fullname}`,
-                  duration: Snackbar.LENGTH_SHORT,
-                  textColor: 'white',
-                  action: {
-                    text: 'ok',
-                    textColor: 'green',
-                    onPress: () => {
-                      Snackbar.dismiss();
+              setToken(token);
+              setTokenToStorage(token);
+              profile(token)
+                .then((res) => {
+                  const authUser = {
+                    name: res.fullname,
+                    role: 'student',
+                    ...res,
+                  };
+                  setUser(authUser);
+                  setIsLoggedIn(true);
+                  setLoading(false);
+                  Snackbar.show({
+                    text: `Registration Successful, Welcome ${res.fullname}`,
+                    duration: Snackbar.LENGTH_SHORT,
+                    textColor: 'white',
+                    action: {
+                      text: 'ok',
+                      textColor: 'green',
+                      onPress: () => {
+                        Snackbar.dismiss();
+                      },
                     },
-                  },
+                  });
+                })
+                .catch((data) => {
+                  console.log(data);
+                  setLoading(false);
                 });
-              })
-              .catch((data) => {
-                console.log(data);
-                setLoading(false);
-              });
-          })
-          .catch((error) => {
-            Snackbar.show({
-              text: error.toUpperCase(),
-              duration: Snackbar.LENGTH_SHORT,
-              textColor: 'red',
-              action: {
-                text: 'ok',
+            })
+            .catch((error) => {
+              Snackbar.show({
+                text: error.toUpperCase(),
+                duration: Snackbar.LENGTH_SHORT,
                 textColor: 'red',
-                onPress: () => {
-                  Snackbar.dismiss();
+                action: {
+                  text: 'ok',
+                  textColor: 'red',
+                  onPress: () => {
+                    Snackbar.dismiss();
+                  },
                 },
-              },
+              });
+              setLoading(false);
             });
-            setLoading(false);
-          });
-      })
-      .catch((error) => {
-        setLoading(false);
-        Snackbar.show({
-          text: error.toUpperCase(),
-          duration: Snackbar.LENGTH_SHORT,
-          textColor: 'red',
-          action: {
-            text: 'ok',
+        })
+        .catch((error) => {
+          setLoading(false);
+          Snackbar.show({
+            text: error.toUpperCase(),
+            duration: Snackbar.LENGTH_SHORT,
             textColor: 'red',
-            onPress: () => {
-              Snackbar.dismiss();
+            action: {
+              text: 'ok',
+              textColor: 'red',
+              onPress: () => {
+                Snackbar.dismiss();
+              },
             },
-          },
+          });
         });
-      });
-    }else{
+    } else {
       setLoading(false);
       Snackbar.show({
         text: 'Password Mismatch',

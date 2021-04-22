@@ -44,4 +44,30 @@ const getTheme = async () => {
   }
 };
 
-export {setCredentials, getCredentials, removeCredentials, getTheme, setTheme};
+const setTokenToStorage = async (token) => {
+  try {
+    await AsyncStorage.setItem('token', JSON.stringify(token));
+  } catch (error) {
+    console.log('Something went wrong', error);
+  }
+};
+
+const getToken = async () => {
+  try {
+    let data = await AsyncStorage.getItem('token');
+    const token = JSON.parse(data);
+    return token;
+  } catch (error) {
+    console.log('Something went wrong', error);
+  }
+};
+
+export {
+  setCredentials,
+  getCredentials,
+  removeCredentials,
+  getTheme,
+  setTheme,
+  setTokenToStorage,
+  getToken,
+};

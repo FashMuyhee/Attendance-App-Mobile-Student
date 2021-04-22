@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
 import {
-  PermissionsAndroid,
-  ToastAndroid,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {
   StyleService,
-  useStyleSheet,
   Text,
   Button,
-  useTheme,
 } from '@ui-kitten/components';
 import {Container, ModalAlert, MyText} from '../../components';
 import {inject, observer} from 'mobx-react';
@@ -19,7 +15,7 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MapView, {Marker, Circle} from 'react-native-maps';
 import {checkLocationDifference} from '../../helpers/locationDifference';
 import {TakeScreen} from '../student';
-
+import hasLocationPermission from '../../helpers/checkLocation';
 let markers = [];
 class Location extends Component {
   state = {
@@ -36,45 +32,8 @@ class Location extends Component {
     this.props.navigation.navigate('camera');
   };
 
-  /*   goBack = () => {
-    console.log('from step2');
-
-    this.props.back();
-  }; */
-
-  hasLocationPermission = async () => {
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-
-    return false;
-  };
-
   getLocation = async () => {
-    const checkLocationPermission = await this.hasLocationPermission();
+    const checkLocationPermission = await hasLocationPermission();
 
     if (!checkLocationPermission) {
       return;

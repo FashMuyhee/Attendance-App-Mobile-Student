@@ -26,7 +26,7 @@ const themedStyles = StyleService.create({
   },
   text: {
     fontWeight: '200',
-    fontSize: wp('5%'),
+    fontSize: wp('4%'),
     marginBottom: 0,
     fontFamily: 'Poppins-Regular',
     color: 'color-text',

@@ -118,7 +118,7 @@ const themeStyle = StyleService.create({
     borderColor: 'color-primary-500',
     backgroundColor: 'background-basic-color-1',
     borderRadius: 5,
-    height: hp(5),
+    height: hp(7),
     color: 'color-text',
     placeholderColor: 'color-text',
   },

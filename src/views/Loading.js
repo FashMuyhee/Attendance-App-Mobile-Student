@@ -22,7 +22,7 @@ const LoadingScreen = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: 100,
+            width: 150,
           }}>
           <Spinner status="primary" />
           <Text>LOADING ...</Text>

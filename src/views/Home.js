@@ -22,7 +22,7 @@ const HomeScreen = ({navigation, store}) => {
   );
 
   const {user, setIsLoggedIn} = store;
-
+  console.log(user.dp);
   const logout = async () => {
     setIsLoggedIn(false);
     removeCredentials();

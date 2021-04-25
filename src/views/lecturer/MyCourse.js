@@ -8,7 +8,13 @@ import {
   Layout,
   Spinner,
 } from '@ui-kitten/components';
-import {ScrollContainer, Navbar, WelcomeNote, Fab} from '../../components';
+import {
+  ScrollContainer,
+  Navbar,
+  WelcomeNote,
+  Fab,
+  Container,
+} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fetchLecturerCourses} from '../../controller/course';
@@ -31,7 +37,7 @@ const MyCourseScreen = ({navigation, store}) => {
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
-  const {user,userToken} = store;
+  const {user, userToken} = store;
 
   useEffect(() => {
     setLoading(true);
@@ -52,7 +58,7 @@ const MyCourseScreen = ({navigation, store}) => {
         leftAction={<BackAction />}
         textStyle={styles.title}
       />
-      <ScrollContainer customStyle={styles.container}>
+      <Container customStyle={styles.container}>
         <WelcomeNote
           bold={`Hi ${user.name.split(' ')[0]}`}
           normal="Here are your courses"
@@ -78,11 +84,11 @@ const MyCourseScreen = ({navigation, store}) => {
             <Rows
               data={table.data}
               textStyle={styles.textBody}
-              style={{height: 50}}
+              style={{height: 100}}
             />
           )}
         </Table>
-      </ScrollContainer>
+      </Container>
       <Fab onPress={() => navigation.navigate('lect_add_course')} icon="plus" />
     </>
   );
@@ -99,7 +105,7 @@ const themedStyles = StyleService.create({
     height: '100%',
   },
   head: {
-    height: 40,
+    height: 60,
     backgroundColor: 'color-primary-500',
   },
   tableText: {
@@ -110,5 +116,10 @@ const themedStyles = StyleService.create({
     color: 'color-basic-100',
     fontFamily: 'Poppins-Regular',
   },
-  textBody: {margin: 6, color: 'color-text`', fontFamily: 'Poppins-Regular'},
+  textBody: {
+    margin: 6,
+    color: 'color-text`',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(2),
+  },
 });

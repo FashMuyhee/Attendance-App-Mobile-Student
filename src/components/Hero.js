@@ -25,13 +25,10 @@ export default Hero;
 
 const styles = StyleSheet.create({
   hero: {
-    // width: wp('100%'),
-    height: hp('25%'),
-    // paddingTop: hp('10%'),
+    // height: '45%',
     marginTop: hp('6%'),
     marginBottom: hp('2%'),
-    /* borderColor: 'black',
-    borderWidth: 1, */
+    // borderWidth: 1, 
   },
   logo: {
     width: wp('16%'),

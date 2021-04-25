@@ -6,8 +6,8 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 export default function WelcomeNote({bold, normal, subtitle}) {
   return (
     <View style={styles.welcomeNote}>
-      <MyText customStyle={styles.boldText}>
-        {bold}! <MyText customStyle={styles.normalText}>{normal} </MyText>
+      <MyText customStyle={styles.boldText} bold>
+        {bold}! <MyText customStyle={styles.normalText} bold={false}>{normal} </MyText>
       </MyText>
       <MyText customStyle={styles.subtitleText}>{subtitle}</MyText>
     </View>
@@ -19,11 +19,10 @@ const styles = StyleSheet.create({
     marginTop: hp('5%'),
     paddingLeft: '3%',
     paddingRight: '3%',
-    height: hp('12%'),
-    marginBottom: hp('5%'),
+    // height: '30%',
+    marginBottom: 10,
   },
   boldText: {
-    fontWeight: 'bold',
     fontSize: hp('3%'),
     textTransform: 'capitalize',
   },

@@ -67,6 +67,6 @@ const themedStyles = StyleService.create({
   text: {
     textTransform: 'capitalize',
     textAlign: 'center',
-    fontSize: wp('5%'),
+    fontSize: wp('4%'),
   },
 });

@@ -26,10 +26,6 @@ const ModalAlert = ({
   const theme = useTheme();
   const pulseIconRef = React.useRef();
 
-  /*  React.useEffect(() => {
-    pulseIconRef.current.startAnimation();
-  }, []); */
-
   return (
     <Modal
       style={styles.modal}
@@ -100,19 +96,21 @@ const themedStyles = StyleService.create({
   },
   textContainer: {
     textAlign: 'center',
-    width: wp('50%'),
+    width: wp('80%'),
   },
   boldText: {
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textAlign: 'center',
     fontSize: hp('2.3%'),
     paddingTop: hp('10%'),
     paddingBottom: hp('5%'),
+    fontFamily: 'Poppins-Bold',
   },
   subtitleText: {
     textAlign: 'center',
-    fontSize: hp('2%'),
-    paddingBottom: hp('5%'),
+    fontSize: hp('3%'),
+    paddingVertical: hp('3%'),
+    fontFamily: 'Poppins-Medium',
   },
   btn: {
     width: '100%',

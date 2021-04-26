@@ -8,7 +8,13 @@ import {
   Layout,
   Spinner,
 } from '@ui-kitten/components';
-import {ScrollContainer, Navbar, WelcomeNote, Fab} from '../../components';
+import {
+  ScrollContainer,
+  Navbar,
+  WelcomeNote,
+  Fab,
+  EmptyData,
+} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fetchStudentCourses} from '../../controller/course';
@@ -75,16 +81,21 @@ const MyCourseScreen = ({navigation, store}) => {
               <Spinner status="primary" />
               <Text>Fetching Your Courses...</Text>
             </Layout>
-          ) : (
+          ) : table.data.length ? (
             <Rows
               data={table.data}
               textStyle={styles.textBody}
-              style={{height: 50}}
+              style={{height: 100}}
             />
+          ) : (
+            <EmptyData info="You have not added any course yet, click the + to add courses" />
           )}
         </Table>
       </ScrollContainer>
-      <Fab onPress={() => navigation.navigate('stu_add_course')} icon="plus" />
+      <Fab
+        onPress={() => navigation.navigate('stu_add_course')}
+        icon="plus"
+      />
     </>
   );
 };
@@ -100,7 +111,7 @@ const themedStyles = StyleService.create({
     height: '100%',
   },
   head: {
-    height: 40,
+    height: 60,
     backgroundColor: 'color-primary-500',
   },
   tableText: {
@@ -111,5 +122,10 @@ const themedStyles = StyleService.create({
     color: 'color-basic-100',
     fontFamily: 'Poppins-Regular',
   },
-  textBody: {margin: 6, color: 'color-text`', fontFamily: 'Poppins-Regular'},
+  textBody: {
+    margin: 6,
+    color: 'color-text`',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(2),
+  },
 });

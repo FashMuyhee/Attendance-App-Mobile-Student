@@ -14,6 +14,7 @@ import {
   WelcomeNote,
   Fab,
   Container,
+  EmptyData,
 } from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -80,12 +81,14 @@ const MyCourseScreen = ({navigation, store}) => {
               <Spinner status="primary" />
               <Text>Fetching Your Courses...</Text>
             </Layout>
-          ) : (
+          ) : table.data.length > 0 ? (
             <Rows
               data={table.data}
               textStyle={styles.textBody}
               style={{height: 100}}
             />
+          ) : (
+            <EmptyData info="You have not added any course yet, click the + to add courses" />
           )}
         </Table>
       </Container>

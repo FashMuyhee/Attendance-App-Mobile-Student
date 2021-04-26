@@ -9,7 +9,7 @@ import {register, login, profile} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
 import {useNavigation} from '@react-navigation/native';
 import {inject, observer} from 'mobx-react';
-import {setTokenToStorage} from '../helpers/app-persistent';
+import {setTokenToStorage,setCredentials} from '../helpers/app-persistent';
 
 const StudentForm = ({store}) => {
   const data = [
@@ -58,6 +58,12 @@ const StudentForm = ({store}) => {
                     ...res,
                   };
                   setUser(authUser);
+                  const userCredentials = {
+                    uid: values.matric_no,
+                    password: values.password,
+                    role: 'lecturer',
+                  };
+                  setCredentials(userCredentials);
                   setIsLoggedIn(true);
                   setLoading(false);
                   Snackbar.show({

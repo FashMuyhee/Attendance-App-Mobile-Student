@@ -13,7 +13,7 @@ import Snackbar from 'react-native-snackbar';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import {inject, observer} from 'mobx-react';
-import {setTokenToStorage} from '../helpers/app-persistent'
+import {setTokenToStorage,setCredentials} from '../helpers/app-persistent'
 
 const LecturerForm = ({store}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -64,6 +64,12 @@ const LecturerForm = ({store}) => {
                   setUser(authUser);
                   setIsLoggedIn(true);
                   setLoading(false);
+                  const userCredentials = {
+                    uid: values.email,
+                    password: values.password,
+                    role: 'lecturer',
+                  };
+                  setCredentials(userCredentials);
                   Snackbar.show({
                     text: `Registration Successful, Welcome ${user.fullname}`,
                     duration: Snackbar.LENGTH_SHORT,

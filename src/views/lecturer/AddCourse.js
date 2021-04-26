@@ -79,7 +79,6 @@ const AddCourseScreen = ({navigation, store}) => {
           subtitle="Select your department,level,semester and the desired courses you need to add"
         />
         <SearchableDropdown
-          onTextChange={(text) => console.log(text)}
           onItemSelect={onSelect}
           selectedItems={value}
           containerStyle={{padding: 5}}

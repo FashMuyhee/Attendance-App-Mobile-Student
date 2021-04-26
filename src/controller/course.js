@@ -102,7 +102,7 @@ const fetchStudentCourses = async (user) => {
   });
 };
 
-const fetchLecturerCourses = async (user) => {
+const fetchLecturerCourses = async (user, select = false) => {
   return new Promise((resolve, reject) => {
     axios({
       url: `${env.url}/lecturers/2/get_courses`,
@@ -111,6 +111,17 @@ const fetchLecturerCourses = async (user) => {
       headers: {Authorization: `Bearer ${user}`},
     })
       .then(({data}) => {
+        if (select) {
+          const myCourse = data.payload.data['courses'].map((course, key) => {
+            const code = course.code.toUpperCase();
+            return {
+              name: course.title,
+              code,
+              id: course.id,
+            };
+          });
+          resolve(myCourse);
+        }
         const myCourse = data.payload.data['courses'].map((course, key) => {
           const code = course.code.toUpperCase();
           return [key + 1, course.title, code];

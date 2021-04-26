@@ -90,7 +90,7 @@ const fetchStudentCourses = async (user) => {
       headers: {Authorization: `Bearer ${user}`},
     })
       .then(({data}) => {
-        const myCourse = data.payload.message['courses'].map((course, key) => {
+        const myCourse = data.payload['courses'].map((course, key) => {
           const code = course.code.toUpperCase();
           return [key + 1, course.title, code];
         });

@@ -22,7 +22,6 @@ const HomeScreen = ({navigation, store}) => {
   );
 
   const {user, setIsLoggedIn} = store;
-  console.log(user.dp);
   const logout = async () => {
     setIsLoggedIn(false);
     removeCredentials();
@@ -50,7 +49,7 @@ const HomeScreen = ({navigation, store}) => {
       <Box icon="clipboard-outline" route="lect_course" title="My Courses" />
       <Box
         icon="list-outline"
-        route="lect_attendance"
+        route="lect_attendance_query"
         title="Attendance Record"
       />
       <Box icon="log-out-outline" title="Sign Out" xtraOnPress={logout} />

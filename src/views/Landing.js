@@ -79,9 +79,10 @@ const style = StyleSheet.create({
     paddingRight: '5%',
   },
   boldenText: {
-    fontWeight: '700',
+    // fontWeight: '700',
     color: 'white',
     fontSize: hp('3.3%'),
+    fontFamily: 'Poppins-Regular',
   },
   ligthenText: {
     fontWeight: '100',

@@ -26,7 +26,7 @@ import {
   CreateAttendanceScreen,
   LectAddCourse,
   LectCourse,
-  LectRecord,
+  LectRecord,AttendanceQueryScreen
 } from '../views/lecturer';
 import {inject, observer} from 'mobx-react';
 import {SiginCode, Location, Camera} from '../views/step';
@@ -73,6 +73,7 @@ const AppNavigator = ({store}) => {
                   component={LectAddCourse}
                 />
                 <Stack.Screen name="lect_attendance" component={LectRecord} />
+                <Stack.Screen name="lect_attendance_query" component={AttendanceQueryScreen} />
                 <Stack.Screen
                   name="create_attendance"
                   component={CreateAttendanceScreen}

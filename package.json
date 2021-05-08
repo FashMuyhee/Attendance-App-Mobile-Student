@@ -32,6 +32,7 @@
     "react-native-actions-sheet": "^0.4.2",
     "react-native-animated-multistep": "^1.0.7",
     "react-native-camera": "^3.37.0",
+    "react-native-camera-hooks": "^0.5.0",
     "react-native-geolocation-service": "^4.0.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-picker": "^3.3.2",

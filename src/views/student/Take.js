@@ -8,8 +8,7 @@ import {
 } from '@ui-kitten/components';
 import { Navbar, ScrollContainer } from '../../components';
 import { inject, observer } from 'mobx-react';
-/* import AnimatedMultistep from 'react-native-animated-multistep';
-import { SiginCode, Location, Camera } from './step'; */
+
 import {useNavigation} from '@react-navigation/native'
 
 const TakeScreen = (props) => {
@@ -17,22 +16,7 @@ const TakeScreen = (props) => {
   const BackIcon = (style) => (
     <Icon {...style} fill="white" name="arrow-back" />
   );
-  /* const allSteps = [
-    { name: 'step 1', component: SiginCode },
-    { name: 'step 2', component: Location },
-    { name: 'step 3', component: Camera },
-  ];
-  const onNext = () => {
-    console.log('Next');
-  };
 
-  const onBack = () => {
-    console.log('Back');
-  };
-
-  const finish = (finalState) => {
-    console.log(finalState);
-  }; */
 const navigation = useNavigation()
 
   return (

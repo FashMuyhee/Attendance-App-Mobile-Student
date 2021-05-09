@@ -15,6 +15,7 @@ import Fab from './Fab';
 import {Table, TBody, THead, TCell, TRow} from './Table';
 import FilterSheet from './FilterSheet';
 import EmptyData from './EmptyData';
+import LoaderText from './LoaderText';
 
 export {
   Container,
@@ -37,5 +38,6 @@ export {
   TRow,
   TCell,
   FilterSheet,
-  EmptyData
+  EmptyData,
+  LoaderText,
 };

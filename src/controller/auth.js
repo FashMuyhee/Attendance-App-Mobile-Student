@@ -206,7 +206,6 @@ const createFormData = (photo) => {
 };
 
 const uploadStudentDp = async (image, token,role) => {
-console.log(role)
   try {
     const {data} = await axios({
       method: 'put',

@@ -1,95 +1,94 @@
 import React, {useState} from 'react';
-import {StyleSheet, Image, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
-  Table,
-  TRow,
-  TBody,
-  TCell,
-  THead,
   Fab,
   ScrollContainer,
   FilterSheet,
+  LoaderText,
+  EmptyData,
 } from '../../components';
 import filter from '../../assets/img/filter.png';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ActionSheet from 'react-native-actions-sheet';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {Table, Row, Rows} from 'react-native-table-component';
 
-const DetailedRecord = ({renderData}) => {
+const DetailedRecord = ({renderData, loading}) => {
   const [tableTitle] = useState([
     'S/N',
     'Course Code',
     'date',
     'sign in',
     'sign out',
-    'Unit',
+    // 'Unit',
   ]);
 
   const filterSheet = React.createRef();
 
-  React.useEffect(() => {
-    filterSheet.current?.setModalVisible();
-  }, []);
+  const styles = useStyleSheet(themeStyle);
 
   return (
     <ScrollContainer customStyle={styles.container}>
-      <Table>
-        <THead>
-          {tableTitle.map((data, key) => {
-            return (
-              <TCell key={key}>
-                <Text style={{color: 'white', textTransform: 'uppercase'}}>
-                  {data}
-                </Text>
-              </TCell>
-            );
-          })}
-        </THead>
-        <TBody>
-          {renderData.map((item, key) => {
-            return (
-              <TRow key={key}>
-                <TCell>
-                  <Text style={styles.tableText}>{item.id}</Text>
-                </TCell>
-                <TCell>
-                  <Text style={styles.tableText}>{item.code}</Text>
-                </TCell>
-                <TCell>
-                  <Text style={styles.tableText}>{item.date}</Text>
-                </TCell>
-                <TCell>
-                  <Text style={styles.tableText}>{item.sign_in}</Text>
-                </TCell>
-                <TCell>
-                  <Text style={styles.tableText}>{item.sign_out}</Text>
-                </TCell>
-                <TCell>
-                  <Text style={styles.tableText}>{item.unit}</Text>
-                </TCell>
-              </TRow>
-            );
-          })}
-        </TBody>
+      <Table borderStyle={styles.tableWrapper}>
+        <Row
+          data={tableTitle}
+          style={styles.head}
+          textStyle={styles.textHead}
+        />
+        {loading ? (
+          <LoaderText
+            loadingText="Your Attendance Is Loading"
+            loading={loading}
+          />
+        ) : renderData.length ? (
+          <Rows
+            data={renderData}
+            textStyle={styles.textBody}
+            style={{height: 100}}
+          />
+        ) : (
+          <EmptyData info="You have Recent Attendance" />
+        )}
       </Table>
-      <Fab
+      {/* <Fab
         imageIcon={filter}
         onPress={() => filterSheet.current?.setModalVisible()}
-      />
+      /> */}
       <FilterSheet sheet={filterSheet} />
     </ScrollContainer>
   );
 };
 export default DetailedRecord;
 
-const styles = StyleSheet.create({
+const themeStyle = StyleService.create({
   container: {
-    paddingLeft: '0%',
-    paddingRight: '0%',
+    paddingTop: 20,
+  },
+  tableWrapper: {
     borderWidth: StyleSheet.hairlineWidth,
-    marginBottom: 20,
-    // height:1300
+    borderColor: 'color-primary-500',
+    borderRadius: 4,
   },
   tableText: {
     textTransform: 'capitalize',
+    color: 'color-text',
+  },
+  head: {
+    height: 60,
+    backgroundColor: 'color-primary-500',
+  },
+  textHead: {
+    textTransform: 'capitalize',
+    textAlign: 'center',
+    color: 'color-basic-100',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(1.2),
+  },
+  textBody: {
+    margin: 6,
+    color: 'color-text`',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(1.2),
+    textAlign: 'center',
   },
 });

@@ -15,16 +15,45 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {TakeScreen} from '../student';
+import {getAttendanceLocation} from '../../controller/attendance';
+import Snackbar from 'react-native-snackbar';
 
-const SigninCode = (props) => {
+const SigninCode = ({navigation, store}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [signCode, setSignCode] = useState(null);
+  const [signCode, setSignCode] = useState('');
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const styles = useStyleSheet(themedStyles);
+  const {userToken, user} = store;
+
   const checkSignInCode = () => {
     // get lecture location and save
-    props.navigation.navigate('location', { lectureLocation: { lat: 6.5183143, lng: 3.3715918 } })
-    // props.navigation.navigate('camera');
+    setLoading(true);
+    getAttendanceLocation({code: signCode, token: userToken})
+      .then((data) => {
+        setLoading(false);
+        if (data.type === 'error') {
+          setLoading(false);
+          return Snackbar.show({
+            text: data.error.toUpperCase(),
+            duration: Snackbar.LENGTH_SHORT,
+            textColor: 'white',
+          });
+        }
+        const {location} = data.message;
+        const parsedLocation = JSON.parse(location);
+        navigation.navigate('location', {
+          lectureLocation: {
+            lat: parsedLocation.lat,
+            lng: parsedLocation.lng,
+          },
+          code: signCode,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   const handleSignOut = () => {
@@ -34,7 +63,7 @@ const SigninCode = (props) => {
   return (
     <TakeScreen>
       <WelcomeNote
-        bold="Hi User"
+        bold={`Hi ${user.name.split(' ')[0]}`}
         normal="It's time for Attendance"
         subtitle="Select an attendance action you intend to perform Sign in for a new
         class or signout for a finished lecturer"
@@ -46,8 +75,15 @@ const SigninCode = (props) => {
           useNativeDriver={true}>
           <Tab title="Sign In">
             <Layout style={styles.tabContainer}>
-              <Input placeholder="Sign in Code" style={styles.input} />
-              <Button onPress={checkSignInCode}>Sign in for class</Button>
+              <Input
+                placeholder="Sign in Code"
+                style={styles.input}
+                onChangeText={setSignCode}
+                onSubmitEditing={checkSignInCode}
+              />
+              <Button onPress={checkSignInCode} disabled={loading}>
+                Sign in for class
+              </Button>
             </Layout>
           </Tab>
           <Tab title="Sign Out">
@@ -57,6 +93,7 @@ const SigninCode = (props) => {
                 style={styles.input}
                 value={signCode}
                 onChangeText={(code) => setSignCode(code)}
+                onSubmitEditing={handleSignOut}
               />
               <Button onPress={handleSignOut}>Sign out for class</Button>
             </FormBody>
@@ -75,8 +112,8 @@ const SigninCode = (props) => {
   );
 };
 
-// export default inject('store')(observer(SigninCode));
-export default SigninCode;
+export default inject('store')(observer(SigninCode));
+// export default SigninCode;
 const themedStyles = StyleService.create({
   form: {
     paddingLeft: '9%',

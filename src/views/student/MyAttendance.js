@@ -1,106 +1,44 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
-import {
-  Icon,
-  Text,
-  TopNavigationAction,
-  TabView,
-  Tab,
-} from '@ui-kitten/components';
-import {
-  ScrollContainer,
-  Navbar,
-  Table,
-  TRow,
-  TBody,
-  TCell,
-  THead,
-} from '../../components';
+import {Icon, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import {ScrollContainer, Navbar} from '../../components';
 import {inject, observer} from 'mobx-react';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import DetailedRecord from './DetailedRecord';
 import SummaryRecord from './SummaryRecord';
-const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
+import {getStudentAllAttendance} from '../../controller/attendance';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const MyAttendanceScreen = ({navigation, store}) => {
+  const Tab = createBottomTabNavigator();
   const navigateBack = () => {
     navigation.goBack();
   };
-
+  const {userToken} = store;
+  const BackIcon = (style) => (
+    <Icon {...style} name="arrow-back" fill="white" />
+  );
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
 
+  const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [table, setTable] = useState({
-    tableTitle: ['S/N', 'Course Code', 'date', 'sign in', 'sign out', 'Unit'],
-    detailedData: [
-      {
-        date: '1 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 1,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '2 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 2,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '3 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 3,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '4 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 4,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '5 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 5,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '6 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 6,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '7 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 7,
-        code: 'com123',
-        unit: 3,
-      },
-      {
-        date: '8 may 2020',
-        sign_in: '9am',
-        sign_out: '12pm',
-        id: 8,
-        code: 'com123',
-        unit: 3,
-      },
-    ],
-  });
+  const [loading, setLoading] = useState(false);
+  const [detailedAttendance, setDetailedAttendance] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    getStudentAllAttendance(userToken)
+      .then((data) => {
+        setDetailedAttendance(data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Navbar
@@ -108,20 +46,41 @@ const MyAttendanceScreen = ({navigation, store}) => {
         leftAction={<BackAction />}
         textStyle={styles.title}
       />
-      <ScrollContainer>
-        <TabView
-          selectedIndex={selectedIndex}
-          onSelect={(index) => setSelectedIndex(index)}
-          useNativeDriver={true}
-          style={{marginTop: 50}}>
-          <Tab title="Summary View">
-            <SummaryRecord renderData={table.detailedData} />
-          </Tab>
-          <Tab title="Detailed View">
-            <DetailedRecord renderData={table.detailedData} />
-          </Tab>
-        </TabView>
-      </ScrollContainer>
+      <Tab.Navigator
+        tabBarOptions={{
+          activeTintColor: theme['color-primary-500'],
+          style: {
+            backgroundColor: 'white',
+          },
+          labelStyle: {
+            alignItems: 'center',
+            marginBottom: 15,
+            fontFamily: 'Poppins-Regular',
+          },
+        }}>
+        <Tab.Screen
+          name="Detailed View"
+          component={() => {
+            return (
+              <DetailedRecord
+                renderData={detailedAttendance}
+                loading={loading}
+              />
+            );
+          }}
+        />
+        <Tab.Screen
+          name="Summary View"
+          component={() => {
+            return (
+              <SummaryRecord
+                renderData={detailedAttendance}
+                loading={loading}
+              />
+            );
+          }}
+        />
+      </Tab.Navigator>
     </SafeAreaView>
   );
 };

@@ -1,55 +1,78 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Table, TRow, TBody, TCell, THead} from '../../components';
-const SummaryRecord = ({renderData}) => {
-  const [tableTitle, ] = useState(['S/N', 'Course Code', 'date', 'sign in', 'sign out', 'Unit'])
-  
+import {ScrollContainer, LoaderText, EmptyData} from '../../components';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {Table, Row, Rows} from 'react-native-table-component';
+
+const SummaryRecord = ({renderData, loading}) => {
+  const [tableTitle] = useState([
+    'S/N',
+    'Course Code',
+    'date',
+    'sign in',
+    'sign out',
+    // 'Unit',
+  ]);
+  const styles = useStyleSheet(themeStyle);
+
   return (
-    <Table>
-      <THead>
-        {tableTitle.map((data, key) => {
-          return (
-            <TCell key={key}>
-              <Text style={{color: 'white', textTransform: 'uppercase'}}>
-                {data}
-              </Text>
-            </TCell>
-          );
-        })}
-      </THead>
-      <TBody>
-        {renderData.map((item, key) => {
-          return (
-            <TRow key={key}>
-              <TCell>
-                <Text style={styles.tableText}>{item.id}</Text>
-              </TCell>
-              <TCell>
-                <Text style={styles.tableText}>{item.code}</Text>
-              </TCell>
-              <TCell>
-                <Text style={styles.tableText}>{item.date}</Text>
-              </TCell>
-              <TCell>
-                <Text style={styles.tableText}>{item.sign_in}</Text>
-              </TCell>
-              <TCell>
-                <Text style={styles.tableText}>{item.sign_out}</Text>
-              </TCell>
-              <TCell>
-                <Text style={styles.tableText}>{item.unit}</Text>
-              </TCell>
-            </TRow>
-          );
-        })}
-      </TBody>
-    </Table>
+    <ScrollContainer customStyle={styles.container}>
+      <Table borderStyle={styles.tableWrapper}>
+        <Row
+          data={tableTitle}
+          style={styles.head}
+          textStyle={styles.textHead}
+        />
+        {loading ? (
+          <LoaderText
+            loadingText="Your Attendance Is Loading"
+            loading={loading}
+          />
+        ) : renderData.length ? (
+          <Rows
+            data={renderData}
+            textStyle={styles.textBody}
+            style={{height: 100}}
+          />
+        ) : (
+          <EmptyData info="You have Recent Attendance" />
+        )}
+      </Table>
+    </ScrollContainer>
   );
 };
 export default SummaryRecord;
 
-const styles = StyleSheet.create({
+const themeStyle = StyleService.create({
+  container: {
+    paddingTop: 20,
+  },
+  tableWrapper: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'color-primary-500',
+    borderRadius: 4,
+  },
   tableText: {
     textTransform: 'capitalize',
+    color: 'color-text',
+  },
+  head: {
+    height: 60,
+    backgroundColor: 'color-primary-500',
+  },
+  textHead: {
+    textTransform: 'capitalize',
+    textAlign: 'center',
+    color: 'color-basic-100',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(1.2),
+  },
+  textBody: {
+    margin: 6,
+    color: 'color-text`',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(1.2),
+    textAlign: 'center',
   },
 });

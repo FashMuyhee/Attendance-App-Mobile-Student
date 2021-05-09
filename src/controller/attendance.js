@@ -49,8 +49,8 @@ const createFormData = (photo, userDp) => {
  * A Function to compare similarities
  * between two images
  * the higher their differences the similar the images
- * @param {imageOne} cameraDp
- * @param {imageTwo} saveDp
+ * @param {imageOne} photo
+ * @param {imageTwo} dp
  */
 const compareImageDp = async (photo, dp) => {
   try {
@@ -176,18 +176,70 @@ const getLecturerAttendanceByCourse = async (token, course_id) => {
       const parsedRecords = JSON.parse(index.attendance);
       if (parsedRecords.length) {
         parsedRecords.forEach((ele) => {
-          const schema = {
-            id: key + 1,
-            date: index.date,
-            student: ele.student_id,
-            sign_in: ele.signed_in ? ele.signed_in_time : '',
-            sign_out: ele.signed_out ? ele.signed_out_time : '',
-          };
+          const schema = [
+            key + 1,
+            ele.student_id,
+            index.date,
+            ele.signed_in ? ele.signed_in_time : '',
+            ele.signed_out ? ele.signed_out_time : '',
+          ];
           genAttendance.push(schema);
         });
       }
     });
     return genAttendance;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getStudentAttendanceByCourse = async (token, course_id) => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `${env.url}/students/4/get_attendance_by_courses?course_id=${course_id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-type': 'application/json',
+      },
+      timeout: 30000,
+    });
+
+    /* const {
+      totalAttendance,
+      myAttendanceCount,
+      data: attendanceData,
+    } = data.payload; */
+    return data.payload;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getStudentAllAttendance = async (token) => {
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `${env.url}/students/4/get_detailed_attendance`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-type': 'application/json',
+      },
+      timeout: 30000,
+    });
+
+    const response = data.payload;
+
+    const myAttendance = response.map((item, key) => {
+      return [
+        key + 1,
+        item.course.code.toUpperCase(),
+        new Date(item.date).toDateString(),
+        item.signed_in_time,
+        item.signed_out_time,
+      ];
+    });
+    return myAttendance;
   } catch (error) {
     return error;
   }
@@ -200,4 +252,6 @@ export {
   compareImageDp,
   getAllLecturerAttendance,
   getLecturerAttendanceByCourse,
+  getStudentAttendanceByCourse,
+  getStudentAllAttendance,
 };

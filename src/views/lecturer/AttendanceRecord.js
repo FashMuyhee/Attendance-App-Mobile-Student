@@ -1,23 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {
-  Divider,
   Icon,
-  Text,
   TopNavigationAction,
-  styled,
-  Button,
+  StyleService,
+  useStyleSheet,
 } from '@ui-kitten/components';
-import {
-  ScrollContainer,
-  Navbar,
-  Table,
-  TRow,
-  TBody,
-  TCell,
-  THead,
-} from '../../components';
+import {ScrollContainer, Navbar, EmptyData} from '../../components';
 import {inject, observer} from 'mobx-react';
+import {Table, Row, Rows} from 'react-native-table-component';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
 const AttendanceRecordScreen = ({navigation, store, route}) => {
@@ -29,9 +22,14 @@ const AttendanceRecordScreen = ({navigation, store, route}) => {
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
   const records = route.params.attendance;
-  const [table] = useState({
-    tableTitle: ['S/N', 'Matric No', 'date', 'sign in', 'sign out'],
-  });
+  const [tableTitle] = useState([
+    'S/N',
+    'Matric No',
+    'date',
+    'sign in',
+    'sign out',
+  ]);
+  const styles = useStyleSheet(themeStyle);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -40,42 +38,22 @@ const AttendanceRecordScreen = ({navigation, store, route}) => {
         leftAction={<BackAction />}
         textStyle={styles.title}
       />
-      <ScrollContainer>
-        <Table style={{marginTop: 30}}>
-          <THead>
-            {table.tableTitle.map((data, key) => {
-              return (
-                <TCell key={key}>
-                  <Text style={{color: 'white', textTransform: 'uppercase'}}>
-                    {data}
-                  </Text>
-                </TCell>
-              );
-            })}
-          </THead>
-          <TBody>
-            {records.map((record, key) => {
-              return (
-                <TRow key={key}>
-                  <TCell>
-                    <Text style={styles.tableText}>{record.id}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{record.student}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{record.date}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{record.sign_in}</Text>
-                  </TCell>
-                  <TCell>
-                    <Text style={styles.tableText}>{record.sign_out}</Text>
-                  </TCell>
-                </TRow>
-              );
-            })}
-          </TBody>
+      <ScrollContainer customStyle={{paddingTop: 20}}>
+        <Table borderStyle={styles.tableWrapper}>
+          <Row
+            data={tableTitle}
+            style={styles.head}
+            textStyle={styles.textHead}
+          />
+          {records.length ? (
+            <Rows
+              data={records}
+              textStyle={styles.textBody}
+              style={{height: 100}}
+            />
+          ) : (
+            <EmptyData info="You have Recent Attendance" />
+          )}
         </Table>
       </ScrollContainer>
     </SafeAreaView>
@@ -83,11 +61,35 @@ const AttendanceRecordScreen = ({navigation, store, route}) => {
 };
 
 export default inject('store')(observer(AttendanceRecordScreen));
-const styles = StyleSheet.create({
+const themeStyle = StyleService.create({
   title: {
     color: 'white',
   },
+  tableWrapper: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'color-primary-500',
+    borderRadius: 4,
+  },
   tableText: {
     textTransform: 'capitalize',
+    color: 'color-text',
+  },
+  head: {
+    height: 60,
+    backgroundColor: 'color-primary-500',
+  },
+  textHead: {
+    textTransform: 'capitalize',
+    textAlign: 'center',
+    color: 'color-basic-100',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(1.2),
+  },
+  textBody: {
+    margin: 6,
+    color: 'color-text`',
+    fontFamily: 'Poppins-Regular',
+    fontSize: hp(1.2),
+    textAlign: 'center',
   },
 });

@@ -23,7 +23,9 @@ const ModalAlert = ({isVisible, closeModal, children}) => {
       style={styles.modal}
       transparent={false}
       visible={isVisible}
-      animationType="slide">
+      animationType="slide"
+      onRequestClose={closeModal}
+      >
       <Layout style={styles.content}>
         {children}
 

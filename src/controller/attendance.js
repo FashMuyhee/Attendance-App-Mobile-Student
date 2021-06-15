@@ -2,17 +2,10 @@ import axios from 'axios';
 import env from '../helpers/env';
 import FormData from 'form-data';
 import {getToken} from '../helpers/app-persistent';
+import RNFetchBlob from 'rn-fetch-blob';
+import {Platform} from 'react-native';
 
 const token = getToken();
-
-/* const http = axios.create({
-  baseURL: env.url,
-  timeout: 8000,
-  headers: {
-    'Content-type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  },
-}); */
 
 const createAttendance = async ({body, token}) => {
   try {
@@ -35,13 +28,16 @@ const createAttendance = async ({body, token}) => {
 
 const createFormData = (photo, userDp) => {
   const data = new FormData();
-  data.append('img_1', {
-    name: photo.fileName,
-    type: photo.type,
+  data.append('image_file1', {
+    // name: photo.fileName,
+    // type: photo.type,
     uri:
       Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
   });
-  data.append('img_2', userDp);
+  data.append('image_url2', userDp);
+  data.append('api_secret', 'IfHgePPhTEUV-OLbCX_WvmywrGUZc8TH');
+  data.append('api_key', 'BI3M7CGFH8TGQsSH9lMk5oeg4MST8L0s');
+  console.log(data);
   return data;
 };
 
@@ -53,21 +49,39 @@ const createFormData = (photo, userDp) => {
  * @param {imageTwo} dp
  */
 const compareImageDp = async (photo, dp) => {
+  const {size, filename} = await RNFetchBlob.fs.stat(photo.uri);
+  const formData = [
+    {
+      name: 'image_file1',
+      data: RNFetchBlob.wrap(photo.uri),
+      filename: filename,
+      type: 'image/jpeg',
+    },
+    {
+      name: 'image_url2',
+      data: dp,
+    },
+    {
+      name: 'api_secret',
+      data: 'IfHgePPhTEUV-OLbCX_WvmywrGUZc8TH',
+    },
+    {
+      name: 'api_key',
+      data: 'BI3M7CGFH8TGQsSH9lMk5oeg4MST8L0s',
+    },
+  ];
   try {
-    console.log('processing');
-    const {data} = await axios({
-      method: 'POST',
-      url: `http://facexapi.com/compare_faces`,
-      data: JSON.stringify({
-        img_1: photo,
-        img_2: dp,
-      }),
-      headers: {
-        'content-type': 'application/json',
-        user_id: '604b4bdebeb79d20279c232a',
+    const data = await RNFetchBlob.fetch(
+      'POST',
+      'https://api-us.faceplusplus.com/facepp/v3/compare',
+      {
+        'content-type': 'multipart/form-data',
       },
-    });
-    console.log(data);
+      formData,
+    );
+
+    console.log(JSON.parse(data.data));
+    return JSON.parse(data.data);
   } catch (e) {
     console.log(e);
   }
@@ -77,21 +91,19 @@ const markAttendance = async ({body, code, token}) => {
   // try {
   axios({
     method: 'put',
-    url: `${env.url}/attendances/mark_attendance/${code}M`,
+    url: `${env.url}/attendances/mark_attendance/${code}`,
     headers: {
       authorization: `Bearer ${token}`,
-      // 'Content-type': 'application/json',
-      'content-type':
-        'multipart/form-data; boundary=---011000010111000001101001',
+      'Content-type': 'application/json',
     },
-    data: createFormData(body.image, body.location),
+    data: body,
     timeout: 30000,
   })
     .then((res) => {
-      console.log(res.data);
+      console.log(res);
     })
     .catch((err) => {
-      console.log(err.data);
+      console.log(err.response);
     });
 
   //   return data;

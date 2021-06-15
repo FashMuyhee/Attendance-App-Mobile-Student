@@ -1,14 +1,7 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import {StyleSheet, ActivityIndicator} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {
-  StyleService,
-  Text,
-  Button,
-} from '@ui-kitten/components';
+import {StyleService, Text, Button} from '@ui-kitten/components';
 import {Container, ModalAlert, MyText} from '../../components';
 import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -26,10 +19,14 @@ class Location extends Component {
     isMatch: false,
     locationDistance: 0,
   };
+  routeParam = this.props.route.params;
 
   goToCamera = () => {
     // get state for use in other steps
-    this.props.navigation.navigate('camera');
+    this.props.navigation.navigate('camera', {
+      location: {lat: this.state.latitude, lng: this.state.longitude},
+      code: this.routeParam.code,
+    });
   };
 
   getLocation = async () => {
@@ -77,8 +74,7 @@ class Location extends Component {
     this.getLocation();
   }
   render() {
-    const routeParam = this.props.route.params;
-    const {lectureLocation} = routeParam;
+    const {lectureLocation} = this.routeParam;
     const {longitude, latitude, locationDistance, loading} = this.state;
     const {user} = this.props.store;
     markers = [
@@ -123,8 +119,8 @@ class Location extends Component {
             <MapView
               style={styles.mapView}
               initialRegion={{
-                latitude: 6.5191271,
-                longitude: 3.3705135,
+                latitude: latitude,
+                longitude: longitude,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
               }}
@@ -132,7 +128,6 @@ class Location extends Component {
               showsCompass
               mapType="standard">
               <Circle
-                // center={{latitude: lectureHall.lat, longitude: lectureHall.lng}}
                 center={markers[1].latlng}
                 radius={20}
                 strokeWidth={1}
@@ -141,7 +136,6 @@ class Location extends Component {
               />
               {markers.map((item, key) => (
                 <Marker
-                  // coordinate={{latitude: 6.5205902, longitude: 3.3745945}}
                   coordinate={item.latlng}
                   title={item.title}
                   description={item.description}
@@ -167,7 +161,7 @@ class Location extends Component {
           <Button
             onPress={this.goToCamera}
             style={{width: '100%'}}
-            //disabled={locationDistance < 20 ? false : true}
+            // disabled={locationDistance < 20 ? false : true}
           >
             Next
           </Button>

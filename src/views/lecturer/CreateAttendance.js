@@ -22,17 +22,18 @@ import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {createAttendance} from '../../controller/attendance';
 import {fetchLecturerCourses} from '../../controller/course';
-import SearchableDropdown from 'react-native-searchable-dropdown';
 import Geolocation from 'react-native-geolocation-service';
 import hasLocationPermission from '../../helpers/checkLocation';
 import {KeyboardAvoidingView} from 'react-native';
+import VectorIcon from 'react-native-vector-icons/MaterialIcons';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 const CreateAttendanceScreen = ({store}) => {
   const styles = useStyleSheet(themedStyles);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const navigation = useNavigation();
   const [data, setData] = React.useState({name: 'Loading....'});
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState([]);
   const {user, userToken} = store;
   const [loading, setLoading] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
@@ -44,12 +45,12 @@ const CreateAttendanceScreen = ({store}) => {
   );
 
   const onSelect = (text) => {
-    setValue({...text});
+    setValue(text);
   };
 
   const createAttendanceCode = async () => {
     const body = {
-      course_id: value.id.toString(),
+      course_id: value[0].toString(),
       location: location,
     };
     setLoading(true);
@@ -137,18 +138,29 @@ const CreateAttendanceScreen = ({store}) => {
             useNativeDriver={true}>
             <Tab title="Class Sign In">
               <Layout style={styles.form}>
-                <SearchableDropdown
-                  onItemSelect={onSelect}
-                  selectedItems={value}
-                  containerStyle={{padding: 5}}
-                  textInputStyle={styles.dropdownInput}
-                  itemStyle={styles.dropdownItem}
-                  itemTextStyle={styles.dropdownItemText}
+                <SectionedMultiSelect
                   items={data}
-                  defaultIndex={2}
-                  placeholder="Enter Course..."
-                  resetValue={false}
-                  underlineColorAndroid="transparent"
+                  IconRenderer={VectorIcon}
+                  uniqueKey="id"
+                  selectText="Enter Course"
+                  showDropDowns={true}
+                  onSelectedItemsChange={onSelect}
+                  selectedItems={value}
+                  searchPlaceholderText="Search Course ..."
+                  displayKey="name"
+                  alwaysShowSelectText
+                  single
+                  onCancel={() => setValue('')}
+                  showCancelButton
+                  styles={{
+                    itemText: {
+                      ...styles.dropdownItem,
+                    },
+                    button: {backgroundColor: '#00BA4A'},
+                    selectToggle: {
+                      ...styles.dropdownInput,
+                    },
+                  }}
                 />
                 <Button onPress={createAttendanceCode} disabled={loading}>
                   {!loading ? 'Create Sign-In Code' : 'Creating Sign-In Code'}
@@ -158,19 +170,29 @@ const CreateAttendanceScreen = ({store}) => {
             <Tab title="Class Sign Out">
               <KeyboardAvoidingView>
                 <FormBody style={styles.form}>
-                  <SearchableDropdown
-                    onTextChange={(text) => console.log(text)}
-                    onItemSelect={onSelect}
-                    selectedItems={value}
-                    containerStyle={{padding: 5}}
-                    textInputStyle={styles.dropdownInput}
-                    itemStyle={styles.dropdownItem}
-                    itemTextStyle={styles.dropdownItemText}
+                  <SectionedMultiSelect
                     items={data}
-                    defaultIndex={2}
-                    placeholder="Enter Course..."
-                    resetValue={false}
-                    underlineColorAndroid="transparent"
+                    IconRenderer={VectorIcon}
+                    uniqueKey="id"
+                    selectText="Enter Course"
+                    showDropDowns={true}
+                    onSelectedItemsChange={onSelect}
+                    selectedItems={value}
+                    searchPlaceholderText="Search Course ..."
+                    displayKey="name"
+                    alwaysShowSelectText
+                    single
+                    onCancel={() => setValue('')}
+                    showCancelButton
+                    styles={{
+                      itemText: {
+                        ...styles.dropdownItem,
+                      },
+                      button: {backgroundColor: '#00BA4A'},
+                      selectToggle: {
+                        ...styles.dropdownInput,
+                      },
+                    }}
                   />
                   <Button onPress={createAttendanceCode} disabled={loading}>
                     {!loading
@@ -218,26 +240,20 @@ const themedStyles = StyleService.create({
   input: {
     marginBottom: hp('2%'),
   },
-  button: {
-    marginBottom: hp('4%'),
-  },
   dropdownInput: {
     padding: 12,
     borderWidth: 1,
     borderColor: 'color-primary-500',
     backgroundColor: 'background-basic-color-1',
     borderRadius: 5,
-    height: hp(7),
+    height: hp(5),
     color: 'color-text',
-    marginBottom: hp(2),
+    placeholderColor: 'color-text',
+    marginBottom: 20,
   },
   dropdownItem: {
     padding: 10,
-    backgroundColor: 'background-basic-color-1',
-    borderColor: 'color-primary-500',
-    borderWidth: 0.5,
-  },
-  dropdownItemText: {
     color: 'color-text',
+    fontFamily: 'Poppins-Regular',
   },
 });

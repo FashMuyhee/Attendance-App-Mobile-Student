@@ -12,7 +12,8 @@ import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {lecturerAddCourse, fetchAllCourses} from '../../controller/course';
 import Snackbar from 'react-native-snackbar';
-import SearchableDropdown from 'react-native-searchable-dropdown';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import VectorIcon from 'react-native-vector-icons/MaterialIcons';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
@@ -28,17 +29,17 @@ const AddCourseScreen = ({navigation, store}) => {
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
 
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState([]);
   const [data, setData] = React.useState({name: 'Loading....'});
   const [loading, setLoading] = React.useState(false);
 
   const onSelect = (text) => {
-    setValue({...text});
+    setValue(text);
   };
 
   const handleAddCourse = () => {
     setLoading(true);
-    lecturerAddCourse(value.id, userToken)
+    lecturerAddCourse(value[0], userToken)
       .then((data) => {
         setLoading(false);
         Snackbar.show({
@@ -78,18 +79,29 @@ const AddCourseScreen = ({navigation, store}) => {
           normal="Let's add some courses"
           subtitle="Select your department,level,semester and the desired courses you need to add"
         />
-        <SearchableDropdown
-          onItemSelect={onSelect}
-          selectedItems={value}
-          containerStyle={{padding: 5}}
-          textInputStyle={styles.dropdownInput}
-          itemStyle={styles.dropdownItem}
-          itemTextStyle={styles.dropdownItemText}
+        <SectionedMultiSelect
           items={data}
-          defaultIndex={2}
-          placeholder="Enter Course..."
-          resetValue={false}
-          underlineColorAndroid="transparent"
+          IconRenderer={VectorIcon}
+          uniqueKey="id"
+          selectText="Enter Course"
+          showDropDowns={true}
+          onSelectedItemsChange={onSelect}
+          selectedItems={value}
+          searchPlaceholderText="Search Course ..."
+          displayKey="name"
+          alwaysShowSelectText
+          single
+          onCancel={() => setValue('')}
+          showCancelButton
+          styles={{
+            itemText: {
+              ...styles.dropdownItem,
+            },
+            button: {backgroundColor: '#00BA4A'},
+            selectToggle: {
+              ...styles.dropdownInput,
+            },
+          }}
         />
         <Button
           style={{marginTop: 30}}
@@ -117,18 +129,14 @@ const themeStyle = StyleService.create({
     borderColor: 'color-primary-500',
     backgroundColor: 'background-basic-color-1',
     borderRadius: 5,
-    height: hp(7),
+    height: hp(5),
     color: 'color-text',
     placeholderColor: 'color-text',
   },
   dropdownItem: {
     padding: 10,
-    backgroundColor: 'background-basic-color-1',
-    borderColor: 'color-primary-500',
-    borderWidth: 0.5,
-  },
-  dropdownItemText: {
     color: 'color-text',
+    fontFamily: 'Poppins-Regular',
   },
 });
 ``;

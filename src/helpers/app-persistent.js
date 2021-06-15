@@ -46,7 +46,7 @@ const getTheme = async () => {
 
 const setTokenToStorage = async (token) => {
   try {
-    await AsyncStorage.setItem('token', JSON.stringify(token));
+    await AsyncStorage.setItem('token', token);
   } catch (error) {
     console.log('Something went wrong', error);
   }
@@ -55,7 +55,7 @@ const setTokenToStorage = async (token) => {
 const getToken = async () => {
   try {
     let data = await AsyncStorage.getItem('token');
-    const token = JSON.parse(data);
+    const token = data;
     return token;
   } catch (error) {
     console.log('Something went wrong', error);

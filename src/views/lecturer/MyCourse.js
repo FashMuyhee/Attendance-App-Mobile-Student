@@ -20,6 +20,7 @@ import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fetchLecturerCourses} from '../../controller/course';
 import {Table, Row, Rows} from 'react-native-table-component';
+import {StyleSheet} from 'react-native';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
@@ -123,6 +124,12 @@ const themedStyles = StyleService.create({
     margin: 6,
     color: 'color-text`',
     fontFamily: 'Poppins-Regular',
-    fontSize: hp(2),
+    fontSize: hp(1.4),
+    textAlign:'center'
+  },
+  tableWrapper: {
+    // borderWidth: StyleSheet.hairlineWidth,
+    // borderColor: 'color-primary-500',
+    // borderRadius: 4,
   },
 });

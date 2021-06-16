@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {mapping, dark, light} from '@eva-design/eva';
@@ -17,22 +17,17 @@ import {
   lecturerProfile,
   lecturerLogin,
 } from './src/controller/auth';
-import {
-  getCredentials,
-  getTheme,
-  getToken,
-  setTokenToStorage,
-} from './src/helpers/app-persistent';
+import {getCredentials} from './src/helpers/app-persistent';
 import Snackbar from 'react-native-snackbar';
-import {LoadingScreen, SettingsScreen} from './src/views';
+import {LoadingScreen} from './src/views';
 const darkTheme = {...dark, ...customDarkTheme};
 const lightTheme = {...light, ...customLightTheme};
-import {ThemeContext} from './src/store/ThemeContext';
+import {useSelector} from 'react-redux';
+import {saveUser, saveUserToken} from './src/store/action';
 
 const App = (props) => {
   const [loading, setLoading] = useState(false);
-  const {setIsLoggedIn, setUser, setToken} = props.store;
-  const {isDark} = useContext(ThemeContext);
+  const {isDark} = useSelector((state) => state.app_store);
 
   const handleStudentLogin = (values) => {
     setLoading(true);
@@ -40,8 +35,7 @@ const App = (props) => {
       .then((data) => {
         const token = data;
 
-        setToken(token);
-        setTokenToStorage(token);
+        saveUserToken(token);
         profile(token)
           .then((res) => {
             const authUser = {
@@ -49,8 +43,7 @@ const App = (props) => {
               role: 'student',
               ...res,
             };
-            setUser(authUser);
-            setIsLoggedIn(true);
+            saveUser(authUser);
             setLoading(false);
             Snackbar.show({
               text: `Welcome back ${res.fullname}`,
@@ -92,8 +85,7 @@ const App = (props) => {
     lecturerLogin({email: values.uid, password: values.password})
       .then((data) => {
         const token = data;
-        setToken(token);
-        setTokenToStorage(token);
+        saveUserToken(token);
         lecturerProfile(token)
           .then(({user}) => {
             const authUser = {
@@ -103,8 +95,7 @@ const App = (props) => {
               ...user,
               role: 'lecturer',
             };
-            setUser(authUser);
-            setIsLoggedIn(true);
+            saveUser(authUser);
             setLoading(false);
             Snackbar.show({
               text: `Welcome back ${user.fullname}`,
@@ -141,7 +132,7 @@ const App = (props) => {
       });
   };
   useEffect(() => {
-    getCredentials()
+    /* getCredentials()
       .then((credentials) => {
         if (credentials.role === 'student') {
           handleStudentLogin(credentials);
@@ -151,9 +142,8 @@ const App = (props) => {
       })
       .catch((e) => {
         console.log(e);
-      });
-    console.log(getToken());
-    changeNavigationBarColor('#00AB4A',false,true);
+      }); */
+    changeNavigationBarColor('#00AB4A', false, true);
   }, []);
 
   return (
@@ -165,10 +155,9 @@ const App = (props) => {
         customMapping={customMapping}>
         <StatusBar backgroundColor="#00AB4A" />
         {loading ? <LoadingScreen /> : <AppNavigator />}
-        {/* <SettingsScreen /> */}
       </ApplicationProvider>
     </>
   );
 };
 
-export default inject('store')(observer(App));
+export default App;

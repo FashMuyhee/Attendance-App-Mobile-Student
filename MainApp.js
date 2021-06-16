@@ -1,15 +1,16 @@
 import React from 'react';
-import {Provider} from 'mobx-react';
-import Store from './src/store/Store';
+import {Provider} from 'react-redux';
+import {store, persistor} from './src/store/store';
 import App from './App';
-import {ThemeProvider} from './src/store/ThemeContext';
+import {PersistGate} from 'redux-persist/integration/react';
+
 const MainApp = () => {
   return (
-    <ThemeProvider>
-      <Provider store={Store}>
+    <Provider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
         <App />
-      </Provider>
-    </ThemeProvider>
+      </PersistGate>
+    </Provider>
   );
 };
 export default MainApp;

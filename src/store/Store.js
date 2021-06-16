@@ -1,33 +1,28 @@
-import {decorate, observable, action, autorun} from 'mobx';
-class Store {
-  userToken = '';
-  user = {
-    id: 1,
-    name: 'Fasoranti Oluwamuyiwa',
-    matric_no: 'F/HD/18/3210014',
-    department: 'Computer Science',
-    level: 'HND2',
-    role: 'lecturer',
-  };
-  isLoggedIn = false;
+import {createStore, applyMiddleware, combineReducers} from 'redux';
+import thunk from 'redux-thunk';
+import AppReducer from './reducer';
+import {persistStore, persistReducer} from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-  setToken = (token) => {
-    this.userToken = token;
-  };
+const initialState = {};
 
-  setIsLoggedIn = (status) => {
-    this.isLoggedIn = status;
-  };
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  timeout: null,
+};
 
-  setUser = (user) => {
-    this.user = user;
-  };
-}
-decorate(Store, {
-  userToken: observable,
-  user: observable,
-  isLoggedIn: observable,
-  setUser: action,
-  setIsLoggedIn: action,
-});
-export default new Store();
+const rootReducer = combineReducers({app_store: AppReducer});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const middleware = [thunk];
+
+let store = createStore(
+  persistedReducer,
+  initialState,
+  applyMiddleware(...middleware),
+);
+
+let persistor = persistStore(store);
+export {store, persistor};

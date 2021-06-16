@@ -8,7 +8,6 @@ import {
   MyText,
   WelcomeNote,
 } from '../../components';
-import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -17,26 +16,26 @@ import {RNCamera} from 'react-native-camera';
 import {TakeScreen} from '../student';
 import {markAttendance, compareImageDp} from '../../controller/attendance';
 import {useCamera} from 'react-native-camera-hooks';
-import * as ImagePicker from 'react-native-image-picker';
+import {useSelector} from 'react-redux';
 
 const Camera = ({route, store}) => {
   const [{cameraRef}, {takePicture: takePictureAsync}] = useCamera();
-  const [base64Img, setBase64Img] = useState('');
   const [imgUri, setImgUri] = useState('');
   const [state, setState] = useState({
     visible: false,
     imgUri: null,
-    error: null,
+    message: null,
     loading: false,
     cameraVisible: false,
   });
   const routeParam = route.params;
-
+  const [message, setMessage] = useState('');
+  const {user} = useSelector((state) => state.app_store);
+  
   const takePicture = async () => {
     const options = {base64: true, quality: 0.5};
     const data = await takePictureAsync(options);
     setState({...state, cameraVisible: false});
-    setBase64Img(data.base64);
     setImgUri(data);
   };
 
@@ -57,20 +56,29 @@ const Camera = ({route, store}) => {
   };
 
   const finish = async () => {
-    const {location, code} = routeParam;
+    const {location, code, type} = routeParam;
     setState({...state, loading: true});
 
-    compareImageDp(imgUri, store.user.dp)
+    compareImageDp(imgUri, user.dp)
       .then(async (data) => {
         setState({...state, loading: false});
         if (data.confidence > 75) {
+          console.log(type);
           try {
-            const data = await markAttendance({
-              body: {gps: location},
-              code,
-              token: store.userToken,
-            });
-            console.log(data.data);
+            if (type === 'sign_in') {
+              const res = await markAttendance({
+                body: {gps: location},
+                code,
+              });
+
+              setState({
+                ...state,
+                visible: true,
+                message: res.message,
+              });
+            } else if (type === 'sign_out') {
+              alert('sign out');
+            }
           } catch (error) {
             console.log(error);
           }
@@ -138,7 +146,7 @@ const Camera = ({route, store}) => {
       <ModalAlert
         isVisible={visible}
         closeModal={() => setState({...state, visible: false})}
-        message="You've signed in for Compiler Construction successfully"
+        message={state.message}
         subtitle="Ensure that you signout when the class is over, so your attendance is marked"
         btnText="Go Home"
       />
@@ -168,7 +176,8 @@ const Camera = ({route, store}) => {
   );
 };
 
-export default inject('store')(observer(Camera));
+export default Camera;
+
 const styles = StyleSheet.create({
   /*  welcomeNote: {
     marginTop: hp('5%'),

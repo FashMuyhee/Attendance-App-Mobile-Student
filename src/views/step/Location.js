@@ -3,12 +3,12 @@ import {StyleSheet, ActivityIndicator} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {StyleService, Text, Button} from '@ui-kitten/components';
 import {Container, ModalAlert, MyText} from '../../components';
-import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MapView, {Marker, Circle} from 'react-native-maps';
 import {checkLocationDifference} from '../../helpers/locationDifference';
 import {TakeScreen} from '../student';
 import hasLocationPermission from '../../helpers/checkLocation';
+import {connect} from 'react-redux';
 let markers = [];
 class Location extends Component {
   state = {
@@ -26,6 +26,7 @@ class Location extends Component {
     this.props.navigation.navigate('camera', {
       location: {lat: this.state.latitude, lng: this.state.longitude},
       code: this.routeParam.code,
+      type: this.routeParam.type,
     });
   };
 
@@ -76,7 +77,7 @@ class Location extends Component {
   render() {
     const {lectureLocation} = this.routeParam;
     const {longitude, latitude, locationDistance, loading} = this.state;
-    const {user} = this.props.store;
+    const {user} = this.props;
     markers = [
       {
         latlng: {
@@ -179,15 +180,18 @@ class Location extends Component {
   }
 }
 
-export default inject('store')(observer(Location));
-// export default Location;
+const mapStateToProps = (state) => {
+  const {user} = state.app_store;
+  return {user};
+};
+
+export default connect(mapStateToProps)(Location);
+
 const styles = StyleService.create({
   welcomeNote: {
     /*  borderColor: 'yellow',
     borderWidth: 1, */
     marginTop: hp('5%'),
-    paddingLeft: '9%',
-    paddingRight: '9%',
     height: hp('12%'),
   },
   boldText: {

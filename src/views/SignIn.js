@@ -13,12 +13,15 @@ import {
 import Snackbar from 'react-native-snackbar';
 import {Formik} from 'formik';
 import {lecturerLoginSchema, studentLoginSchema} from '../helpers/validator';
-import {setCredentials, setTokenToStorage} from '../helpers/app-persistent';
+import {saveUser, saveUserToken} from '../store/action';
+import {useDispatch} from 'react-redux';
+import axios from 'axios';
 
 const SignInScreen = (props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const dispatch = useDispatch();
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -35,32 +38,27 @@ const SignInScreen = (props) => {
   const passwordInput = useRef(null);
   const password2Input = useRef(null);
 
-  const {setIsLoggedIn, setUser, setToken} = props.store;
-
   const handleStudentLogin = (values) => {
     setLoading(true);
 
     login(values)
       .then((data) => {
         const token = data;
-
-        setToken(token);
-        profile(token)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        dispatch(saveUserToken(token));
+        profile()
           .then((res) => {
             const authUser = {
               name: res.fullname,
               role: 'student',
               ...res,
             };
-            setUser(authUser);
+            dispatch(saveUser(authUser));
             const userCredentials = {
               uid: values.matric_no,
               password: values.password,
               role: 'student',
             };
-            setCredentials(userCredentials);
-            setTokenToStorage(token);
-            setIsLoggedIn(true);
             setLoading(false);
             Snackbar.show({
               text: `Welcome back ${res.fullname}`,
@@ -103,9 +101,9 @@ const SignInScreen = (props) => {
     lecturerLogin(values)
       .then((data) => {
         const token = data;
-        setToken(token);
-        setTokenToStorage(token);
-        lecturerProfile(token)
+        dispatch(saveUserToken(token));
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        lecturerProfile()
           .then(({user}) => {
             const authUser = {
               id: user.id,
@@ -114,14 +112,12 @@ const SignInScreen = (props) => {
               ...user,
               role: 'lecturer',
             };
-            setUser(authUser);
+            dispatch(saveUser(authUser));
             const userCredentials = {
               uid: values.email,
               password: values.password,
               role: 'lecturer',
             };
-            setCredentials(userCredentials);
-            setIsLoggedIn(true);
             setLoading(false);
             Snackbar.show({
               text: `Welcome back ${user.fullname}`,
@@ -254,8 +250,7 @@ const SignInScreen = (props) => {
   );
 };
 
-export default inject('store')(observer(SignInScreen));
-// export default SignInScreen;
+export default SignInScreen;
 const styles = StyleSheet.create({
   input: {
     marginBottom: hp('2%'),

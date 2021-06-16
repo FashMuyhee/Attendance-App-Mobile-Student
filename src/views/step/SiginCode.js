@@ -9,7 +9,6 @@ import {
   Button,
 } from '@ui-kitten/components';
 import {Container, FormBody, ModalAlert, WelcomeNote} from '../../components';
-import {inject, observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -17,19 +16,50 @@ import {
 import {TakeScreen} from '../student';
 import {getAttendanceLocation} from '../../controller/attendance';
 import Snackbar from 'react-native-snackbar';
+import {useSelector} from 'react-redux';
 
-const SigninCode = ({navigation, store}) => {
+const SigninCode = ({navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [signCode, setSignCode] = useState('');
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const styles = useStyleSheet(themedStyles);
-  const {userToken, user} = store;
+  const {user} = useSelector((state) => state.app_store);
 
   const checkSignInCode = () => {
     // get lecture location and save
     setLoading(true);
-    getAttendanceLocation({code: signCode, token: userToken})
+    getAttendanceLocation({code: signCode})
+      .then((data) => {
+        setLoading(false);
+        console.log(data);
+        if (data?.type === 'error') {
+          setLoading(false);
+          return Snackbar.show({
+            text: data.error.toUpperCase(),
+            duration: Snackbar.LENGTH_SHORT,
+            textColor: 'white',
+          });
+        }
+        const {location} = data.message;
+        const parsedLocation = JSON.parse(location);
+        navigation.navigate('location', {
+          lectureLocation: {
+            lat: parsedLocation.lat,
+            lng: parsedLocation.lng,
+          },
+          code: signCode,
+          type: 'sign_in',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
+  const handleSignOut = () => {
+    getAttendanceLocation({code: signCode})
       .then((data) => {
         setLoading(false);
         if (data.type === 'error') {
@@ -48,16 +78,13 @@ const SigninCode = ({navigation, store}) => {
             lng: parsedLocation.lng,
           },
           code: signCode,
+          type: 'sign_out',
         });
       })
       .catch((err) => {
         console.log(err);
         setLoading(false);
       });
-  };
-
-  const handleSignOut = () => {
-    setModal(true);
   };
 
   return (
@@ -112,12 +139,11 @@ const SigninCode = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(SigninCode));
-// export default SigninCode;
+export default SigninCode;
 const themedStyles = StyleService.create({
   form: {
-    paddingLeft: '9%',
-    paddingRight: '9%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
     marginTop: hp('8%'),
   },
   tabContainer: {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -17,7 +17,6 @@ import {
   Toggle,
 } from '@ui-kitten/components';
 import {Container, Navbar} from '../components';
-import {inject, observer} from 'mobx-react';
 import avatar from '../assets/img/user.png';
 import {
   heightPercentageToDP as hp,
@@ -25,10 +24,11 @@ import {
 } from 'react-native-responsive-screen';
 import * as ImagePicker from 'react-native-image-picker';
 import {uploadStudentDp} from '../controller/auth';
-import {ThemeContext} from '../store/ThemeContext';
 import Snackbar from 'react-native-snackbar';
+import {useDispatch, useSelector} from 'react-redux';
+import {toggleTheme} from '../store/action';
 
-const SettingsScreen = ({navigation, store}) => {
+const SettingsScreen = ({navigation}) => {
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -36,9 +36,9 @@ const SettingsScreen = ({navigation, store}) => {
   const [imgUrl, setImgUrl] = useState({uri: null});
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [isDark, setIsDark] = useState(false);
-  const {isDark, toggleTheme} = useContext(ThemeContext);
-
+  const dispatch = useDispatch();
+  const {isDark, user} = useSelector((state) => state.app_store);
+  console.log(isDark);
   const BackIcon = (style) => (
     <Icon {...style} name="arrow-back" fill="white" />
   );
@@ -55,8 +55,6 @@ const SettingsScreen = ({navigation, store}) => {
     />
   );
 
-  const {userToken, user, setUser} = store;
-
   const pickImage = () => {
     ImagePicker.launchImageLibrary(
       {mediaType: 'photo', includeBase64: false},
@@ -68,7 +66,7 @@ const SettingsScreen = ({navigation, store}) => {
 
   const saveDp = async () => {
     setLoading(true);
-    const result = await uploadStudentDp(imgUrl, userToken, user.role);
+    const result = await uploadStudentDp(imgUrl, user.role);
     console.log(result);
     const colorCode = result.type === 'error' ? 'red' : 'green';
     if (result.type != 'error') {
@@ -90,8 +88,9 @@ const SettingsScreen = ({navigation, store}) => {
   };
 
   const handleThemeToggle = () => {
-    toggleTheme();
+    dispatch(toggleTheme());
   };
+
   const image =
     user.dp === null && imgUrl.uri === null
       ? avatar
@@ -170,7 +169,7 @@ const SettingsScreen = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(SettingsScreen));
+export default SettingsScreen;
 const styles = StyleSheet.create({
   title: {
     color: 'white',
@@ -182,8 +181,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatar: {
-    width: wp(40),
-    height: hp(22),
+    width: wp(45),
+    height: hp(23),
     alignSelf: 'center',
   },
   pickerIcon: {

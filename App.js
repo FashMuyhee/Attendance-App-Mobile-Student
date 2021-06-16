@@ -12,12 +12,14 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color';
 const darkTheme = {...dark, ...customDarkTheme};
 const lightTheme = {...light, ...customLightTheme};
 import {useSelector} from 'react-redux';
+import axios from 'axios';
 
 const App = () => {
-  const {isDark} = useSelector((state) => state.app_store);
+  const {isDark, userToken} = useSelector((state) => state.app_store);
 
   useEffect(() => {
     changeNavigationBarColor('#00AB4A', false, true);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
   }, []);
 
   return (

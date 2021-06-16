@@ -14,14 +14,14 @@ import {
   EmptyData,
   LoaderText,
 } from '../../components';
-import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fetchStudentCourses} from '../../controller/course';
 import {Table, Row, Rows} from 'react-native-table-component';
+import {useSelector} from 'react-redux';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
-const MyCourseScreen = ({navigation, store}) => {
+const MyCourseScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const [table, setTable] = useState({
     head: ['S/N', 'Course Title', 'Course Code'],
@@ -36,11 +36,11 @@ const MyCourseScreen = ({navigation, store}) => {
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
-  const {user, userToken} = store;
+  const {user} = useSelector((state) => state.app_store);
 
   useEffect(() => {
     setLoading(true);
-    fetchStudentCourses(userToken)
+    fetchStudentCourses()
       .then((data) => {
         setTable({...table, data});
         setLoading(false);
@@ -91,7 +91,8 @@ const MyCourseScreen = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(MyCourseScreen));
+export default MyCourseScreen;
+
 const themedStyles = StyleService.create({
   title: {
     color: 'white',

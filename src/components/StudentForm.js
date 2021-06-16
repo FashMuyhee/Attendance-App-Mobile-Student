@@ -7,9 +7,9 @@ import {Formik} from 'formik';
 import {registerSchema} from '../helpers/validator';
 import {register, login, profile} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
-import {useNavigation} from '@react-navigation/native';
-import {inject, observer} from 'mobx-react';
-import {setTokenToStorage,setCredentials} from '../helpers/app-persistent';
+import {saveUser, saveUserToken} from '../store/action';
+import {useDispatch} from 'react-redux';
+import axios from 'axios';
 
 const StudentForm = ({store}) => {
   const data = [
@@ -21,12 +21,12 @@ const StudentForm = ({store}) => {
     {text: 'HND3'},
   ];
 
-  const {navigate} = useNavigation();
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [level, setLevel] = React.useState({text: ''});
   const [loading, setLoading] = useState(false);
 
   const {setIsLoggedIn, setUser, setToken} = store;
+  const dispatch = useDispatch();
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -47,24 +47,19 @@ const StudentForm = ({store}) => {
           login(user)
             .then((data) => {
               const token = data;
+              axios.defaults.headers.common[
+                'Authorization'
+              ] = `Bearer ${token}`;
 
-              setToken(token);
-              setTokenToStorage(token);
-              profile(token)
+              dispatch(saveUser(token));
+              profile()
                 .then((res) => {
                   const authUser = {
                     name: res.fullname,
                     role: 'student',
                     ...res,
                   };
-                  setUser(authUser);
-                  const userCredentials = {
-                    uid: values.matric_no,
-                    password: values.password,
-                    role: 'lecturer',
-                  };
-                  setCredentials(userCredentials);
-                  setIsLoggedIn(true);
+                  dispatch(saveUser(authUser));
                   setLoading(false);
                   Snackbar.show({
                     text: `Registration Successful, Welcome ${res.fullname}`,
@@ -232,7 +227,8 @@ const StudentForm = ({store}) => {
   );
 };
 
-export default inject('store')(observer(StudentForm));
+export default StudentForm;
+
 const styles = StyleSheet.create({
   form: {
     marginTop: '6%',

@@ -8,22 +8,22 @@ import {
   StyleService,
 } from '@ui-kitten/components';
 import {Container, Navbar, WelcomeNote} from '../../components';
-import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {lecturerAddCourse, fetchAllCourses} from '../../controller/course';
 import Snackbar from 'react-native-snackbar';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import VectorIcon from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
-const AddCourseScreen = ({navigation, store}) => {
+const AddCourseScreen = ({navigation}) => {
   const styles = useStyleSheet(themeStyle);
 
   const navigateBack = () => {
     navigation.goBack();
   };
-  const {user, userToken} = store;
+  const {user} = useSelector((state) => state.app_store);
 
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
@@ -39,7 +39,7 @@ const AddCourseScreen = ({navigation, store}) => {
 
   const handleAddCourse = () => {
     setLoading(true);
-    lecturerAddCourse(value[0], userToken)
+    lecturerAddCourse(value[0])
       .then((data) => {
         setLoading(false);
         Snackbar.show({
@@ -114,7 +114,8 @@ const AddCourseScreen = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(AddCourseScreen));
+export default AddCourseScreen;
+
 const themeStyle = StyleService.create({
   title: {
     color: 'white',

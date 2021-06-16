@@ -7,17 +7,16 @@ import {
   useStyleSheet,
 } from '@ui-kitten/components';
 import {ScrollContainer, Navbar, EmptyData} from '../../components';
-import {inject, observer} from 'mobx-react';
 import {Table, Row, Rows} from 'react-native-table-component';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const BackIcon = (style) => <Icon {...style} name="arrow-back" fill="white" />;
 
-const AttendanceRecordScreen = ({navigation, store, route}) => {
+const AttendanceRecordScreen = ({navigation, route}) => {
+
   const navigateBack = () => {
     navigation.goBack();
   };
-  const {userToken} = store;
   const BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
   );
@@ -60,7 +59,8 @@ const AttendanceRecordScreen = ({navigation, store, route}) => {
   );
 };
 
-export default inject('store')(observer(AttendanceRecordScreen));
+export default AttendanceRecordScreen;
+
 const themeStyle = StyleService.create({
   title: {
     color: 'white',

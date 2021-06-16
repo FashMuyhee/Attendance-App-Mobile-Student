@@ -156,41 +156,29 @@ const lecturerRegister = async ({
   });
 };
 
-const profile = async (token) => {
-  if (token) {
-    try {
-      const {data} = await axios({
-        method: 'GET',
-        url: `${env.url}/students/1`,
-        headers: {Authorization: `Bearer ${token}`},
-
-        timeout: 30000,
-      });
-      return data.payload.data;
-    } catch (error) {
-      return error.response;
-    }
-  } else {
-    return {error: 'invalid user'};
+const profile = async () => {
+  try {
+    const {data} = await axios({
+      method: 'GET',
+      url: `${env.url}/students/1`,
+      timeout: 30000,
+    });
+    return data.payload.data;
+  } catch (error) {
+    return error.response;
   }
 };
 
-const lecturerProfile = async (token) => {
-  if (token) {
-    try {
-      const {data} = await axios({
-        method: 'GET',
-        url: `${env.url}/lecturers/1`,
-        headers: {Authorization: `Bearer ${token}`},
-
-        timeout: 30000,
-      });
-      return data.data;
-    } catch (error) {
-      return error.response;
-    }
-  } else {
-    return {error: 'invalid user'};
+const lecturerProfile = async () => {
+  try {
+    const {data} = await axios({
+      method: 'GET',
+      url: `${env.url}/lecturers/1`,
+      timeout: 30000,
+    });
+    return data.data;
+  } catch (error) {
+    return error.response;
   }
 };
 
@@ -205,13 +193,12 @@ const createFormData = (photo) => {
   return data;
 };
 
-const uploadStudentDp = async (image, token,role) => {
+const uploadStudentDp = async (image, role) => {
   try {
     const {data} = await axios({
       method: 'put',
       url: `${env.url}/${role}s/8/uploadDp`,
       headers: {
-        authorization: `Bearer ${token}`,
         'content-type': 'multipart/form-data',
       },
       data: createFormData(image),

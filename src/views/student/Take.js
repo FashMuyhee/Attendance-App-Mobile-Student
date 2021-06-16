@@ -4,12 +4,10 @@ import {
   StyleService,
   useStyleSheet,
   Icon,
-  Layout,
 } from '@ui-kitten/components';
-import { Navbar, ScrollContainer } from '../../components';
-import { inject, observer } from 'mobx-react';
+import {Navbar, ScrollContainer} from '../../components';
 
-import {useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native';
 
 const TakeScreen = (props) => {
   const styles = useStyleSheet(themedStyles);
@@ -17,7 +15,7 @@ const TakeScreen = (props) => {
     <Icon {...style} fill="white" name="arrow-back" />
   );
 
-const navigation = useNavigation()
+  const navigation = useNavigation();
 
   return (
     <>
@@ -38,14 +36,14 @@ const navigation = useNavigation()
   );
 };
 
-export default inject('store')(observer(TakeScreen));
+export default TakeScreen;
+
 const themedStyles = StyleService.create({
   screen: {
     // height: '100%',
     width: '100%',
     position: 'relative',
-    paddingLeft: 0,
-    paddingRight: 0,
+    paddingHorizontal: '5%',
     backgroundColor: 'background-basic-color-1',
   },
   navBar: {

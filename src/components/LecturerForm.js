@@ -10,18 +10,17 @@ import {
   lecturerProfile,
 } from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
-import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
-import {inject, observer} from 'mobx-react';
-import {setTokenToStorage,setCredentials} from '../helpers/app-persistent'
+import {saveUser, saveUserToken} from '../store/action';
+import {useDispatch} from 'react-redux';
+import axios from 'axios';
 
 const LecturerForm = ({store}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [level, setLevel] = useState({text: ''});
   const [levelData, setLevelData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {navigate} = useNavigation();
-  const {setIsLoggedIn, setUser, setToken} = store;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let data = [];
@@ -49,11 +48,11 @@ const LecturerForm = ({store}) => {
           lecturerLogin(user)
             .then((data) => {
               const token = data;
-              // console.log(token);
-              setToken(token);
-              setTokenToStorage(token);
-
-              lecturerProfile(token)
+              dispatch(saveUserToken(token));
+              axios.defaults.headers.common[
+                'Authorization'
+              ] = `Bearer ${token}`;
+              lecturerProfile()
                 .then(({user}) => {
                   const authUser = {
                     id: user.id,
@@ -61,15 +60,9 @@ const LecturerForm = ({store}) => {
                     ...user,
                     role: 'lecturer',
                   };
-                  setUser(authUser);
-                  setIsLoggedIn(true);
+                  dispatch(saveUser(authUser));
                   setLoading(false);
-                  const userCredentials = {
-                    uid: values.email,
-                    password: values.password,
-                    role: 'lecturer',
-                  };
-                  setCredentials(userCredentials);
+
                   Snackbar.show({
                     text: `Registration Successful, Welcome ${user.fullname}`,
                     duration: Snackbar.LENGTH_SHORT,
@@ -238,7 +231,7 @@ const LecturerForm = ({store}) => {
   );
 };
 
-export default inject('store')(observer(LecturerForm));
+export default LecturerForm;
 
 const styles = StyleSheet.create({
   form: {

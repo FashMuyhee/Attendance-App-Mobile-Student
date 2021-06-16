@@ -5,7 +5,7 @@ import {
   useStyleSheet,
   Icon,
   Layout,
-  Select,
+  Input,
   Tab,
   TabView,
   Button,
@@ -17,24 +17,25 @@ import {
   FormBody,
   WelcomeNote,
 } from '../../components';
-import {inject, observer} from 'mobx-react';
 import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {createAttendance} from '../../controller/attendance';
+import {createAttendance, createSignOutCode} from '../../controller/attendance';
 import {fetchLecturerCourses} from '../../controller/course';
 import Geolocation from 'react-native-geolocation-service';
 import hasLocationPermission from '../../helpers/checkLocation';
 import {KeyboardAvoidingView} from 'react-native';
 import VectorIcon from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import {useSelector} from 'react-redux';
 
-const CreateAttendanceScreen = ({store}) => {
+const CreateAttendanceScreen = () => {
   const styles = useStyleSheet(themedStyles);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [code, setCode] = useState('');
   const navigation = useNavigation();
   const [data, setData] = React.useState({name: 'Loading....'});
   const [value, setValue] = useState([]);
-  const {user, userToken} = store;
+  const {user} = useSelector((state) => state.app_store);
   const [loading, setLoading] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
   const [postMsg, setPostMsg] = React.useState({error: false, msg: {}});
@@ -54,15 +55,40 @@ const CreateAttendanceScreen = ({store}) => {
       location: location,
     };
     setLoading(true);
-    const res = await createAttendance({body, token: userToken});
+    const res = await createAttendance({body});
     const {message, type} = res;
     console.log(res);
     if (type === 'success') {
       setPostMsg({
         error: false,
         msg: {
-          msg: `Attendance Sign-in Code for ${value.name} has been Created Successfully`,
+          msg: `Attendance Sign-in Code has been Created Successfully`,
           code: `Sign-in Code ${message.attendance_code}`,
+        },
+      });
+    }
+    setLoading(false);
+    setVisible(true);
+  };
+
+  const createAttendanceSignOutCode = async () => {
+    const body = {
+      course_id: value[0].toString(),
+      location: location,
+    };
+    setLoading(true);
+    const res = await createSignOutCode({
+      body,
+      att_code: code,
+    }); //"5B00F4A",
+    const {message, type} = res;
+    console.log(res);
+    if (type === 'success') {
+      setPostMsg({
+        error: false,
+        msg: {
+          msg: `Attendance Sign-out Code has been Created Successfully`,
+          code: `Sign-in Code ${message.code}`,
         },
       });
     }
@@ -170,6 +196,14 @@ const CreateAttendanceScreen = ({store}) => {
             <Tab title="Class Sign Out">
               <KeyboardAvoidingView>
                 <FormBody style={styles.form}>
+                  <Input
+                    placeholder="Attendance Sign-in Code"
+                    onChangeText={setCode}
+                    style={styles.input}
+                    returnKeyType="done"
+                    onSubmitEditing={createSignOutCode}
+                  />
+
                   <SectionedMultiSelect
                     items={data}
                     IconRenderer={VectorIcon}
@@ -194,7 +228,9 @@ const CreateAttendanceScreen = ({store}) => {
                       },
                     }}
                   />
-                  <Button onPress={createAttendanceCode} disabled={loading}>
+                  <Button
+                    onPress={createAttendanceSignOutCode}
+                    disabled={loading}>
                     {!loading
                       ? 'Create Sign-Out Code'
                       : 'Creating Sign-Out Code'}
@@ -217,7 +253,8 @@ const CreateAttendanceScreen = ({store}) => {
   );
 };
 
-export default inject('store')(observer(CreateAttendanceScreen));
+export default CreateAttendanceScreen;
+
 const themedStyles = StyleService.create({
   screen: {
     // height: '100%',

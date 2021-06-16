@@ -8,24 +8,27 @@ import {
 } from '@ui-kitten/components';
 import {View, Image, TouchableWithoutFeedback} from 'react-native';
 import {Navbar, DetailText, Box} from '../components';
-import {inject, observer} from 'mobx-react';
 import avatar from '../assets/img/user.png';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {removeCredentials} from '../helpers/app-persistent';
+import {useSelector, useDispatch} from 'react-redux';
+import {logout as logoutUser} from '../store/action';
+
 const HomeScreen = ({navigation, store}) => {
   const styles = useStyleSheet(themedStyles);
   const SettingIcon = (style) => (
     <Icon {...style} fill="white" name="settings-outline" />
   );
 
-  const {user, setIsLoggedIn} = store;
+  const dispatch = useDispatch();
+  const {user} = useSelector((state) => state.app_store);
+
   const logout = async () => {
-    setIsLoggedIn(false);
-    removeCredentials();
+    dispatch(logoutUser());
   };
+
   const DashboardActionStudent = () => (
     <View style={styles.actions}>
       <Box icon="edit-outline" route="att_signin" title="Take Attendance" />
@@ -92,7 +95,8 @@ const HomeScreen = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(HomeScreen));
+export default HomeScreen;
+
 const themedStyles = StyleService.create({
   dashboard: {
     height: '100%',

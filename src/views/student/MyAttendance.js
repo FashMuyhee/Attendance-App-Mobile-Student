@@ -1,19 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {Icon, TopNavigationAction, useTheme} from '@ui-kitten/components';
-import {ScrollContainer, Navbar} from '../../components';
-import {inject, observer} from 'mobx-react';
+import { Navbar} from '../../components';
 import DetailedRecord from './DetailedRecord';
 import SummaryRecord from './SummaryRecord';
 import {getStudentAllAttendance} from '../../controller/attendance';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-const MyAttendanceScreen = ({navigation, store}) => {
+const MyAttendanceScreen = ({navigation}) => {
   const Tab = createBottomTabNavigator();
   const navigateBack = () => {
     navigation.goBack();
   };
-  const {userToken} = store;
   const BackIcon = (style) => (
     <Icon {...style} name="arrow-back" fill="white" />
   );
@@ -22,13 +20,12 @@ const MyAttendanceScreen = ({navigation, store}) => {
   );
 
   const theme = useTheme();
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [detailedAttendance, setDetailedAttendance] = useState([]);
 
   useEffect(() => {
     setLoading(true);
-    getStudentAllAttendance(userToken)
+    getStudentAllAttendance()
       .then((data) => {
         setDetailedAttendance(data);
         setLoading(false);
@@ -85,7 +82,8 @@ const MyAttendanceScreen = ({navigation, store}) => {
   );
 };
 
-export default inject('store')(observer(MyAttendanceScreen));
+export default MyAttendanceScreen
+
 const styles = StyleSheet.create({
   title: {
     color: 'white',

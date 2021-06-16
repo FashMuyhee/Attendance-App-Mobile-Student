@@ -7,6 +7,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {RFPercentage as fontSize} from 'react-native-responsive-fontsize';
 
 const LandingScreen = (props) => {
   return (
@@ -81,12 +82,12 @@ const style = StyleSheet.create({
   boldenText: {
     // fontWeight: '700',
     color: 'white',
-    fontSize: hp('3.3%'),
+    fontSize: fontSize(3.2),
     fontFamily: 'Poppins-Regular',
   },
   ligthenText: {
     fontWeight: '100',
-    fontSize: hp('2.3%'),
+    fontSize: fontSize(2.3),
     color: 'white',
   },
   authButtons: {

@@ -17,18 +17,17 @@ import {
   FormBody,
   WelcomeNote,
 } from '../../components';
-import {inject, observer} from 'mobx-react';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {getLecturerAttendanceByCourse} from '../../controller/attendance';
 import {fetchLecturerCourses} from '../../controller/course';
 import SearchableDropdown from 'react-native-searchable-dropdown';
-import {KeyboardAvoidingView} from 'react-native';
+import { useSelector } from 'react-redux';
 
 const AttendanceQueryScreen = ({store, navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = React.useState({name: 'Loading....'});
   const [value, setValue] = useState(null);
-  const {user, userToken} = store;
+  const {user} = useSelector((state) => state.app_store);
   const [loading, setLoading] = React.useState(false);
 
   const BackIcon = (style) => (
@@ -43,7 +42,6 @@ const AttendanceQueryScreen = ({store, navigation}) => {
     try {
       setLoading(true);
       const attendance = await getLecturerAttendanceByCourse(
-        userToken,
         value.id.toString(),
       );
       setLoading(false);
@@ -54,7 +52,7 @@ const AttendanceQueryScreen = ({store, navigation}) => {
     }
   };
   useEffect(() => {
-    fetchLecturerCourses(userToken, true)
+    fetchLecturerCourses(true)
       .then((data) => {
         setData(data);
       })
@@ -95,7 +93,6 @@ const AttendanceQueryScreen = ({store, navigation}) => {
               placeholder="Enter Course..."
               resetValue={false}
               underlineColorAndroid="transparent"
-              
             />
             <Button onPress={fetchAttendance} disabled={loading}>
               {!loading ? 'View Attendance' : 'Fetching Attendance'}
@@ -107,7 +104,8 @@ const AttendanceQueryScreen = ({store, navigation}) => {
   );
 };
 
-export default inject('store')(observer(AttendanceQueryScreen));
+export default AttendanceQueryScreen
+
 const themedStyles = StyleService.create({
   screen: {
     // height: '100%',

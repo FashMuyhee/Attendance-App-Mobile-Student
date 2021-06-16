@@ -1,19 +1,13 @@
 import axios from 'axios';
 import env from '../helpers/env';
-import FormData from 'form-data';
-import {getToken} from '../helpers/app-persistent';
 import RNFetchBlob from 'rn-fetch-blob';
-import {Platform} from 'react-native';
 
-const token = getToken();
-
-const createAttendance = async ({body, token}) => {
+const createAttendance = async () => {
   try {
     const {data} = await axios({
       method: 'post',
       url: `${env.url}/attendances/create_attendance`,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-type': 'application/json',
       },
       data: body,
@@ -26,30 +20,15 @@ const createAttendance = async ({body, token}) => {
   }
 };
 
-const createFormData = (photo, userDp) => {
-  const data = new FormData();
-  data.append('image_file1', {
-    // name: photo.fileName,
-    // type: photo.type,
-    uri:
-      Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
-  });
-  data.append('image_url2', userDp);
-  data.append('api_secret', 'IfHgePPhTEUV-OLbCX_WvmywrGUZc8TH');
-  data.append('api_key', 'BI3M7CGFH8TGQsSH9lMk5oeg4MST8L0s');
-  console.log(data);
-  return data;
-};
-
 /**
  * A Function to compare similarities
  * between two images
  * the higher their differences the similar the images
- * @param {imageOne} photo
- * @param {imageTwo} dp
+ * @param  photo
+ * @param  dp
  */
 const compareImageDp = async (photo, dp) => {
-  const {size, filename} = await RNFetchBlob.fs.stat(photo.uri);
+  const {filename} = await RNFetchBlob.fs.stat(photo.uri);
   const formData = [
     {
       name: 'image_file1',
@@ -87,38 +66,52 @@ const compareImageDp = async (photo, dp) => {
   }
 };
 
-const markAttendance = async ({body, code, token}) => {
-  // try {
-  axios({
-    method: 'put',
-    url: `${env.url}/attendances/mark_attendance/${code}`,
-    headers: {
-      authorization: `Bearer ${token}`,
-      'Content-type': 'application/json',
-    },
-    data: body,
-    timeout: 30000,
-  })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err.response);
+/**
+ * A Function to mark student attendance
+ * @param body
+ * @param code
+ */
+const markAttendance = async ({body, code}) => {
+  try {
+    const {data} = await axios({
+      method: 'put',
+      url: `${env.url}/attendances/mark_attendance/${code}`,
+      headers: {
+        'Content-type': 'application/json',
+      },
+      data: body,
+      timeout: 30000,
     });
 
-  //   return data;
-  // } catch (error) {
-  //   return error.response;
-  // }
+    return data.payload;
+  } catch (error) {
+    return error.response;
+  }
 };
 
-const getAttendanceLocation = async ({code, token}) => {
+const createSignOutCode = async ({body, att_code}) => {
+  try {
+    const {data} = await axios({
+      method: 'put',
+      url: `${env.url}/attendances/create_signout/${att_code}`,
+      headers: {
+        'Content-type': 'application/json',
+      },
+      data: body,
+      timeout: 30000,
+    });
+    return data.payload;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+const getAttendanceLocation = async ({code}) => {
   try {
     const {data} = await axios({
       method: 'get',
       url: `${env.url}/attendances/get_attendance_location/${code}`,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-type': 'application/json',
       },
       timeout: 30000,
@@ -154,13 +147,12 @@ const generateAttendanceRecord = (attendance_record) => {
   return genAttendance;
 };
 
-const getAllLecturerAttendance = async (token) => {
+const getAllLecturerAttendance = async () => {
   try {
     const {data} = await axios({
       method: 'get',
       url: `${env.url}/lecturers/4/get_attendances/`,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-type': 'application/json',
       },
       timeout: 30000,
@@ -171,13 +163,12 @@ const getAllLecturerAttendance = async (token) => {
   }
 };
 
-const getLecturerAttendanceByCourse = async (token, course_id) => {
+const getLecturerAttendanceByCourse = async (course_id) => {
   try {
     const {data} = await axios({
       method: 'get',
       url: `${env.url}/lecturers/4/attendance_by_course?course_id=${course_id}`,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-type': 'application/json',
       },
       timeout: 30000,
@@ -205,13 +196,12 @@ const getLecturerAttendanceByCourse = async (token, course_id) => {
   }
 };
 
-const getStudentAttendanceByCourse = async (token, course_id) => {
+const getStudentAttendanceByCourse = async (course_id) => {
   try {
     const {data} = await axios({
       method: 'get',
       url: `${env.url}/students/4/get_attendance_by_courses?course_id=${course_id}`,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-type': 'application/json',
       },
       timeout: 30000,
@@ -228,13 +218,12 @@ const getStudentAttendanceByCourse = async (token, course_id) => {
   }
 };
 
-const getStudentAllAttendance = async (token) => {
+const getStudentAllAttendance = async () => {
   try {
     const {data} = await axios({
       method: 'get',
       url: `${env.url}/students/4/get_detailed_attendance`,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-type': 'application/json',
       },
       timeout: 30000,
@@ -266,4 +255,5 @@ export {
   getLecturerAttendanceByCourse,
   getStudentAttendanceByCourse,
   getStudentAllAttendance,
+  createSignOutCode,
 };

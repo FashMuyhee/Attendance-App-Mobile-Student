@@ -1,6 +1,7 @@
 import axios from 'axios';
 import env from '../helpers/env';
 import RNFetchBlob from 'rn-fetch-blob';
+import moment from 'moment';
 
 const createAttendance = async () => {
   try {
@@ -134,7 +135,7 @@ const generateAttendanceRecord = (attendance_record) => {
         const schema = {
           id: key + 1,
           course: item.course_id,
-          date: item.created_at,
+          date: moment(item.created_at).format('ddd Do MMM,YYYY'),
           student: ele.student_id,
           sign_in: ele.signed_in ? ele.signed_in_time : '',
           sign_out: ele.signed_out ? ele.signed_out_time : '',
@@ -182,7 +183,7 @@ const getLecturerAttendanceByCourse = async (course_id) => {
           const schema = [
             key + 1,
             ele.student_id,
-            index.date,
+            moment(index.date).format('ddd Do MMM,YYYY'),
             ele.signed_in ? ele.signed_in_time : '',
             ele.signed_out ? ele.signed_out_time : '',
           ];
@@ -235,7 +236,7 @@ const getStudentAllAttendance = async () => {
       return [
         key + 1,
         item.course.code.toUpperCase(),
-        new Date(item.date).toDateString(),
+        moment(item.date).format('ddd Do MMM,YYYY'),
         item.signed_in_time,
         item.signed_out_time,
       ];

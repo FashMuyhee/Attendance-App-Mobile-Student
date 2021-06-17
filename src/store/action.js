@@ -1,4 +1,10 @@
-import {SET_TOKEN, SET_THEME, SET_USER, LOGOUT} from './type';
+import {
+  SET_TOKEN,
+  SET_THEME,
+  SET_USER,
+  LOGOUT,
+  SET_LECTURE_LOCATION,
+} from './type';
 
 export const saveUserToken = (token) => {
   return async (dispatch) => {
@@ -30,6 +36,15 @@ export const logout = () => {
   return async (dispatch) => {
     dispatch({
       type: LOGOUT,
+    });
+  };
+};
+
+export const saveLectureLocation = (location) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_LECTURE_LOCATION,
+      payload: location,
     });
   };
 };

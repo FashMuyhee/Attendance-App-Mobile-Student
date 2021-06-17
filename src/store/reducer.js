@@ -1,10 +1,17 @@
-import {LOGOUT, SET_THEME, SET_TOKEN, SET_USER} from './type';
+import {
+  LOGOUT,
+  SET_LECTURE_LOCATION,
+  SET_THEME,
+  SET_TOKEN,
+  SET_USER,
+} from './type';
 
 const initialState = {
   isDark: false,
   user: {},
   userToken: null,
   isLoggedIn: false,
+  location: {},
 };
 
 export default AppReducer = (state = initialState, action) => {
@@ -32,6 +39,11 @@ export default AppReducer = (state = initialState, action) => {
         userToken: {},
         isLoggedIn: false,
         user: {},
+      };
+    case SET_LECTURE_LOCATION:
+      return {
+        ...state,
+        location: action.payload,
       };
     default:
       return state;

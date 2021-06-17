@@ -5,3 +5,4 @@ export const GET_USER = "GET_USER";
 export const SET_TOKEN = "SET_TOKEN";
 export const GET_TOKEN = "GET_TOKEN";
 export const LOGOUT = "LOGOUT";
+export const SET_LECTURE_LOCATION = "SET_LECTURE_LOCATION";

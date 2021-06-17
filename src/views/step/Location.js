@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, ActivityIndicator} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {StyleService, Text, Button} from '@ui-kitten/components';
-import {Container, ModalAlert, MyText} from '../../components';
+import {Container, ModalAlert, MyText, WelcomeNote} from '../../components';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MapView, {Marker, Circle} from 'react-native-maps';
 import {checkLocationDifference} from '../../helpers/locationDifference';
@@ -24,7 +24,6 @@ class Location extends Component {
   goToCamera = () => {
     // get state for use in other steps
     this.props.navigation.navigate('camera', {
-      location: {lat: this.state.latitude, lng: this.state.longitude},
       code: this.routeParam.code,
       type: this.routeParam.type,
     });
@@ -51,7 +50,7 @@ class Location extends Component {
         };
         // check check for location distance
         const routeParam = this.props.route.params;
-        const lectureHall = routeParam.lectureLocation;
+        const lectureHall = this.props.lectureLoc;
         const distance = checkLocationDifference(userLocation, {
           lat: lectureHall.lat,
           lng: lectureHall.lng,
@@ -75,9 +74,8 @@ class Location extends Component {
     this.getLocation();
   }
   render() {
-    const {lectureLocation} = this.routeParam;
     const {longitude, latitude, locationDistance, loading} = this.state;
-    const {user} = this.props;
+    const {user, lectureLoc} = this.props;
     markers = [
       {
         latlng: {
@@ -89,7 +87,7 @@ class Location extends Component {
         pinColor: '#4B9CFB',
       },
       {
-        latlng: {latitude: lectureLocation.lat, longitude: lectureLocation.lng},
+        latlng: {latitude: lectureLoc.lat, longitude: lectureLoc.lng},
         title: 'Lecture Hall',
         description: 'Dolor sit sint exercitation reprehenderit magna.',
         pinColor: '#00BA4A',
@@ -98,18 +96,12 @@ class Location extends Component {
 
     return (
       <TakeScreen>
-        <Container customStyle={styles.welcomeNote}>
-          <MyText customStyle={styles.boldText}>
-            Nice!
-            <MyText customStyle={styles.normalText}>
-              We need your location.
-            </MyText>
-          </MyText>
-          <MyText customStyle={styles.subtitleText}>
-            to ensure you're reaaly in class kindly activate location setting to
-            be sure you're within 30 meters of the Lecturer
-          </MyText>
-        </Container>
+        <WelcomeNote
+          bold="Nice"
+          normal="We need your location."
+          subtitle="to ensure you're really in class kindly activate location setting to
+          be sure you're within 30 meters of the Lecturer"
+        />
         <Container customStyle={styles.map}>
           {loading && latitude <= 0 && longitude <= 0 ? (
             <>
@@ -127,7 +119,7 @@ class Location extends Component {
               }}
               provider="google"
               showsCompass
-              mapType="standard">
+              mapType="mutedStandard">
               <Circle
                 center={markers[1].latlng}
                 radius={20}
@@ -181,36 +173,18 @@ class Location extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {user} = state.app_store;
-  return {user};
+  const {user, location} = state.app_store;
+  return {user, lectureLoc: location};
 };
 
 export default connect(mapStateToProps)(Location);
 
 const styles = StyleService.create({
-  welcomeNote: {
-    /*  borderColor: 'yellow',
-    borderWidth: 1, */
-    marginTop: hp('5%'),
-    height: hp('12%'),
-  },
-  boldText: {
-    fontWeight: 'bold',
-    fontSize: hp('3%'),
-  },
-  normalText: {
-    fontSize: hp('3%'),
-  },
-  subtitleText: {
-    fontSize: hp('2%'),
-  },
   map: {
     display: 'flex',
     borderColor: '#00BA4A',
     borderRadius: 5,
     borderWidth: 1,
-    // paddingLeft: '9%',
-    // paddingRight: '9%',
     marginTop: hp('2%'),
     height: hp('55%'),
     justifyContent: 'center',

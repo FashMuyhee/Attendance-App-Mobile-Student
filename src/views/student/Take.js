@@ -43,7 +43,7 @@ const themedStyles = StyleService.create({
     // height: '100%',
     width: '100%',
     position: 'relative',
-    paddingHorizontal: '5%',
+    paddingHorizontal: '3%',
     backgroundColor: 'background-basic-color-1',
   },
   navBar: {

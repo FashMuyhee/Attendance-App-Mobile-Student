@@ -62,28 +62,10 @@ const SigninCode = ({navigation}) => {
   };
 
   const handleSignOut = () => {
-    getAttendanceLocation({code: signCode})
-      .then((data) => {
-        setLoading(false);
-        if (data.type === 'error') {
-          setLoading(false);
-          return Snackbar.show({
-            text: data.error.toUpperCase(),
-            duration: Snackbar.LENGTH_SHORT,
-            textColor: 'white',
-          });
-        }
-        const {location} = data.message;
-        const parsedLocation = JSON.parse(location);
-        navigation.navigate('location', {
-          code: signCode,
-          type: 'sign_out',
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    navigation.navigate('location', {
+      code: signCode,
+      type: 'sign_out',
+    });
   };
 
   return (

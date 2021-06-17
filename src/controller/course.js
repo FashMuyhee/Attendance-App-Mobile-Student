@@ -41,13 +41,12 @@ const fetchCoursesByLevel = async (level) => {
   });
 };
 
-const studentAddCourse = async (course_id, user) => {
+const studentAddCourse = async (course_id) => {
   return new Promise((resolve, reject) => {
     axios({
       url: `${env.url}/students/2/add_course`,
       method: 'post',
       timeout: 30000,
-      headers: {Authorization: `Bearer ${user}`},
       data: {
         course_id,
       },
@@ -61,13 +60,12 @@ const studentAddCourse = async (course_id, user) => {
   });
 };
 
-const lecturerAddCourse = async (course_id, user) => {
+const lecturerAddCourse = async (course_id) => {
   return new Promise((resolve, reject) => {
     axios({
       url: `${env.url}/lecturers/2/add_course`,
       method: 'post',
       timeout: 30000,
-      headers: {Authorization: `Bearer ${user}`},
       data: {
         course_id,
       },
@@ -81,13 +79,12 @@ const lecturerAddCourse = async (course_id, user) => {
   });
 };
 
-const fetchStudentCourses = async (user) => {
+const fetchStudentCourses = async () => {
   return new Promise((resolve, reject) => {
     axios({
       url: `${env.url}/students/2/get_courses`,
       method: 'get',
       timeout: 30000,
-      headers: {Authorization: `Bearer ${user}`},
     })
       .then(({data}) => {
         const myCourse = data.payload['courses'].map((course, key) => {
@@ -102,13 +99,12 @@ const fetchStudentCourses = async (user) => {
   });
 };
 
-const fetchLecturerCourses = async (user, select = false) => {
+const fetchLecturerCourses = async (select = false) => {
   return new Promise((resolve, reject) => {
     axios({
       url: `${env.url}/lecturers/2/get_courses`,
       method: 'get',
       timeout: 30000,
-      headers: {Authorization: `Bearer ${user}`},
     })
       .then(({data}) => {
         if (select) {

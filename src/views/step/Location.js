@@ -119,7 +119,7 @@ class Location extends Component {
               }}
               provider="google"
               showsCompass
-              mapType="mutedStandard">
+              mapType="standard">
               <Circle
                 center={markers[1].latlng}
                 radius={20}

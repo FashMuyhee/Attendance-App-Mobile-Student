@@ -14,11 +14,12 @@ import {
 import {RFPercentage as fontSize} from 'react-native-responsive-fontsize';
 import confeti from '../assets/img/confeti.png';
 import sad from '../assets/img/sad.png';
+import wink from '../assets/img/wink.png';
 
 const ModalAlert = ({
   isVisible,
   closeModal,
-  warn,
+  type,
   btnText,
   message,
   subtitle,
@@ -34,15 +35,17 @@ const ModalAlert = ({
       <Layout style={styles.wrapper}>
         <View style={styles.content}>
           <View style={styles.iconContainer}>
-            {warn ? (
+            {type === 'error' ? (
               <Image source={sad} style={styles.icon} />
-            ) : (
+            ) : type === 'success' ? (
               <Image source={confeti} style={styles.icon} />
+            ) : (
+              <Image source={wink} style={styles.icon} />
             )}
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.boldText}>{message}</Text>
-            {warn ? null : (
+            {type != 'success' ? null : (
               <Text appearance="hint" style={styles.subtitleText}>
                 {subtitle}
               </Text>

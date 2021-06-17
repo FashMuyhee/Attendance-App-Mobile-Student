@@ -14,7 +14,11 @@ import {
 } from 'react-native-responsive-screen';
 import {RNCamera} from 'react-native-camera';
 import {TakeScreen} from '../student';
-import {markAttendance, compareImageDp} from '../../controller/attendance';
+import {
+  markAttendance,
+  compareImageDp,
+  signoutAttendance,
+} from '../../controller/attendance';
 import {useCamera} from 'react-native-camera-hooks';
 import {useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
@@ -28,7 +32,7 @@ const Camera = ({route, store, navigation}) => {
     message: null,
     loading: false,
     cameraVisible: false,
-    isError: false,
+    msgType: 'success',
   });
   const routeParam = route.params;
   const [message, setMessage] = useState('');
@@ -72,9 +76,7 @@ const Camera = ({route, store, navigation}) => {
 
     compareImageDp(imgUri, user.dp)
       .then(async (data) => {
-        setState({...state, loading: false});
-        if (data.confidence > 75) {
-          console.log(type);
+        if (data.confidence > 65) {
           try {
             if (type === 'sign_in') {
               const res = await markAttendance({
@@ -85,28 +87,38 @@ const Camera = ({route, store, navigation}) => {
               setState({
                 ...state,
                 visible: true,
-                message: `${res.message} 👌👌👌`,
-                isError: false,
+                message: `${res.message}`,
+                msgType: 'success',
+                loading: false,
               });
             } else if (type === 'sign_out') {
-              alert('sign out');
+              const res = await signoutAttendance({signout_code: code});
+              setState({
+                ...state,
+                visible: true,
+                message: `${res.type === 'error' ? res.error : res.message}`,
+                msgType: res.type === 'error' ? 'sorry' : 'success',
+                loading: false,
+              });
             }
           } catch (error) {
             console.log(error);
           }
-        } else if (data.confidence < 75) {
+        } else if (data.confidence < 65) {
           setState({
             ...state,
             visible: true,
             message: `You can't mark attendance for someone else, alaye go retrun person phone 😜😜😜`,
-            isError: false,
+            msgType: 'sorry',
+            loading: false,
           });
         } else {
           setState({
             ...state,
             visible: true,
             message: `Something went wrong, Try Again`,
-            isError: true,
+            msgType: 'error',
+            loading: false,
           });
 
           setImgUri(null);
@@ -180,7 +192,7 @@ const Camera = ({route, store, navigation}) => {
         message={state.message}
         subtitle="Ensure that you signout when the class is over, so your attendance is marked"
         btnText="Close"
-        warn={state.isError}
+        type={state.msgType}
       />
       <CameraModal isVisible={cameraVisible} closeModal={handleCameraModal}>
         <RNCamera

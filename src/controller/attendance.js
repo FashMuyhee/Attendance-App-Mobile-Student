@@ -90,6 +90,29 @@ const markAttendance = async ({body, code}) => {
   }
 };
 
+/**
+ * A Function to signout student attendance
+ * @param body
+ * @param code
+ */
+const signoutAttendance = async (body) => {
+  try {
+    const {data} = await axios({
+      method: 'put',
+      url: `${env.url}/attendances/signout`,
+      headers: {
+        'Content-type': 'application/json',
+      },
+      data: body,
+      timeout: 30000,
+    });
+    console.log(data.payload);
+    return data.payload;
+  } catch (error) {
+    return error.response.data.payload;
+  }
+};
+
 const createSignOutCode = async ({body, att_code}) => {
   try {
     const {data} = await axios({
@@ -124,6 +147,7 @@ const getAttendanceLocation = async ({code}) => {
   }
 };
 
+// attendance array generator
 const generateAttendanceRecord = (attendance_record) => {
   let genAttendance = [];
 
@@ -148,6 +172,7 @@ const generateAttendanceRecord = (attendance_record) => {
   return genAttendance;
 };
 
+// get all lecturer attendance
 const getAllLecturerAttendance = async () => {
   try {
     const {data} = await axios({
@@ -164,6 +189,7 @@ const getAllLecturerAttendance = async () => {
   }
 };
 
+// filter lecturer attendance by course
 const getLecturerAttendanceByCourse = async (course_id) => {
   try {
     const {data} = await axios({
@@ -184,8 +210,8 @@ const getLecturerAttendanceByCourse = async (course_id) => {
             key + 1,
             ele.student_id,
             moment(index.date).format('ddd Do MMM,YYYY'),
-            ele.signed_in ? ele.signed_in_time : '',
-            ele.signed_out ? ele.signed_out_time : '',
+            ele.signed_in ? moment(ele.signed_in_time).format('h:mm A') : '',
+            ele.signed_out ? moment(ele.signed_out_time).format('h:mm A') : '',
           ];
           genAttendance.push(schema);
         });
@@ -197,6 +223,7 @@ const getLecturerAttendanceByCourse = async (course_id) => {
   }
 };
 
+// get student attendance by course
 const getStudentAttendanceByCourse = async (course_id) => {
   try {
     const {data} = await axios({
@@ -219,6 +246,7 @@ const getStudentAttendanceByCourse = async (course_id) => {
   }
 };
 
+// get all students attendance
 const getStudentAllAttendance = async () => {
   try {
     const {data} = await axios({
@@ -257,4 +285,5 @@ export {
   getStudentAttendanceByCourse,
   getStudentAllAttendance,
   createSignOutCode,
+  signoutAttendance,
 };

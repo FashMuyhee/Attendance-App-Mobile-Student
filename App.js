@@ -15,11 +15,15 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const App = () => {
-  const {isDark, userToken} = useSelector((state) => state.app_store);
+  const {isDark, userToken, isLoggedIn} = useSelector(
+    (state) => state.app_store,
+  );
 
   useEffect(() => {
     changeNavigationBarColor('#00AB4A', false, true);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
+    isLoggedIn
+      ? (axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`)
+      : false;
   }, []);
 
   return (

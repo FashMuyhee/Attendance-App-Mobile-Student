@@ -101,6 +101,21 @@ const AddCourseScreen = ({navigation}) => {
             selectToggle: {
               ...styles.dropdownInput,
             },
+            container: {
+              ...styles.bgTheme,
+            },
+            item: {
+              ...styles.bgTheme,
+            },
+            searchBar: {
+              ...styles.bgTheme,
+            },
+            searchTextInput: {
+              ...styles.dropdownItem,
+            },
+          }}
+          colors={{
+            selectToggleTextColor: styles.dropdownItem.color,
           }}
         />
         <Button
@@ -138,6 +153,9 @@ const themeStyle = StyleService.create({
     padding: 10,
     color: 'color-text',
     fontFamily: 'Poppins-Regular',
+  },
+  bgTheme: {
+    backgroundColor: 'background-basic-color-1',
   },
 });
 ``;

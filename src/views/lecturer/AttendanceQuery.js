@@ -20,13 +20,14 @@ import {
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {getLecturerAttendanceByCourse} from '../../controller/attendance';
 import {fetchLecturerCourses} from '../../controller/course';
-import SearchableDropdown from 'react-native-searchable-dropdown';
-import { useSelector } from 'react-redux';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import VectorIcon from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
 
-const AttendanceQueryScreen = ({store, navigation}) => {
+const AttendanceQueryScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const [data, setData] = React.useState({name: 'Loading....'});
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState([]);
   const {user} = useSelector((state) => state.app_store);
   const [loading, setLoading] = React.useState(false);
 
@@ -35,14 +36,14 @@ const AttendanceQueryScreen = ({store, navigation}) => {
   );
 
   const onSelect = (text) => {
-    setValue({...text});
+    setValue(text);
   };
 
   const fetchAttendance = async () => {
     try {
       setLoading(true);
       const attendance = await getLecturerAttendanceByCourse(
-        value.id.toString(),
+        value[0].toString(),
       );
       setLoading(false);
       navigation.navigate('lect_attendance', {attendance});
@@ -81,20 +82,49 @@ const AttendanceQueryScreen = ({store, navigation}) => {
         />
         <Container customStyle={styles.form}>
           <Layout style={styles.form}>
-            <SearchableDropdown
-              onItemSelect={onSelect}
-              selectedItems={value}
-              containerStyle={{padding: 5}}
-              textInputStyle={styles.dropdownInput}
-              itemStyle={styles.dropdownItem}
-              itemTextStyle={styles.dropdownItemText}
+            <SectionedMultiSelect
               items={data}
-              defaultIndex={2}
-              placeholder="Enter Course..."
-              resetValue={false}
-              underlineColorAndroid="transparent"
+              IconRenderer={VectorIcon}
+              uniqueKey="id"
+              selectText="Enter Course"
+              showDropDowns={true}
+              onSelectedItemsChange={onSelect}
+              selectedItems={value}
+              searchPlaceholderText="Search Course ..."
+              displayKey="name"
+              alwaysShowSelectText
+              single
+              onCancel={() => setValue('')}
+              showCancelButton
+              styles={{
+                itemText: {
+                  ...styles.dropdownItem,
+                },
+                button: {backgroundColor: '#00BA4A'},
+                selectToggle: {
+                  ...styles.dropdownInput,
+                },
+                container: {
+                  ...styles.bgTheme,
+                },
+                item: {
+                  ...styles.bgTheme,
+                },
+                searchBar: {
+                  ...styles.bgTheme,
+                },
+                searchTextInput: {
+                  ...styles.dropdownItem,
+                },
+              }}
+              colors={{
+                selectToggleTextColor: styles.dropdownItem.color,
+              }}
             />
-            <Button onPress={fetchAttendance} disabled={loading}>
+            <Button
+              onPress={fetchAttendance}
+              disabled={loading}
+              style={styles.button}>
               {!loading ? 'View Attendance' : 'Fetching Attendance'}
             </Button>
           </Layout>
@@ -104,7 +134,7 @@ const AttendanceQueryScreen = ({store, navigation}) => {
   );
 };
 
-export default AttendanceQueryScreen
+export default AttendanceQueryScreen;
 
 const themedStyles = StyleService.create({
   screen: {
@@ -129,7 +159,7 @@ const themedStyles = StyleService.create({
     marginBottom: hp('2%'),
   },
   button: {
-    marginBottom: hp('4%'),
+    marginTop: hp('2%'),
   },
   dropdownInput: {
     padding: 12,
@@ -137,17 +167,19 @@ const themedStyles = StyleService.create({
     borderColor: 'color-primary-500',
     backgroundColor: 'background-basic-color-1',
     borderRadius: 5,
-    height: hp(7),
+    height: hp(5),
     color: 'color-text',
-    marginBottom: hp(2),
+    placeholderColor: 'color-text',
   },
   dropdownItem: {
     padding: 10,
-    backgroundColor: 'background-basic-color-1',
-    borderColor: 'color-primary-500',
-    borderWidth: 0.5,
+    color: 'color-text',
+    fontFamily: 'Poppins-Regular',
   },
-  dropdownItemText: {
+  bgTheme: {
+    backgroundColor: 'background-basic-color-1',
+  },
+  textTheme: {
     color: 'color-text',
   },
 });

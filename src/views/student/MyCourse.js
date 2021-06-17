@@ -64,27 +64,27 @@ const MyCourseScreen = ({navigation}) => {
           normal="Here are your courses"
           subtitle="below ate the courses offered by you,you can choose to add more at any given time by by clicking the `+` button"
         />
-        {loading ? (
-          <LoaderText
-            loadingText="Fetching Your Courses..."
-            loading={loading}
+        <Table borderStyle={styles.tableWrapper}>
+          <Row
+            data={table.head}
+            style={styles.head}
+            textStyle={styles.textHead}
           />
-        ) : table.data.length ? (
-          <Table borderStyle={styles.tableWrapper}>
-            <Row
-              data={table.head}
-              style={styles.head}
-              textStyle={styles.textHead}
+          {loading ? (
+            <LoaderText
+              loadingText="Fetching Your Courses..."
+              loading={loading}
             />
+          ) : table.data.length ? (
             <Rows
               data={table.data}
               textStyle={styles.textBody}
               style={{height: 70}}
             />
-          </Table>
-        ) : (
-          <EmptyData info="You have not added any course yet, click the + to add courses" />
-        )}
+          ) : (
+            <EmptyData info="You have not added any course yet, click the + to add courses" />
+          )}
+        </Table>
       </ScrollContainer>
       <Fab onPress={() => navigation.navigate('stu_add_course')} icon="plus" />
     </>
@@ -121,7 +121,7 @@ const themedStyles = StyleService.create({
   },
   textBody: {
     margin: 6,
-    color: 'color-text`',
+    color: 'color-text',
     fontFamily: 'Poppins-Regular',
     fontSize: hp(1.4),
     textAlign: 'center',

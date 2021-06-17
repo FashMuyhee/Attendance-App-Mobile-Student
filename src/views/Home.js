@@ -58,6 +58,7 @@ const HomeScreen = ({navigation, store}) => {
       <Box icon="log-out-outline" title="Sign Out" xtraOnPress={logout} />
     </View>
   );
+
   return (
     <Layout style={styles.dashboard}>
       <Navbar

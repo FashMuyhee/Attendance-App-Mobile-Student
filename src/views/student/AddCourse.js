@@ -105,6 +105,9 @@ const AddCourseScreen = ({navigation}) => {
           single
           onCancel={() => setValue('')}
           showCancelButton
+          colors={{
+            selectToggleTextColor: styles.dropdownItem.color,
+          }}
           styles={{
             itemText: {
               ...styles.dropdownItem,
@@ -112,6 +115,18 @@ const AddCourseScreen = ({navigation}) => {
             button: {backgroundColor: '#00BA4A'},
             selectToggle: {
               ...styles.dropdownInput,
+            },
+            container: {
+              ...styles.bgTheme,
+            },
+            item: {
+              ...styles.bgTheme,
+            },
+            searchBar: {
+              ...styles.bgTheme,
+            },
+            searchTextInput: {
+              ...styles.dropdownItem,
             },
           }}
         />
@@ -146,5 +161,8 @@ const themeStyle = StyleService.create({
     padding: 10,
     color: 'color-text',
     fontFamily: 'Poppins-Regular',
+  },
+  bgTheme: {
+    backgroundColor: 'background-basic-color-1',
   },
 });

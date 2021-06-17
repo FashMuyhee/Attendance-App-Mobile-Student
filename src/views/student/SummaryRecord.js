@@ -70,7 +70,7 @@ const themeStyle = StyleService.create({
   },
   textBody: {
     margin: 6,
-    color: 'color-text`',
+    color: 'color-text',
     fontFamily: 'Poppins-Regular',
     fontSize: hp(1.2),
     textAlign: 'center',

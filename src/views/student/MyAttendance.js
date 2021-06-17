@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {Icon, TopNavigationAction, useTheme} from '@ui-kitten/components';
-import { Navbar} from '../../components';
+import {Navbar} from '../../components';
 import DetailedRecord from './DetailedRecord';
 import SummaryRecord from './SummaryRecord';
 import {getStudentAllAttendance} from '../../controller/attendance';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {RFPercentage} from 'react-native-responsive-fontsize';
 
 const MyAttendanceScreen = ({navigation}) => {
   const Tab = createBottomTabNavigator();
@@ -45,14 +46,15 @@ const MyAttendanceScreen = ({navigation}) => {
       />
       <Tab.Navigator
         tabBarOptions={{
-          activeTintColor: theme['color-primary-500'],
+          activeTintColor: theme['color-basic-100'],
           style: {
-            backgroundColor: 'white',
+            backgroundColor: theme['color-primary-500'],
           },
           labelStyle: {
             alignItems: 'center',
             marginBottom: 15,
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Poppins-Bold',
+            fontSize: RFPercentage(1.4),
           },
         }}>
         <Tab.Screen
@@ -82,7 +84,7 @@ const MyAttendanceScreen = ({navigation}) => {
   );
 };
 
-export default MyAttendanceScreen
+export default MyAttendanceScreen;
 
 const styles = StyleSheet.create({
   title: {

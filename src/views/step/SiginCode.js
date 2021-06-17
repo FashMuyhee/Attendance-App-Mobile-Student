@@ -16,7 +16,8 @@ import {
 import {TakeScreen} from '../student';
 import {getAttendanceLocation} from '../../controller/attendance';
 import Snackbar from 'react-native-snackbar';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {saveLectureLocation} from '../../store/action';
 
 const SigninCode = ({navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -25,6 +26,7 @@ const SigninCode = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const styles = useStyleSheet(themedStyles);
   const {user} = useSelector((state) => state.app_store);
+  const dispatch = useDispatch();
 
   const checkSignInCode = () => {
     // get lecture location and save
@@ -43,6 +45,7 @@ const SigninCode = ({navigation}) => {
         }
         const {location} = data.message;
         const parsedLocation = JSON.parse(location);
+        dispatch(saveLectureLocation(parsedLocation));
         navigation.navigate('location', {
           lectureLocation: {
             lat: parsedLocation.lat,
@@ -73,10 +76,6 @@ const SigninCode = ({navigation}) => {
         const {location} = data.message;
         const parsedLocation = JSON.parse(location);
         navigation.navigate('location', {
-          lectureLocation: {
-            lat: parsedLocation.lat,
-            lng: parsedLocation.lng,
-          },
           code: signCode,
           type: 'sign_out',
         });

@@ -1,18 +1,19 @@
 import React from 'react';
-import {Modal, View} from 'react-native';
+import {Modal, View, Image} from 'react-native';
 import {
   StyleService,
   useStyleSheet,
   Text,
   Button,
   Layout,
-  Icon,
-  useTheme,
 } from '@ui-kitten/components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {RFPercentage as fontSize} from 'react-native-responsive-fontsize';
+import confeti from '../assets/img/confeti.png';
+import sad from '../assets/img/sad.png';
 
 const ModalAlert = ({
   isVisible,
@@ -23,98 +24,91 @@ const ModalAlert = ({
   subtitle,
 }) => {
   const styles = useStyleSheet(themedStyles);
-  const theme = useTheme();
-  const pulseIconRef = React.useRef();
 
   return (
     <Modal
       style={styles.modal}
-      transparent={false}
+      transparent
       visible={isVisible}
       animationType="slide">
-      <Layout style={styles.content}>
-        <View style={warn ? styles.iconWarnContainer : styles.iconContainer}>
-          {warn ? (
-            <Icon
-              name="alert-triangle-outline"
-              style={styles.icon}
-              fill={theme['color-danger-default']}
-              ref={pulseIconRef}
-              animation="pulse"
-            />
-          ) : (
-            <Icon
-              name="checkmark"
-              style={styles.icon}
-              fill={theme['background-basic-color-1']}
-              ref={pulseIconRef}
-              animation="pulse"
-            />
-          )}
+      <Layout style={styles.wrapper}>
+        <View style={styles.content}>
+          <View style={styles.iconContainer}>
+            {warn ? (
+              <Image source={sad} style={styles.icon} />
+            ) : (
+              <Image source={confeti} style={styles.icon} />
+            )}
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.boldText}>{message}</Text>
+            {warn ? null : (
+              <Text appearance="hint" style={styles.subtitleText}>
+                {subtitle}
+              </Text>
+            )}
+          </View>
+          <Button style={styles.btn} onPress={closeModal}>
+            {btnText}
+          </Button>
         </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.boldText}>{message}</Text>
-          <Text appearance="hint" style={styles.subtitleText}>
-            {subtitle}
-          </Text>
-        </View>
-        <Button style={styles.btn} onPress={closeModal}>
-          {btnText}
-        </Button>
       </Layout>
     </Modal>
   );
 };
 
 export default ModalAlert;
+
 const themedStyles = StyleService.create({
-  content: {
+  wrapper: {
     width: wp('100%'),
     height: hp('100%'),
-    paddingLeft: wp('10%'),
-    paddingRight: wp('10%'),
-    paddingTop: hp('20%'),
     display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,.4)',
+    justifyContent: 'center',
+  },
+  content: {
+    width: wp('90%'),
+    height: hp('50%'),
+    backgroundColor: 'background-basic-color-1',
+    padding: 20,
+    borderRadius: 10,
     alignItems: 'center',
   },
   iconContainer: {
-    backgroundColor: 'color-primary-default',
+    backgroundColor: 'color-basic-100',
     height: hp('20%'),
-    width: wp('35%'),
+    width: wp('40%'),
     borderRadius: 100,
-  },
-  iconWarnContainer: {
-    // backgroundColor: 'color-danger-default',
-    height: hp('20%'),
-    width: wp('30%'),
-    borderRadius: 100,
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   icon: {
-    width: wp('25%'),
-    height: hp('20%'),
-    alignSelf: 'center',
+    resizeMode: 'center',
+    width: wp(40),
+    height: hp(50),
   },
   textContainer: {
     textAlign: 'center',
     width: wp('80%'),
   },
   boldText: {
-    // fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: hp('2.3%'),
-    paddingTop: hp('10%'),
-    paddingBottom: hp('5%'),
+    fontSize: fontSize(2),
+    paddingVertical: hp('2%'),
     fontFamily: 'Poppins-Bold',
+    letterSpacing: 2,
+    flexWrap: 'wrap',
   },
   subtitleText: {
     textAlign: 'center',
-    fontSize: hp('3%'),
+    fontSize: fontSize(1.9),
     paddingVertical: hp('3%'),
     fontFamily: 'Poppins-Medium',
   },
   btn: {
-    width: '100%',
-    marginTop: hp('4%'),
-    marginBottom: hp('4%'),
+    width: '60%',
+    marginVertical: 20,
   },
 });

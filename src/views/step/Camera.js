@@ -17,23 +17,25 @@ import {TakeScreen} from '../student';
 import {markAttendance, compareImageDp} from '../../controller/attendance';
 import {useCamera} from 'react-native-camera-hooks';
 import {useSelector} from 'react-redux';
+import Snackbar from 'react-native-snackbar';
 
-const Camera = ({route, store}) => {
+const Camera = ({route, store, navigation}) => {
   const [{cameraRef}, {takePicture: takePictureAsync}] = useCamera();
-  const [imgUri, setImgUri] = useState('');
+  const [imgUri, setImgUri] = useState(null);
   const [state, setState] = useState({
     visible: false,
     imgUri: null,
     message: null,
     loading: false,
     cameraVisible: false,
+    isError: false,
   });
   const routeParam = route.params;
   const [message, setMessage] = useState('');
-  const {user} = useSelector((state) => state.app_store);
-  
+  const {user, location} = useSelector((state) => state.app_store);
+
   const takePicture = async () => {
-    const options = {base64: true, quality: 0.5};
+    const options = {base64: true, quality: 0.2};
     const data = await takePictureAsync(options);
     setState({...state, cameraVisible: false});
     setImgUri(data);
@@ -56,8 +58,17 @@ const Camera = ({route, store}) => {
   };
 
   const finish = async () => {
-    const {location, code, type} = routeParam;
+    const {code, type} = routeParam;
     setState({...state, loading: true});
+
+    if (!user.dp) {
+      Snackbar.show({
+        text: 'Upload Profile Picture of your self before marking attendance',
+        duration: Snackbar.LENGTH_SHORT,
+        textColor: 'white',
+      });
+      return;
+    }
 
     compareImageDp(imgUri, user.dp)
       .then(async (data) => {
@@ -74,7 +85,8 @@ const Camera = ({route, store}) => {
               setState({
                 ...state,
                 visible: true,
-                message: res.message,
+                message: `${res.message} 👌👌👌`,
+                isError: false,
               });
             } else if (type === 'sign_out') {
               alert('sign out');
@@ -82,6 +94,22 @@ const Camera = ({route, store}) => {
           } catch (error) {
             console.log(error);
           }
+        } else if (data.confidence < 75) {
+          setState({
+            ...state,
+            visible: true,
+            message: `You can't mark attendance for someone else, alaye go retrun person phone 😜😜😜`,
+            isError: false,
+          });
+        } else {
+          setState({
+            ...state,
+            visible: true,
+            message: `Something went wrong, Try Again`,
+            isError: true,
+          });
+
+          setImgUri(null);
         }
       })
       .catch((e) => {
@@ -144,11 +172,15 @@ const Camera = ({route, store}) => {
         </Button>
       </Container>
       <ModalAlert
-        isVisible={visible}
-        closeModal={() => setState({...state, visible: false})}
+        isVisible={state.visible}
+        closeModal={() => {
+          setState({...state, visible: false});
+          navigation.navigate('home');
+        }}
         message={state.message}
         subtitle="Ensure that you signout when the class is over, so your attendance is marked"
-        btnText="Go Home"
+        btnText="Close"
+        warn={state.isError}
       />
       <CameraModal isVisible={cameraVisible} closeModal={handleCameraModal}>
         <RNCamera
@@ -156,7 +188,7 @@ const Camera = ({route, store}) => {
           captureAudio={false}
           style={StyleSheet.absoluteFill}
           type={RNCamera.Constants.Type.front}
-          flashMode={RNCamera.Constants.FlashMode.on}
+          flashMode={RNCamera.Constants.FlashMode.off}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
             message: 'We need your permission to use your camera',

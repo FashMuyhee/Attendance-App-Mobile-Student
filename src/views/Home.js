@@ -4,7 +4,7 @@ import {
   StyleService,
   useStyleSheet,
   Icon,
-  Layout,
+  Layout
 } from '@ui-kitten/components';
 import {View, Image, TouchableWithoutFeedback} from 'react-native';
 import {Navbar, DetailText, Box} from '../components';

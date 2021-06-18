@@ -4,6 +4,7 @@ import {
   SET_USER,
   LOGOUT,
   SET_LECTURE_LOCATION,
+  SET_SYSTEM_THEME,
 } from './type';
 
 export const saveUserToken = (token) => {
@@ -45,6 +46,14 @@ export const saveLectureLocation = (location) => {
     dispatch({
       type: SET_LECTURE_LOCATION,
       payload: location,
+    });
+  };
+};
+
+export const switchSystemTheme = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_SYSTEM_THEME,
     });
   };
 };

@@ -1,6 +1,7 @@
 import {
   LOGOUT,
   SET_LECTURE_LOCATION,
+  SET_SYSTEM_THEME,
   SET_THEME,
   SET_TOKEN,
   SET_USER,
@@ -12,6 +13,7 @@ const initialState = {
   userToken: null,
   isLoggedIn: false,
   location: {},
+  isSystemTheme: false,
 };
 
 export default AppReducer = (state = initialState, action) => {
@@ -44,6 +46,11 @@ export default AppReducer = (state = initialState, action) => {
       return {
         ...state,
         location: action.payload,
+      };
+    case SET_SYSTEM_THEME:
+      return {
+        ...state,
+        isSystemTheme: !state.isSystemTheme,
       };
     default:
       return state;

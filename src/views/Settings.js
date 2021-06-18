@@ -26,7 +26,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {uploadStudentDp} from '../controller/auth';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
-import {toggleTheme} from '../store/action';
+import {switchSystemTheme, toggleTheme} from '../store/action';
 
 const SettingsScreen = ({navigation}) => {
   const navigateBack = () => {
@@ -37,8 +37,7 @@ const SettingsScreen = ({navigation}) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const {isDark, user} = useSelector((state) => state.app_store);
-  console.log(isDark);
+  const {isDark, user, isSystemTheme} = useSelector((state) => state.app_store);
   const BackIcon = (style) => (
     <Icon {...style} name="arrow-back" fill="white" />
   );
@@ -91,6 +90,10 @@ const SettingsScreen = ({navigation}) => {
     dispatch(toggleTheme());
   };
 
+  const handleUseSystemTheme = () => {
+    dispatch(switchSystemTheme());
+  };
+
   const image =
     user.dp === null && imgUrl.uri === null
       ? avatar
@@ -136,6 +139,21 @@ const SettingsScreen = ({navigation}) => {
           <></>
         )}
         <View style={styles.themeToggle}>
+          <Text>Use System Theme</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Toggle
+              status="primary"
+              checked={isSystemTheme}
+              onChange={handleUseSystemTheme}
+            />
+          </View>
+        </View>
+        <View style={styles.themeToggle}>
           <Text>Theme</Text>
           <View
             style={{
@@ -147,6 +165,7 @@ const SettingsScreen = ({navigation}) => {
               status="primary"
               checked={isDark}
               onChange={handleThemeToggle}
+              disabled={isSystemTheme}
             />
             <ThemeIcon />
           </View>

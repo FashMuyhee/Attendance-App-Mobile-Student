@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, useColorScheme} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {mapping, dark, light} from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -15,12 +15,29 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const App = () => {
-  const {isDark, userToken, isLoggedIn} = useSelector(
+  const {isDark, isSystemTheme, userToken, isLoggedIn} = useSelector(
     (state) => state.app_store,
   );
+  const colorScheme = useColorScheme();
+
+  const isDarkTheme = () => {
+    let theme = false;
+    if (isSystemTheme) {
+      if (colorScheme === 'dark') {
+        theme = true;
+      } else {
+        theme = false;
+      }
+    } else if (isDark) {
+      theme = true;
+    }
+
+    return theme;
+  };
 
   useEffect(() => {
     changeNavigationBarColor('#00AB4A', false, true);
+    console.log(isDarkTheme());
     isLoggedIn
       ? (axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`)
       : false;
@@ -31,7 +48,7 @@ const App = () => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         mapping={mapping}
-        theme={isDark ? darkTheme : lightTheme}
+        theme={isDarkTheme() ? darkTheme : lightTheme}
         customMapping={customMapping}>
         <StatusBar backgroundColor="#00AB4A" />
         <AppNavigator />

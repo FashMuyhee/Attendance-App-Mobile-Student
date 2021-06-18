@@ -203,15 +203,15 @@ const getLecturerAttendanceByCourse = async (course_id) => {
     let genAttendance = [];
     const records = data.payload;
     records.forEach((index, key) => {
-      const parsedRecords = JSON.parse(index.attendance);
+      const parsedRecords = index.attendance;
       if (parsedRecords.length) {
         parsedRecords.forEach((ele) => {
           const schema = [
             key + 1,
-            ele.student_id,
+            ele.student.matric_no,
             moment(index.date).format('ddd Do MMM,YYYY'),
-            ele.signed_in ? moment(ele.signed_in_time).format('h:mm A') : '',
-            ele.signed_out ? moment(ele.signed_out_time).format('h:mm A') : '',
+            ele.signed_in ? ele.signed_in_time : '',
+            ele.signed_out ? ele.signed_out_time : '',
           ];
           genAttendance.push(schema);
         });
